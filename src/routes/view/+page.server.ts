@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ url }) => {
     const resp =  await fetch(backendUrl);
     const data = await resp.json();
 
-    const index = data.files.findIndex((e) => e == path)
+    const index = data.files.findIndex((e: string) => e == path)
 
     return {
         current: path,
