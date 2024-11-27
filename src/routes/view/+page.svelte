@@ -51,7 +51,7 @@
 
 			output.push({
 				name: parts[i],
-				prefix: prefix 
+				prefix: prefix
 			});
 		}
 
@@ -162,7 +162,7 @@
 	</nav>
 </Container>
 
-{#if filetype == 'video' || filetype== 'audio'}
+{#if filetype == 'video' || filetype == 'audio'}
 	<Container>
 		<media-player title={getFilenameFromKey(data.current, 'media')} src="/view/get?path={path}">
 			<media-provider></media-provider>

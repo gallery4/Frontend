@@ -8,7 +8,6 @@ export async function GET({ url, fetch }) {
 		backendUrl.search = `path=${path}`
 	}
 
-	
 	const data = await fetch(backendUrl)
 
 	return data;

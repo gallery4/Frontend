@@ -1,5 +1,5 @@
 import stringHash from "string-hash";
-import mime  from 'mime-types'
+import mime from 'mime-types'
 
 export function getFilenameFromKey(name: string, type: 'image' | 'media' | 'zip' | 'directory') {
     return name.substring(name.lastIndexOf('/') + 1);
@@ -14,7 +14,7 @@ export function determinFileType(name: string): string | false {
 
     const mimetype = mime.lookup(lower);
 
-    if(mimetype == false) {
+    if (mimetype == false) {
         return false
     }
 

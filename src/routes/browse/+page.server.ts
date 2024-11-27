@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
         backendUrl.search = `path=${path}`
     }
 
-    const resp =  await fetch(backendUrl);
+    const resp = await fetch(backendUrl);
 
     const data = await resp.json();
 
