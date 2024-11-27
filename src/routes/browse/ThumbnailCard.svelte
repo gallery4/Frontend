@@ -22,14 +22,16 @@
 			case 'file':
 				const filetype = determinFileType(name);
 
-				switch (filetype)
-				{
-					case "image": return "image";
-					case "audio": return "file-music";
-					case "video" : return "file-play"
+				switch (filetype) {
+					case 'image':
+						return 'image';
+					case 'audio':
+						return 'file-music';
+					case 'video':
+						return 'file-play';
 				}
 
-				return "";
+				return '';
 
 			case 'directory':
 				return 'folder';
@@ -45,14 +47,16 @@
 		switch (type) {
 			case 'file':
 				const filetype = determinFileType(name);
-				switch (filetype)
-				{
-					case "image": return `/browse/thumb?path=${name}`;
-					case "audio": return AUDIO_IMAGE_SOURCE;
-					case "video" : return VIDEO_IMAGE_SOURCE
+				switch (filetype) {
+					case 'image':
+						return `/browse/thumb?path=${name}`;
+					case 'audio':
+						return AUDIO_IMAGE_SOURCE;
+					case 'video':
+						return VIDEO_IMAGE_SOURCE;
 				}
 
-				return "";
+				return '';
 
 			case 'directory':
 				return DIRECTORY_IMAGE_SOURCE;
@@ -68,14 +72,16 @@
 		switch (type) {
 			case 'file':
 				const filetype = determinFileType(name);
-					switch (filetype)
-					{
-						case "image": return IMAGE_ICON_COLOR;
-						case "audio": return AUDIO_ICON_COLOR;
-						case "video" : return VIDEO_ICON_COLOR
-					}
+				switch (filetype) {
+					case 'image':
+						return IMAGE_ICON_COLOR;
+					case 'audio':
+						return AUDIO_ICON_COLOR;
+					case 'video':
+						return VIDEO_ICON_COLOR;
+				}
 
-				return "";
+				return '';
 
 			case 'directory':
 				return DIRECTORY_ICON_COLOR;
@@ -118,8 +124,7 @@
 		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" fill="${AUDIO_ICON_COLOR}" class="bi bi-file-music" viewBox="0 0 16 16">
 			<path d="M10.304 3.13a1 1 0 0 1 1.196.98v1.8l-2.5.5v5.09c0 .495-.301.883-.662 1.123C7.974 12.866 7.499 13 7 13s-.974-.134-1.338-.377C5.302 12.383 5 11.995 5 11.5s.301-.883.662-1.123C6.026 10.134 6.501 10 7 10c.356 0 .7.068 1 .196V4.41a1 1 0 0 1 .804-.98z"/>
 			<path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
-		</svg>
-	`
+		</svg>`;
 </script>
 
 <Card data-id={createElementId(getFilenameFromKey(name, type))}>
