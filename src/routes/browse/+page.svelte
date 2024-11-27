@@ -42,7 +42,7 @@
 		}
 
 		let parts = path?.split('/');
-	
+
 		for (let i = 0; i < parts?.length; i++) {
 			const prefix = parts.slice(0, i + 1).join('/');
 
@@ -61,17 +61,17 @@
 		breadcrumbData = createBreadcrumb(data.path);
 	});
 
-	function moveToHash(node: Element){
+	function moveToHash(node: Element) {
 		const hash = $page.url.hash;
 		if (!hash) return;
 
-		const element = node.querySelector(`div[data-id="${hash.substring(1)}"]`)
+		const element = node.querySelector(`div[data-id="${hash.substring(1)}"]`);
 
 		element?.scrollIntoView({
 			behavior: 'smooth',
 			block: 'end',
-			inline: 'nearest',
-		})
+			inline: 'nearest'
+		});
 	}
 </script>
 
@@ -117,31 +117,31 @@
 		</div>
 	</Container>
 {:else}
-	<Container >
+	<Container>
 		<div use:moveToHash>
-		<Row cols={{ lg: 3, md: 2, sm: 1, xs: 1 }}>
-			{#if data.directories}
-				{#each data.directories as object}
-					<Col class="mt-3">
-						<ThumbnailCard name={object} type='directory'></ThumbnailCard>
-					</Col>
-				{/each}
-			{/if}
-			{#if data.archives}
-				{#each data.archives as object}
-					<Col class="mt-3">
-						<ThumbnailCard name={object} type='zip'></ThumbnailCard>
-					</Col>
-				{/each}
-			{/if}
-			{#if data.files}
-				{#each data.files as object}
-					<Col class="mt-3">
-						<ThumbnailCard name={object} type='file'></ThumbnailCard>
-					</Col>
-				{/each}
-			{/if}
-		</Row>
-	</div>
+			<Row cols={{ lg: 3, md: 2, sm: 1, xs: 1 }}>
+				{#if data.directories}
+					{#each data.directories as object}
+						<Col class="mt-3">
+							<ThumbnailCard name={object} type="directory"></ThumbnailCard>
+						</Col>
+					{/each}
+				{/if}
+				{#if data.archives}
+					{#each data.archives as object}
+						<Col class="mt-3">
+							<ThumbnailCard name={object} type="zip"></ThumbnailCard>
+						</Col>
+					{/each}
+				{/if}
+				{#if data.files}
+					{#each data.files as object}
+						<Col class="mt-3">
+							<ThumbnailCard name={object} type="file"></ThumbnailCard>
+						</Col>
+					{/each}
+				{/if}
+			</Row>
+		</div>
 	</Container>
 {/if}
