@@ -83,7 +83,7 @@
 
 			<div class="position-absolute top-0 start-0 h-100 w-100">
 				<Image
-					src="/view/image?path={path}"
+					src="/get/image/{path}"
 					class="h-100 w-100"
 					style="object-fit:contain; padding-top:6em;"
 					onload={() => (isImageLoaded = true)}
@@ -123,7 +123,7 @@
 		<Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
 			<Nav class="ms-auto" navbar>
 				<NavItem>
-					<NavLink href="/download/{path}" target="_blank">
+					<NavLink href="/get/file/{path}" target="_blank">
 						<Icon name="download"></Icon>&nbsp;Get
 					</NavLink>
 				</NavItem>
@@ -164,7 +164,7 @@
 
 {#if filetype == 'video' || filetype == 'audio'}
 	<Container>
-		<media-player title={getFilenameFromKey(data.current, 'media')} src="/download/{path}">
+		<media-player title={getFilenameFromKey(data.current, 'media')} src="/get/file/{path}">
 			<media-provider></media-provider>
 			<media-video-layout></media-video-layout>
 			<media-audio-layout></media-audio-layout>

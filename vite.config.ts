@@ -14,7 +14,7 @@ export default defineConfig(({ command, mode }) => {
 		},
 		server: {
 			proxy: {
-				'/download': {
+				'/get': {
 					target: env.BACKEND_URL,
 					changeOrigin: true,
 				}
