@@ -12,5 +12,13 @@ export default defineConfig(({ command, mode }) => {
 				{ find: 'path', replacement: 'path-browserify' },
 			],
 		},
+		server: {
+			proxy: {
+				'/download': {
+					target: env.BACKEND_URL,
+					changeOrigin: true,
+				}
+			}
+		}
 	}
 });

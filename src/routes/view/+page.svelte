@@ -123,7 +123,7 @@
 		<Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
 			<Nav class="ms-auto" navbar>
 				<NavItem>
-					<NavLink href="/view/get?path={path}" target="_blank">
+					<NavLink href="/download/{path}" target="_blank">
 						<Icon name="download"></Icon>&nbsp;Get
 					</NavLink>
 				</NavItem>
@@ -164,7 +164,7 @@
 
 {#if filetype == 'video' || filetype == 'audio'}
 	<Container>
-		<media-player title={getFilenameFromKey(data.current, 'media')} src="/view/get?path={path}">
+		<media-player title={getFilenameFromKey(data.current, 'media')} src="/download/{path}">
 			<media-provider></media-provider>
 			<media-video-layout></media-video-layout>
 			<media-audio-layout></media-audio-layout>
