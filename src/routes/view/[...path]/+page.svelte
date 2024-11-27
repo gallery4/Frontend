@@ -96,7 +96,7 @@
 				class="position-absolute top-0 start-0 h-100"
 				style="width:20%;"
 				onclick={() => {
-					if (data.previous != null) goto(`/view?path=${data.previous}`);
+					if (data.previous != null) goto(`/view/${data.previous}`);
 				}}
 			>
 				<Icon name="chevron-left"></Icon>
@@ -107,7 +107,7 @@
 				class="position-absolute top-0 end-0 h-100 w-10"
 				style="width:20%;"
 				onclick={() => {
-					if (data.next != null) goto(`/view?path=${data.next}`);
+					if (data.next != null) goto(`/view/${data.next}`);
 				}}
 			>
 				<Icon name="chevron-right"></Icon>
@@ -130,12 +130,12 @@
 			</Nav>
 			<Nav navbar>
 				<NavItem>
-					<NavLink disabled={data.previous == null} href={`/view?path=${data.previous}`}>
+					<NavLink disabled={data.previous == null} href={`/view/${data.previous}`}>
 						<Icon name="chevron-left"></Icon>&nbsp;Previous
 					</NavLink>
 				</NavItem>
 				<NavItem>
-					<NavLink disabled={data.next == null} href={`/view?path=${data.next}`}>
+					<NavLink disabled={data.next == null} href={`/view/${data.next}`}>
 						<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 						<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
 					</NavLink>
@@ -152,7 +152,7 @@
 					</li>
 				{:else}
 					<li class="breadcrumb-item">
-						<a href="/browse?path={b.prefix}#{createElementId(breadcrumbData[i + 1].name)}"
+						<a href="/browse/{b.prefix}#{createElementId(breadcrumbData[i + 1].name)}"
 							>{b.name}
 						</a>
 					</li>

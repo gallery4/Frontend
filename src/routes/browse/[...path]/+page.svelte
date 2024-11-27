@@ -100,7 +100,7 @@
 					</li>
 				{:else}
 					<li class="breadcrumb-item">
-						<a href="/browse?path={b.prefix}#{createElementId(breadcrumbData[i + 1].name)}">
+						<a href="/browse/{b.prefix}#{createElementId(breadcrumbData[i + 1].name)}">
 							{b.name}
 						</a>
 					</li>

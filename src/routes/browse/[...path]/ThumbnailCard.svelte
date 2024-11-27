@@ -7,11 +7,11 @@
 	function getLink(name: string, type: string): string {
 		switch (type) {
 			case 'file':
-				return `/view?path=${name}`;
+				return `/view/${name}`;
 
 			case 'directory':
 			case 'zip':
-				return `/browse?path=${name}`;
+				return `/browse/${name}`;
 		}
 
 		return '';

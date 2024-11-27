@@ -1,8 +1,8 @@
 import { env } from "$env/dynamic/private";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ request, fetch, url }) => {
-    const path = url.searchParams.get('path');
+export const load: PageServerLoad = async ({ params, fetch }) => {
+    const path =  params.path
 
     const backendUrl = new URL('list', env.BACKEND_URL)
     if (path != null) {

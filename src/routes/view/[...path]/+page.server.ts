@@ -2,8 +2,8 @@ import { env } from "$env/dynamic/private";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ url }) => {
-    const path = url.searchParams.get('path');
+export const load: PageServerLoad = async ({ params, url }) => {
+    const path = params.path;
 
     if (!path) {
         throw error(500, "path is required.")
