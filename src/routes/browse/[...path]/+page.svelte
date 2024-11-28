@@ -112,12 +112,6 @@
 
 {#if $navigating}
 	<Container>
-		<div class="d-block w-100">
-			<span class=" top-50 start-50 translate-middle">
-				<Spinner type="border"></Spinner>&NonBreakingSpace;Loading</span
-			>
-		</div>
-
 		<Row cols={{ lg: 3, md: 2, sm: 1, xs: 1 }}>
 			<Col class="mt-3">
 				<ThumbnailCard name="loading_1" type="placeholder"></ThumbnailCard>
@@ -138,6 +132,13 @@
 				<ThumbnailCard name="loading_6" type="placeholder"></ThumbnailCard>
 			</Col>
 		</Row>
+
+		<div
+			class="position-absolute top-50 start-50"
+			style="background-color:#00000080; padding: 1em;"
+		>
+			<span> <Spinner type="border"></Spinner>&nbsp;Loading</span>
+		</div>
 	</Container>
 {:else}
 	<Container>
