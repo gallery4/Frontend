@@ -4,6 +4,7 @@
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils.js';
 	import {
 		Button,
+		Col,
 		Collapse,
 		Container,
 		Icon,
@@ -14,6 +15,7 @@
 		NavbarToggler,
 		NavItem,
 		NavLink,
+		Row,
 		Spinner
 	} from '@sveltestrap/sveltestrap';
 
@@ -171,6 +173,31 @@
 			<media-video-layout></media-video-layout>
 			<media-audio-layout></media-audio-layout>
 		</media-player>
+	</Container>
+
+	<Container>
+		<Row cols={{ lg: 2, md: 2, sm: 1, xs: 1 }}>
+			<Col>
+				<Button
+					class="m-1 w-100"
+					disabled={data.previous == null}
+					onclick={() => goto(`/view/${data.previous}`)}
+				>
+					<Icon name="chevron-left"></Icon>&nbsp;Previous
+				</Button>
+			</Col>
+			<Col>
+				<Button
+					class="m-1 w-100"
+					color="primary"
+					disabled={data.next == null}
+					onclick={() => goto(`/view/${data.next}`)}
+				>
+					<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
+					<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
+				</Button>
+			</Col>
+		</Row>
 	</Container>
 {/if}
 
