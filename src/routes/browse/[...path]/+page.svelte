@@ -112,9 +112,32 @@
 
 {#if $navigating}
 	<Container>
-		<div class="position-absolute top-50 start-50 translate-middle">
-			<Spinner type="border"></Spinner>&NonBreakingSpace;Loading
+		<div class="d-block w-100">
+			<span class=" top-50 start-50 translate-middle">
+				<Spinner type="border"></Spinner>&NonBreakingSpace;Loading</span
+			>
 		</div>
+
+		<Row cols={{ lg: 3, md: 2, sm: 1, xs: 1 }}>
+			<Col class="mt-3">
+				<ThumbnailCard name="loading_1" type="placeholder"></ThumbnailCard>
+			</Col>
+			<Col class="mt-3">
+				<ThumbnailCard name="loading_2" type="placeholder"></ThumbnailCard>
+			</Col>
+			<Col class="mt-3">
+				<ThumbnailCard name="loading_3" type="placeholder"></ThumbnailCard>
+			</Col>
+			<Col class="mt-3">
+				<ThumbnailCard name="loading_4" type="placeholder"></ThumbnailCard>
+			</Col>
+			<Col class="mt-3">
+				<ThumbnailCard name="loading_5" type="placeholder"></ThumbnailCard>
+			</Col>
+			<Col class="mt-3">
+				<ThumbnailCard name="loading_6" type="placeholder"></ThumbnailCard>
+			</Col>
+		</Row>
 	</Container>
 {:else}
 	<Container>
