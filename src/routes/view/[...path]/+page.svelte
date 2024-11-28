@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { navigating } from '$app/stores';
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils.js';
 	import {
 		Button,
@@ -76,7 +77,10 @@
 	<Container>
 		<div class="position-absolute top-0 start-0 h-100 w-100" style="padding-top:10em;">
 			{#if !isImageLoaded}
-				<div class="position-absolute top-50 start-50 translate-middle">
+				<div
+					class="position-absolute top-50 start-50"
+					style="background-color:#00000080; padding: 1em;"
+				>
 					<Spinner type="border"></Spinner> Loading
 				</div>
 			{/if}
@@ -152,9 +156,7 @@
 					</li>
 				{:else}
 					<li class="breadcrumb-item">
-						<a href="/browse/{b.prefix}#{createElementId(breadcrumbData[i + 1].name)}"
-							>{b.name}
-						</a>
+						<a href="/browse/{b.prefix}#{createElementId(breadcrumbData[i + 1].name)}">{b.name} </a>
 					</li>
 				{/if}
 			{/each}
@@ -170,4 +172,10 @@
 			<media-audio-layout></media-audio-layout>
 		</media-player>
 	</Container>
+{/if}
+
+{#if $navigating}
+	<div class="position-absolute top-50 start-50" style="background-color:#00000080; padding: 1em;">
+		<Spinner type="border"></Spinner> Loading
+	</div>
 {/if}
