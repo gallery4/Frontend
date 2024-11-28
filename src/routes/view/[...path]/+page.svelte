@@ -78,7 +78,7 @@
 		<div class="position-absolute top-0 start-0 h-100 w-100" style="padding-top:10em;">
 			{#if !isImageLoaded}
 				<div
-					class="position-absolute top-50 start-50"
+					class="position-absolute top-50 start-50 translate-middle"
 					style="background-color:#00000080; padding: 1em;"
 				>
 					<Spinner type="border"></Spinner> Loading
@@ -175,7 +175,10 @@
 {/if}
 
 {#if $navigating}
-	<div class="position-absolute top-50 start-50" style="background-color:#00000080; padding: 1em;">
+	<div
+		class="position-absolute top-50 start-50 translate-middle"
+		style="background-color:#00000080; padding: 1em;"
+	>
 		<Spinner type="border"></Spinner> Loading
 	</div>
 {/if}
