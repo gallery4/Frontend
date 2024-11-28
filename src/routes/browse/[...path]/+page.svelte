@@ -132,14 +132,13 @@
 				<ThumbnailCard name="loading_6" type="placeholder"></ThumbnailCard>
 			</Col>
 		</Row>
-
-		<div
-			class="position-absolute top-50 start-50 translate-middle"
-			style="background-color:#00000080; padding: 1em;"
-		>
-			<span> <Spinner type="border"></Spinner>&nbsp;Loading</span>
-		</div>
 	</Container>
+	<div
+		class="position-absolute top-50 start-50 translate-middle"
+		style="background-color:#00000080; padding: 1em;"
+	>
+		<span> <Spinner type="border"></Spinner>&nbsp;Loading</span>
+	</div>
 {:else}
 	<Container>
 		<div use:moveToHash>
