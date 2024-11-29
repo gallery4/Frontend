@@ -160,7 +160,7 @@
 
 {#if $navigating}
 	<div
-		class="position-absolute top-50 start-50 translate-middle"
+		class="position-absolute top-50 start-50 translate-middle justify-content-center"
 		style="background-color:#00000080; padding: 1em;"
 	>
 		<span> <Spinner type="border"></Spinner>&nbsp;Loading</span>

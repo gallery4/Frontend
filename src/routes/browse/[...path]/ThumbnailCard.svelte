@@ -1,9 +1,18 @@
 <script lang="ts">
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
-	import { Card, Icon, Image, CardBody, CardText } from '@sveltestrap/sveltestrap';
+	import {
+		Card,
+		Icon,
+		Image,
+		CardBody,
+		CardText,
+		Spinner,
+		CardFooter
+	} from '@sveltestrap/sveltestrap';
 
 	let { name, type, sortby, order } = $props();
 
+	let loaded = $state(false);
 	function getLink(): string {
 		switch (type) {
 			case 'file':
@@ -38,7 +47,7 @@
 
 			case 'zip':
 				return 'file-zip';
-			
+
 			case 'placeholder':
 				return 'hourglass';
 		}
@@ -94,7 +103,7 @@
 
 			case 'zip':
 				return ZIP_ICON_COLOR;
-			
+
 			case 'placeholder':
 				return PLACEHOLDER_ICON_COLOR;
 		}
@@ -136,7 +145,7 @@
 			<path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
 		</svg>`;
 
-	const PLACEHOLDER_IMAGE_SOURCE=`
+	const PLACEHOLDER_IMAGE_SOURCE = `
 		data:image/svg+xml;utf8,
 		<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" fill="${PLACEHOLDER_ICON_COLOR}" class="bi bi-hourglass" viewBox="-8 -8 32 32">
 			<path d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5m2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2z"/>
@@ -144,17 +153,24 @@
 	`;
 </script>
 
-<Card data-id={createElementId(getFilenameFromKey(name, type))}>
+<Card
+	data-id={createElementId(getFilenameFromKey(name, type))}
+	class="border"
+	style="border-color: {getIconColor()} !important;"
+>
 	<a href={getLink()}>
 		<Image
 			class="card-img-top"
 			loading="lazy"
 			src={getImageSource()}
 			style="height: 300px; object-fit: cover;"
+			onload={() => {
+				loaded = true;
+			}}
 		></Image>
 	</a>
 	<CardBody style="height: 6em; overflow:hidden;" class="fade show">
-		{#if type=="placeholder"}
+		{#if type == 'placeholder'}
 			<CardText class="placeholder-glow">
 				<span class="placeholder col-7"></span>
 			</CardText>
@@ -164,6 +180,10 @@
 				&nbsp;{getFilenameFromKey(name, type)}
 			</CardText>
 		{/if}
-		
 	</CardBody>
+	{#if !loaded}
+		<div class="position-absolute bottom-0 end-0">
+			<Spinner type="grow" size="sm" style="color:{getIconColor()}; margin: 1em;"></Spinner>
+		</div>
+	{/if}
 </Card>
