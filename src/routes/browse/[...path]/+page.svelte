@@ -1,13 +1,11 @@
 <script lang="ts">
 	import {
 		Accordion,
-		AccordionHeader,
 		AccordionItem,
 		Button,
 		Col,
 		Collapse,
 		Container,
-		FormGroup,
 		Icon,
 		Input,
 		InputGroup,
@@ -84,9 +82,9 @@
 				<option value="ascending">ascending</option>
 				<option value="descending">descending</option>
 			</Input>
-			<Button onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}
-				><Icon name="arrow-clockwise"></Icon></Button
-			>
+			<Button onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}>
+				<Icon name="arrow-clockwise"></Icon>
+			</Button>
 		</InputGroup>
 	</div>
 
@@ -124,39 +122,16 @@
 	</Accordion>
 </Container>
 
-{#if $navigating}
-	<Container>
-		<Row cols={{ lg: 3, md: 2, sm: 1, xs: 1 }}>
-			<Col class="mt-3">
-				<ThumbnailCard name="loading_1" type="placeholder" {sortby} {order}></ThumbnailCard>
-			</Col>
-			<Col class="mt-3">
-				<ThumbnailCard name="loading_2" type="placeholder" {sortby} {order}></ThumbnailCard>
-			</Col>
-			<Col class="mt-3">
-				<ThumbnailCard name="loading_3" type="placeholder" {sortby} {order}></ThumbnailCard>
-			</Col>
-			<Col class="mt-3">
-				<ThumbnailCard name="loading_4" type="placeholder" {sortby} {order}></ThumbnailCard>
-			</Col>
-			<Col class="mt-3">
-				<ThumbnailCard name="loading_5" type="placeholder" {sortby} {order}></ThumbnailCard>
-			</Col>
-			<Col class="mt-3">
-				<ThumbnailCard name="loading_6" type="placeholder" {sortby} {order}></ThumbnailCard>
-			</Col>
-		</Row>
-	</Container>
-	<div
-		class="position-absolute top-50 start-50 translate-middle"
-		style="background-color:#00000080; padding: 1em;"
-	>
-		<span> <Spinner type="border"></Spinner>&nbsp;Loading</span>
-	</div>
-{:else}
-	<Container>
-		<div use:moveToHash>
-			<Row cols={{ lg: 3, md: 2, sm: 1, xs: 1 }}>
+<Container>
+	<div use:moveToHash>
+		<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
+			{#if $navigating}
+				{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
+					<Col class="mt-3">
+						<ThumbnailCard name="loading_{i}" type="placeholder" {sortby} {order}></ThumbnailCard>
+					</Col>
+				{/each}
+			{:else}
 				{#if data.directories}
 					{#each data.directories as object}
 						<Col class="mt-3">
@@ -178,7 +153,16 @@
 						</Col>
 					{/each}
 				{/if}
-			</Row>
-		</div>
-	</Container>
+			{/if}
+		</Row>
+	</div>
+</Container>
+
+{#if $navigating}
+	<div
+		class="position-absolute top-50 start-50 translate-middle"
+		style="background-color:#00000080; padding: 1em;"
+	>
+		<span> <Spinner type="border"></Spinner>&nbsp;Loading</span>
+	</div>
 {/if}
