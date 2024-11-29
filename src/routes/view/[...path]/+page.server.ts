@@ -1,29 +1,33 @@
-import { env } from "$env/dynamic/private";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
+import { fetchList } from "$lib/server";
+import path from "path-browserify"
 
 export const load: PageServerLoad = async ({ params, url }) => {
-    const path = params.path;
+    const pathVal = params.path;
 
-    if (!path) {
+    if (!pathVal) {
         throw error(500, "path is required.")
     }
 
-    const prefix = path.substring(0, path.lastIndexOf('/'))
+    const parent = path.dirname(pathVal)
 
-    const backendUrl = new URL('list', env.BACKEND_URL)
-    if (path != null) {
-        backendUrl.search = `path=${prefix}`
-    }
+    const sortby: "name" | "dateTime" 
+        = url.searchParams.get("sortby") != 'dateTime' ? 'name' : 'dateTime'
 
-    const resp = await fetch(backendUrl);
+    const order: "ascending" | "descending" 
+        = url.searchParams.get("order") != 'descending' ? 'ascending' : 'descending'
+
+    const resp = await fetchList(parent, sortby, order, fetch);
     const data = await resp.json();
 
-    const index = data.files.findIndex((e: string) => e == path)
+    const index = data.files.findIndex((e:any) => e.name == pathVal)
 
     return {
-        current: path,
-        previous: index > 0 ? data.files[index - 1] : null,
-        next: index < data.files.length - 2 ? data.files[index + 1] : null
+        current: pathVal,
+        previous: index > 0 ? data.files[index - 1].name : null,
+        next: index < data.files.length - 2 ? data.files[index + 1].name : null,
+        sortby: sortby,
+        order: order,
     }
 }

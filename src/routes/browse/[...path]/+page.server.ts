@@ -1,17 +1,20 @@
-import { env } from "$env/dynamic/private";
+import { fetchList } from "$lib/server";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ params, fetch }) => {
-    const path =  params.path
+export const load: PageServerLoad = async ({ params, url, fetch }) => {
+    const path = params.path
+    const sortby: "name" | "dateTime" 
+        = url.searchParams.get("sortby") != 'dateTime' ? 'name' : 'dateTime'
+    const order: "ascending" | "descending" 
+        = url.searchParams.get("order") != 'descending' ? 'ascending' : 'descending'
 
-    const backendUrl = new URL('list', env.BACKEND_URL)
-    if (path != null) {
-        backendUrl.search = `path=${path}`
-    }
-
-    const resp = await fetch(backendUrl);
-
+    const resp = await fetchList(path, sortby, order, fetch);
     const data = await resp.json();
 
-    return data;
+    return {
+        path: data.path,
+        directories: data.directories,
+        archives: data.archives,
+        files: data.files,
+    };
 }

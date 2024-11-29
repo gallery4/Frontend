@@ -146,21 +146,21 @@
 				{#if data.directories}
 					{#each data.directories as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object} type="directory"></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="directory"></ThumbnailCard>
 						</Col>
 					{/each}
 				{/if}
 				{#if data.archives}
 					{#each data.archives as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object} type="zip"></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="zip"></ThumbnailCard>
 						</Col>
 					{/each}
 				{/if}
 				{#if data.files}
 					{#each data.files as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object} type="file"></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="file"></ThumbnailCard>
 						</Col>
 					{/each}
 				{/if}
