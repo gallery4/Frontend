@@ -68,7 +68,7 @@
 				class="position-absolute top-0 start-0 h-100"
 				style="width:20%;"
 				onclick={() => {
-					if (data.previous != null) 
+					if (data.previous != null)
 						goto(`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`);
 				}}
 			>
@@ -80,7 +80,7 @@
 				class="position-absolute top-0 end-0 h-100 w-10"
 				style="width:20%;"
 				onclick={() => {
-					if (data.next != null) 
+					if (data.next != null)
 						goto(`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`);
 				}}
 			>
@@ -104,12 +104,18 @@
 			</Nav>
 			<Nav navbar>
 				<NavItem>
-					<NavLink disabled={data.previous == null} href={`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`}>
+					<NavLink
+						disabled={data.previous == null}
+						href={`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`}
+					>
 						<Icon name="chevron-left"></Icon>&nbsp;Previous
 					</NavLink>
 				</NavItem>
 				<NavItem>
-					<NavLink disabled={data.next == null} href={`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`}>
+					<NavLink
+						disabled={data.next == null}
+						href={`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`}
+					>
 						<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 						<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
 					</NavLink>
