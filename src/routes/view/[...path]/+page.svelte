@@ -21,6 +21,8 @@
 	} from '@sveltestrap/sveltestrap';
 
 	import 'vidstack/bundle';
+	import { swipeable } from '@react2svelte/swipeable';
+	import type { SwipeEventData } from '@react2svelte/swipeable';
 
 	const { data } = $props();
 
@@ -35,6 +37,22 @@
 	$effect(() => {
 		filetype = determinFileType(data.current);
 	});
+
+	function handler(e: CustomEvent<SwipeEventData>) {
+		switch (e.detail.dir) {
+			case 'Left':
+				if (data.next) {
+					goto(`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`);
+				}
+				break;
+
+			case 'Right':
+				if (data.previous) {
+					goto(`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`);
+				}
+				break;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -53,7 +71,7 @@
 				</div>
 			{/if}
 
-			<div class="position-absolute top-0 start-0 h-100 w-100">
+			<div class="position-absolute top-0 start-0 h-100 w-100" use:swipeable on:swiped={handler}>
 				<Image
 					src="/get/image/{data.current}"
 					class="h-100 w-100"
