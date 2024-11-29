@@ -1,9 +1,13 @@
 <script lang="ts">
 	import {
+		Accordion,
+		AccordionHeader,
+		AccordionItem,
 		Button,
 		Col,
 		Collapse,
 		Container,
+		FormGroup,
 		Icon,
 		Input,
 		InputGroup,
@@ -69,21 +73,52 @@
 	</Navbar>
 
 	<Breadcrumb path={data.path} {order} {sortby}></Breadcrumb>
+	<div class="d-none d-sm-block">
+		<InputGroup>
+			<InputGroupText>Order By</InputGroupText>
+			<Input type="select" bind:value={sortby}>
+				<option value="name">name</option>
+				<option value="dateTime">date-time</option>
+			</Input>
+			<Input type="select" bind:value={order}>
+				<option value="ascending">ascending</option>
+				<option value="descending">descending</option>
+			</Input>
+			<Button onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}
+				><Icon name="arrow-clockwise"></Icon></Button
+			>
+		</InputGroup>
+	</div>
 
-	<InputGroup>
-		<InputGroupText>Order By</InputGroupText>
-		<Input type="select" bind:value={sortby}>
-			<option value="name">name</option>
-			<option value="dateTime">date-time</option>
-		</Input>
-		<Input type="select" bind:value={order}>
-			<option value="ascending">ascending</option>
-			<option value="descending">descending</option>
-		</Input>
-		<Button onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}
-			><Icon name="arrow-clockwise"></Icon></Button
-		>
-	</InputGroup>
+	<Accordion class="d-block d-sm-none">
+		<AccordionItem header="Order By">
+			<Container>
+				<Row class="mb-3"
+					><Col>
+						<Input type="select" bind:value={sortby}>
+							<option value="name">name</option>
+							<option value="dateTime">date-time</option>
+						</Input>
+					</Col>
+				</Row>
+				<Row class="mb-3">
+					<Col>
+						<Input type="select" bind:value={order}>
+							<option value="ascending">ascending</option>
+							<option value="descending">descending</option>
+						</Input>
+					</Col>
+				</Row>
+				<Row class="mb-3">
+					<Col>
+						<Button class="w-100" onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}>
+							<Icon name="arrow-clockwise"></Icon>&nbsp;Update
+						</Button>
+					</Col>
+				</Row>
+			</Container>
+		</AccordionItem>
+	</Accordion>
 </Container>
 
 {#if $navigating}
