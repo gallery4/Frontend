@@ -90,11 +90,11 @@
 		</InputGroup>
 	</div>
 
-	<Accordion class="d-block d-sm-none">
+	<Accordion flush class="d-block d-sm-none">
 		<AccordionItem header="Order By">
 			<Container>
-				<Row class="mb-3"
-					><Col>
+				<Row class="mb-3">
+					<Col>
 						<Input type="select" bind:value={sortby}>
 							<option value="name">name</option>
 							<option value="dateTime">date-time</option>
@@ -111,7 +111,10 @@
 				</Row>
 				<Row class="mb-3">
 					<Col>
-						<Button class="w-100" onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}>
+						<Button
+							class="w-100"
+							onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}
+						>
 							<Icon name="arrow-clockwise"></Icon>&nbsp;Update
 						</Button>
 					</Col>
