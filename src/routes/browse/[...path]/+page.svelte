@@ -111,7 +111,7 @@
 					</li>
 				{:else}
 					<li class="breadcrumb-item">
-						<a href="/browse/{b.prefix}?sortby=${sortby}&order=${order}#{createElementId(breadcrumbData[i + 1].name)}">
+						<a href="/browse/{b.prefix}?sortby={sortby}&order={order}#{createElementId(breadcrumbData[i + 1].name)}">
 							{b.name}
 						</a>
 					</li>
