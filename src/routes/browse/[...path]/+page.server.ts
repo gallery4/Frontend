@@ -11,8 +11,6 @@ export const load: PageServerLoad = async ({ params, url, fetch }) => {
     const resp = await fetchList(path, sortby, order, fetch);
     const data = await resp.json();
 
-    console.log(params.path)
-    console.log(data.path)
     return {
         path: data.path,
         directories: data.directories,
