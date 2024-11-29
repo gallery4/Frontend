@@ -123,15 +123,19 @@
 </Container>
 
 <Container>
-	<div use:moveToHash>
-		<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
-			{#if $navigating}
+	{#if $navigating}
+		<div use:moveToHash>
+			<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
 				{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
 					<Col class="mt-3">
 						<ThumbnailCard name="loading_{i}" type="placeholder" {sortby} {order}></ThumbnailCard>
 					</Col>
 				{/each}
-			{:else}
+			</Row>
+		</div>
+	{:else}
+		<div use:moveToHash>
+			<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
 				{#if data.directories}
 					{#each data.directories as object}
 						<Col class="mt-3">
@@ -153,9 +157,9 @@
 						</Col>
 					{/each}
 				{/if}
-			{/if}
-		</Row>
-	</div>
+			</Row>
+		</div>
+	{/if}
 </Container>
 
 {#if $navigating}
