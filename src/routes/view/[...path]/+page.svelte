@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { navigating } from '$app/stores';
+	import Breadcrumb from '$lib/Breadcrumb.svelte';
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils.js';
 	import {
 		Button,
@@ -31,42 +32,7 @@
 		isOpen = event.detail;
 	}
 
-	interface BreadcrumbData {
-		name: string;
-		prefix: string;
-	}
-
-	function createBreadcrumb(path?: string): BreadcrumbData[] {
-		let output = [];
-		output.push({
-			name: '<root>',
-			prefix: ''
-		});
-
-		if (!path) {
-			return output;
-		}
-
-		let parts = path?.split('/');
-
-		for (let i = 0; i < parts?.length; i++) {
-			const prefix = parts.slice(0, i + 1).join('/');
-
-			output.push({
-				name: parts[i],
-				prefix: prefix
-			});
-		}
-
-		return output;
-	}
-
-	let breadcrumbData: BreadcrumbData[] = $state([]);
-	let path: string = $state('');
-
 	$effect(() => {
-		path = data.current ? data.current : '';
-		breadcrumbData = createBreadcrumb(path);
 		filetype = determinFileType(data.current);
 	});
 </script>
@@ -89,7 +55,7 @@
 
 			<div class="position-absolute top-0 start-0 h-100 w-100">
 				<Image
-					src="/get/image/{path}"
+					src="/get/image/{data.current}"
 					class="h-100 w-100"
 					style="object-fit:contain; padding-top:6em;"
 					onload={() => (isImageLoaded = true)}
@@ -131,7 +97,7 @@
 		<Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
 			<Nav class="ms-auto" navbar>
 				<NavItem>
-					<NavLink href="/get/file/{path}" target="_blank">
+					<NavLink href="/get/file/{data.current}" target="_blank">
 						<Icon name="download"></Icon>&nbsp;Get
 					</NavLink>
 				</NavItem>
@@ -151,26 +117,13 @@
 			</Nav>
 		</Collapse>
 	</Navbar>
-	<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			{#each breadcrumbData as b, i}
-				{#if i == breadcrumbData.length - 1}
-					<li class="breadcrumb-item active" aria-current="page">
-						{b.name}
-					</li>
-				{:else}
-					<li class="breadcrumb-item">
-						<a href="/browse/{b.prefix}?sortby={data.sortby}&order={data.order}#{createElementId(breadcrumbData[i + 1].name)}">{b.name} </a>
-					</li>
-				{/if}
-			{/each}
-		</ol>
-	</nav>
+
+	<Breadcrumb sortby={data.sortby} order={data.order} path={data.current}></Breadcrumb>
 </Container>
 
 {#if filetype == 'video' || filetype == 'audio'}
 	<Container>
-		<media-player title={getFilenameFromKey(data.current, 'media')} src="/get/file/{path}">
+		<media-player title={getFilenameFromKey(data.current, 'media')} src="/get/file/{data.current}">
 			<media-provider></media-provider>
 			<media-video-layout></media-video-layout>
 			<media-audio-layout></media-audio-layout>
