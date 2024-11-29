@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { createElementId } from '$lib/utils.js';
 	import {
+	Button,
 		Col,
 		Collapse,
 		Container,
 		Icon,
+		Input,
+		InputGroup,
+		InputGroupText,
 		Nav,
 		Navbar,
 		NavbarBrand,
@@ -17,6 +21,7 @@
 
 	import ThumbnailCard from './ThumbnailCard.svelte';
 	import { navigating, page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	const { data } = $props();
 
@@ -55,6 +60,12 @@
 		return output;
 	}
 
+	let sortby = $state('name');
+	let order = $state('ascending');
+
+	sortby = $page.url.searchParams.get("sortby") != 'dateTime' ? 'name' : 'dateTime'
+    order = $page.url.searchParams.get("order") != 'descending' ? 'ascending' : 'descending'
+
 	let breadcrumbData: BreadcrumbData[] = $state([]);
 
 	$effect(() => {
@@ -79,7 +90,7 @@
 	<title>Gallery - Browse: {data.path}</title>
 </svelte:head>
 
-<Container class="sticky-top text-bg-light">
+<Container class="sticky-top text-bg-light pb-3">
 	<Navbar dark expand="md" container="md">
 		<NavbarBrand href="/">Gallery</NavbarBrand>
 		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
@@ -100,7 +111,7 @@
 					</li>
 				{:else}
 					<li class="breadcrumb-item">
-						<a href="/browse/{b.prefix}#{createElementId(breadcrumbData[i + 1].name)}">
+						<a href="/browse/{b.prefix}?sortby=${sortby}&order=${order}#{createElementId(breadcrumbData[i + 1].name)}">
 							{b.name}
 						</a>
 					</li>
@@ -108,28 +119,42 @@
 			{/each}
 		</ol>
 	</nav>
+	<InputGroup>
+		<InputGroupText>Order By</InputGroupText>
+		<Input type="select" bind:value={sortby}>
+			<option value="name">name</option>
+			<option value="dateTime">date-time</option>
+		</Input>
+		<Input type="select" bind:value={order}>
+			<option value="ascending">ascending</option>
+			<option value="descending">descending</option>
+		</Input>
+		<Button onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}
+			><Icon name="arrow-clockwise"></Icon></Button
+		>
+	</InputGroup>
 </Container>
 
 {#if $navigating}
 	<Container>
 		<Row cols={{ lg: 3, md: 2, sm: 1, xs: 1 }}>
 			<Col class="mt-3">
-				<ThumbnailCard name="loading_1" type="placeholder"></ThumbnailCard>
+				<ThumbnailCard name="loading_1" type="placeholder" {sortby} {order}></ThumbnailCard>
 			</Col>
 			<Col class="mt-3">
-				<ThumbnailCard name="loading_2" type="placeholder"></ThumbnailCard>
+				<ThumbnailCard name="loading_2" type="placeholder" {sortby} {order}></ThumbnailCard>
 			</Col>
 			<Col class="mt-3">
-				<ThumbnailCard name="loading_3" type="placeholder"></ThumbnailCard>
+				<ThumbnailCard name="loading_3" type="placeholder" {sortby} {order}></ThumbnailCard>
 			</Col>
 			<Col class="mt-3">
-				<ThumbnailCard name="loading_4" type="placeholder"></ThumbnailCard>
+				<ThumbnailCard name="loading_4" type="placeholder" {sortby} {order}></ThumbnailCard>
 			</Col>
 			<Col class="mt-3">
-				<ThumbnailCard name="loading_5" type="placeholder"></ThumbnailCard>
+				<ThumbnailCard name="loading_5" type="placeholder" {sortby} {order}></ThumbnailCard>
 			</Col>
 			<Col class="mt-3">
-				<ThumbnailCard name="loading_6" type="placeholder"></ThumbnailCard>
+				<ThumbnailCard name="loading_6" type="placeholder" {sortby} {order}></ThumbnailCard>
 			</Col>
 		</Row>
 	</Container>
@@ -146,21 +171,21 @@
 				{#if data.directories}
 					{#each data.directories as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="directory"></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="directory" {sortby} {order}></ThumbnailCard>
 						</Col>
 					{/each}
 				{/if}
 				{#if data.archives}
 					{#each data.archives as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="zip"></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="zip" {sortby} {order}></ThumbnailCard>
 						</Col>
 					{/each}
 				{/if}
 				{#if data.files}
 					{#each data.files as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="file"></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="file" {sortby} {order}></ThumbnailCard>
 						</Col>
 					{/each}
 				{/if}

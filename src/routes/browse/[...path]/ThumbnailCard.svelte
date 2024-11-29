@@ -2,22 +2,22 @@
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
 	import { Card, Icon, Image, CardBody, CardText } from '@sveltestrap/sveltestrap';
 
-	let { name, type } = $props();
+	let { name, type, sortby, order } = $props();
 
-	function getLink(name: string, type: string): string {
+	function getLink(): string {
 		switch (type) {
 			case 'file':
-				return `/view/${name}`;
+				return `/view/${name}?sortby=${sortby}&order=${order}`;
 
 			case 'directory':
 			case 'zip':
-				return `/browse/${name}`;
+				return `/browse/${name}?sortby=${sortby}&order=${order}`;
 		}
 
 		return '';
 	}
 
-	function getIcon(name: string, type: string): string {
+	function getIcon(): string {
 		switch (type) {
 			case 'file':
 				const filetype = determinFileType(name);
@@ -46,7 +46,7 @@
 		return '';
 	}
 
-	function getImageSource(name: string, type: string): string {
+	function getImageSource(): string {
 		switch (type) {
 			case 'file':
 				const filetype = determinFileType(name);
@@ -74,7 +74,7 @@
 		return '';
 	}
 
-	function getIconColor(type: string): string {
+	function getIconColor(): string {
 		switch (type) {
 			case 'file':
 				const filetype = determinFileType(name);
@@ -145,11 +145,11 @@
 </script>
 
 <Card data-id={createElementId(getFilenameFromKey(name, type))}>
-	<a href={getLink(name, type)}>
+	<a href={getLink()}>
 		<Image
 			class="card-img-top"
 			loading="lazy"
-			src={getImageSource(name, type)}
+			src={getImageSource()}
 			style="height: 300px; object-fit: cover;"
 		></Image>
 	</a>
@@ -160,7 +160,7 @@
 			</CardText>
 		{:else}
 			<CardText>
-				<Icon name={getIcon(name, type)} style="color:{getIconColor(type)};"></Icon>
+				<Icon name={getIcon()} style="color:{getIconColor()};"></Icon>
 				&nbsp;{getFilenameFromKey(name, type)}
 			</CardText>
 		{/if}
