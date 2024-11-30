@@ -33,11 +33,10 @@
 		isOpen = event.detail;
 	}
 
-	let sortby = $state('name');
-	let order = $state('ascending');
+	let sort = $state('name ascending');
 
-	sortby = $page.url.searchParams.get('sortby') != 'dateTime' ? 'name' : 'dateTime';
-	order = $page.url.searchParams.get('order') != 'descending' ? 'ascending' : 'descending';
+	const sortby = $derived(sort.startsWith('dateTime') ? 'dateTime' : 'name');
+	const order = $derived(sort.endsWith('descending') ? 'descending' : 'ascending');
 
 	function moveToHash(node: Element) {
 		const hash = $page.url.hash;
@@ -70,17 +69,15 @@
 		</Collapse>
 	</Navbar>
 
-	<Breadcrumb path={data.path} {order} {sortby}></Breadcrumb>
+	<Breadcrumb path={data.path} {sortby} {order}></Breadcrumb>
 	<div class="d-none d-sm-block">
 		<InputGroup>
 			<InputGroupText>Order By</InputGroupText>
-			<Input type="select" bind:value={sortby}>
-				<option value="name">name</option>
-				<option value="dateTime">date-time</option>
-			</Input>
-			<Input type="select" bind:value={order}>
-				<option value="ascending">ascending</option>
-				<option value="descending">descending</option>
+			<Input type="select" bind:value={sort}>
+				<option value="name ascending">name ascending</option>
+				<option value="name descending">name descending</option>
+				<option value="dateTime ascending">date-time ascending</option>
+				<option value="dateTime descending">date-time descending</option>
 			</Input>
 			<Button onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}>
 				<Icon name="arrow-clockwise"></Icon>
@@ -93,20 +90,15 @@
 			<Container>
 				<Row class="mb-3">
 					<Col>
-						<Input type="select" bind:value={sortby}>
-							<option value="name">name</option>
-							<option value="dateTime">date-time</option>
+						<Input type="select" bind:value={sort}>
+							<option value="name ascending">name ascending</option>
+							<option value="name descending">name descending</option>
+							<option value="dateTime ascending">date-time ascending</option>
+							<option value="dateTime descending">date-time descending</option>
 						</Input>
 					</Col>
 				</Row>
-				<Row class="mb-3">
-					<Col>
-						<Input type="select" bind:value={order}>
-							<option value="ascending">ascending</option>
-							<option value="descending">descending</option>
-						</Input>
-					</Col>
-				</Row>
+
 				<Row class="mb-3">
 					<Col>
 						<Button
@@ -128,7 +120,7 @@
 			<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
 				{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
 					<Col class="mt-3">
-						<ThumbnailCard name="loading_{i}" type="placeholder" {sortby} {order}></ThumbnailCard>
+						<ThumbnailCard name="loading_{i}" type="placeholder" {sortby} {order} />
 					</Col>
 				{/each}
 			</Row>
@@ -139,21 +131,21 @@
 				{#if data.directories}
 					{#each data.directories as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="directory" {sortby} {order}></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="directory" {sortby} {order} />
 						</Col>
 					{/each}
 				{/if}
 				{#if data.archives}
 					{#each data.archives as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="zip" {sortby} {order}></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="zip" {sortby} {order} />
 						</Col>
 					{/each}
 				{/if}
 				{#if data.files}
 					{#each data.files as object}
 						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="file" {sortby} {order}></ThumbnailCard>
+							<ThumbnailCard name={object.name} type="file" {sortby} {order} />
 						</Col>
 					{/each}
 				{/if}
