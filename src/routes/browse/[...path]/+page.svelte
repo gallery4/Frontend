@@ -69,49 +69,60 @@
 		</Collapse>
 	</Navbar>
 
-	<Breadcrumb path={data.path} {sortby} {order}></Breadcrumb>
-	<div class="d-none d-sm-block">
-		<InputGroup>
-			<InputGroupText>Order By</InputGroupText>
-			<Input type="select" bind:value={sort}>
-				<option value="name ascending">name ascending</option>
-				<option value="name descending">name descending</option>
-				<option value="dateTime ascending">date-time ascending</option>
-				<option value="dateTime descending">date-time descending</option>
-			</Input>
-			<Button onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}>
-				<Icon name="arrow-clockwise"></Icon>
-			</Button>
-		</InputGroup>
-	</div>
-
-	<Accordion flush class="d-block d-sm-none">
-		<AccordionItem header="Order By">
-			<Container>
-				<Row class="mb-3">
-					<Col>
+	<Container>
+		<Row>
+			<Col class="col-8">
+				<Breadcrumb path={data.path} {sortby} {order}></Breadcrumb>
+			</Col>
+			<Col>
+				<div class="d-none d-sm-block">
+					<InputGroup>
+						<InputGroupText><Icon name="sort-down"/></InputGroupText>
 						<Input type="select" bind:value={sort}>
 							<option value="name ascending">name ascending</option>
 							<option value="name descending">name descending</option>
 							<option value="dateTime ascending">date-time ascending</option>
 							<option value="dateTime descending">date-time descending</option>
 						</Input>
-					</Col>
-				</Row>
-
-				<Row class="mb-3">
-					<Col>
-						<Button
-							class="w-100"
-							onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}
-						>
-							<Icon name="arrow-clockwise"></Icon>&nbsp;Update
+						<Button onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}>
+							<Icon name="arrow-clockwise"></Icon>
 						</Button>
-					</Col>
-				</Row>
-			</Container>
-		</AccordionItem>
-	</Accordion>
+					</InputGroup>
+				</div>
+			</Col>
+		</Row>
+		<Row>
+			<Col>
+				<Accordion flush class="d-block d-sm-none">
+					<AccordionItem header="Order By">
+						<Container>
+							<Row class="mb-3">
+								<Col>
+									<Input type="select" bind:value={sort}>
+										<option value="name ascending">name ascending</option>
+										<option value="name descending">name descending</option>
+										<option value="dateTime ascending">date-time ascending</option>
+										<option value="dateTime descending">date-time descending</option>
+									</Input>
+								</Col>
+							</Row>
+
+							<Row class="mb-3">
+								<Col>
+									<Button
+										class="w-100"
+										onclick={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}
+									>
+										<Icon name="arrow-clockwise"></Icon>&nbsp;Update
+									</Button>
+								</Col>
+							</Row>
+						</Container>
+					</AccordionItem>
+				</Accordion>
+			</Col>
+		</Row>
+	</Container>
 </Container>
 
 <Container>
