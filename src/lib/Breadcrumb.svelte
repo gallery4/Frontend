@@ -1,18 +1,16 @@
 <script lang="ts">
-	import {
-		Accordion,
-		AccordionItem,
-		Container,
-		ListGroup,
-		ListGroupItem
-	} from '@sveltestrap/sveltestrap';
+	import { Icon, Input, InputGroup, InputGroupText } from '@sveltestrap/sveltestrap';
 	import { createElementId } from './utils';
+	import { goto } from '$app/navigation';
 
 	const { path, sortby, order } = $props();
-	let data: BreadcrumbData[] = $state([]);
+	let data: BreadcrumbData[] = $state(createBreadcrumb(path));
+
+	let pathVal = $state(path);
 
 	$effect(() => {
 		data = createBreadcrumb(path);
+		pathVal = path;
 	});
 
 	interface BreadcrumbData {
@@ -50,6 +48,11 @@
 
 		return output;
 	}
+
+	function gotoBrowse(path: string) {
+		const b = data.find((b) => b.path == path);
+		if (b) goto(`/browse/${b.path}?sortby=${sortby}&order=${order}#${b.targetId}`);
+	}
 </script>
 
 <nav aria-label="breadcrumb" class="d-none d-sm-block">
@@ -70,22 +73,11 @@
 	</ol>
 </nav>
 
-<Accordion class="d-block d-sm-none mb-3" flush>
-	{#if data.length > 0}
-		<AccordionItem header={data[data.length - 1].name}>
-			<ListGroup flush>
-				{#each data.reverse() as b, i}
-					{#if i != 0}
-						<ListGroupItem>
-							<a
-								href="/browse/{b.path}?sortby={sortby}&order={order}#{createElementId(b.targetId)}"
-							>
-								{b.name}
-							</a>
-						</ListGroupItem>
-					{/if}
-				{/each}
-			</ListGroup>
-		</AccordionItem>
-	{/if}
-</Accordion>
+<InputGroup class="d-sm-none mb-3">
+	<InputGroupText><Icon name="sign-turn-right" /></InputGroupText>
+	<Input type="select" bind:value={pathVal} onchange={() => gotoBrowse(pathVal)}>
+		{#each data.reverse() as b}
+			<option value={b.path}>{b.name}</option>
+		{/each}
+	</Input>
+</InputGroup>
