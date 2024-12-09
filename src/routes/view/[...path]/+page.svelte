@@ -1,8 +1,13 @@
 <script lang="ts">
+	import 'vidstack/bundle';
+	import { compareItems, determinFileType, extractSort, getFilenameFromKey } from '$lib/utils.js';
 	import { goto } from '$app/navigation';
 	import { navigating } from '$app/stores';
+	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
+	import { swipeable } from '@react2svelte/swipeable';
+	import { writable } from 'svelte/store';
 	import Breadcrumb from '$lib/Breadcrumb.svelte';
-	import { compareItems, determinFileType, extractSort, getFilenameFromKey } from '$lib/utils.js';
+	import type { SwipeEventData } from '@react2svelte/swipeable';
 	import {
 		Button,
 		Col,
@@ -23,30 +28,20 @@
 		Spinner
 	} from '@sveltestrap/sveltestrap';
 
-	import 'vidstack/bundle';
-	import { swipeable } from '@react2svelte/swipeable';
-	import type { SwipeEventData } from '@react2svelte/swipeable';
-	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
-	import { derived, writable } from 'svelte/store';
-
 	const { data } = $props();
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
-	const sortVal = derived(sort, extractSort);
-	const files = derived(sortVal, (v) => {
-		return {
-			objects: data.files.toSorted((a: any, b: any) => compareItems(a, b, v.sortBy, v.order))
-		};
-	});
+	const {sortBy, order} = $derived(extractSort($sort));
 
-	const index = derived(files, (files) =>
-		files.objects.findIndex((e: any) => e.name == data.current)
-	);
-	const previous = derived(index, (index) => (index > 0 ? $files.objects[index - 1].name : null));
-	const next = derived(index, (index) =>
-		index < $files.objects.length - 1 ? $files.objects[index + 1].name : null
-	);
+	const files = $derived(data.files.toSorted((a: any, b: any) =>
+		compareItems(a, b, sortBy, order)
+	));
 
-	let filetype: string | false = $state('');
+	const index = $derived(files.findIndex((e: any) => e.name == data.current));
+	const previous = $derived(index > 0 ? files[index - 1].name : null);
+	const next = $derived(index < files.length - 1 ? files[index + 1].name : null);
+
+	const filetype = $derived(determinFileType(data.current));
+	
 	let isOpen = $state(false);
 	let isImageLoaded = $state(false);
 
@@ -54,21 +49,17 @@
 		isOpen = event.detail;
 	}
 
-	$effect(() => {
-		filetype = determinFileType(data.current);
-	});
-
 	function handler(e: CustomEvent<SwipeEventData>) {
 		switch (e.detail.dir) {
 			case 'Left':
-				if ($next) {
-					goto(`/view/${$next}`);
+				if (next) {
+					goto(`/view/${next}`);
 				}
 				break;
 
 			case 'Right':
-				if ($previous) {
-					goto(`/view/${$previous}`);
+				if (previous) {
+					goto(`/view/${previous}`);
 				}
 				break;
 		}
@@ -106,7 +97,7 @@
 				class="position-absolute top-0 start-0 h-100"
 				style="width:20%;"
 				onclick={() => {
-					if ($previous != null) goto(`/view/${$previous}`);
+					if (previous != null) goto(`/view/${previous}`);
 				}}
 			>
 				<Icon name="chevron-left"></Icon>
@@ -117,7 +108,7 @@
 				class="position-absolute top-0 end-0 h-100 w-10"
 				style="width:20%;"
 				onclick={() => {
-					if ($next != null) goto(`/view/${$next}`);
+					if (next != null) goto(`/view/${next}`);
 				}}
 			>
 				<Icon name="chevron-right"></Icon>
@@ -140,12 +131,12 @@
 			</Nav>
 			<Nav navbar>
 				<NavItem>
-					<NavLink disabled={$previous == null} href={`/view/${$previous}`}>
+					<NavLink disabled={previous == null} href={`/view/${previous}`}>
 						<Icon name="chevron-left"></Icon>&nbsp;Previous
 					</NavLink>
 				</NavItem>
 				<NavItem>
-					<NavLink disabled={$next == null} href={`/view/${$next}`}>
+					<NavLink disabled={next == null} href={`/view/${next}`}>
 						<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 						<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
 					</NavLink>
@@ -188,8 +179,8 @@
 			<Col>
 				<Button
 					class="m-1 w-100"
-					disabled={$previous == null}
-					onclick={() => goto(`/view/${$previous}`)}
+					disabled={previous == null}
+					onclick={() => goto(`/view/${previous}`)}
 				>
 					<Icon name="chevron-left"></Icon>&nbsp;Previous
 				</Button>
@@ -198,8 +189,8 @@
 				<Button
 					class="m-1 w-100"
 					color="primary"
-					disabled={$next == null}
-					onclick={() => goto(`/view/${$next}`)}
+					disabled={next == null}
+					onclick={() => goto(`/view/${next}`)}
 				>
 					<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 					<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
