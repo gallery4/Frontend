@@ -20,7 +20,7 @@
 
 	import { navigating, page } from '$app/stores';
 	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
-	import { derived, writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import Breadcrumb from '$lib/Breadcrumb.svelte';
 	import GridItem from './GridItem.svelte';
 	import ListItem from './ListItem.svelte';
@@ -30,24 +30,18 @@
 
 	const browseView = persistBrowserLocal(writable('grid'), 'browseView');
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
-	const sortVal = derived(sort, extractSort);
+	const { sortBy, order } = $derived(extractSort($sort));
 
-	const files = derived(sortVal, (v) => {
-		return {
-			objects: data.files.toSorted((a: any, b: any) => compareItems(a, b, v.sortBy, v.order))
-		};
+	const files = $derived({
+		objects: data.files.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
 	});
 
-	const archives = derived(sortVal, (v) => {
-		return {
-			objects: data.archives.toSorted((a: any, b: any) => compareItems(a, b, v.sortBy, v.order))
-		};
+	const archives = $derived({
+		objects: data.archives.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
 	});
 
-	const directories = derived(sortVal, (v) => {
-		return {
-			objects: data.directories.toSorted((a: any, b: any) => compareItems(a, b, v.sortBy, v.order))
-		};
+	const directories = $derived({
+		objects: data.directories.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
 	});
 
 	let isOpen = $state(false);
@@ -129,22 +123,22 @@
 		{:else}
 			<div use:moveToHash>
 				<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
-					{#if $directories}
-						{#each $directories.objects as object}
+					{#if directories}
+						{#each directories.objects as object}
 							<Col class="mt-3">
 								<GridItem name={object.name} type="directory" />
 							</Col>
 						{/each}
 					{/if}
-					{#if $archives}
-						{#each $archives.objects as object}
+					{#if archives}
+						{#each archives.objects as object}
 							<Col class="mt-3">
 								<GridItem name={object.name} type="zip" />
 							</Col>
 						{/each}
 					{/if}
-					{#if $files}
-						{#each $files.objects as object}
+					{#if files}
+						{#each files.objects as object}
 							<Col class="mt-3">
 								<GridItem name={object.name} type="file" />
 							</Col>
@@ -166,18 +160,18 @@
 			</div>
 		{:else}
 			<div use:moveToHash>
-				{#if $directories}
-					{#each $directories.objects as object}
+				{#if directories}
+					{#each directories.objects as object}
 						<ListItem name={object.name} type="directory" dateTime={object.dateTime} />
 					{/each}
 				{/if}
-				{#if $archives}
-					{#each $archives.objects as object}
+				{#if archives}
+					{#each archives.objects as object}
 						<ListItem name={object.name} type="zip" dateTime={object.dateTime} />
 					{/each}
 				{/if}
-				{#if $files}
-					{#each $files.objects as object}
+				{#if files}
+					{#each files.objects as object}
 						<ListItem name={object.name} type="file" dateTime={object.dateTime} />
 					{/each}
 				{/if}
