@@ -3,6 +3,7 @@
 		Accordion,
 		AccordionItem,
 		Button,
+		ButtonGroup,
 		Col,
 		Collapse,
 		Container,
@@ -20,12 +21,17 @@
 		Spinner
 	} from '@sveltestrap/sveltestrap';
 
-	import ThumbnailCard from './ThumbnailCard.svelte';
-	import { navigating, page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { navigating, page } from '$app/stores';
+	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
+	import { writable } from 'svelte/store';
 	import Breadcrumb from '$lib/Breadcrumb.svelte';
+	import GridItem from './GridItem.svelte';
+	import ListItem from './ListItem.svelte';
 
 	const { data } = $props();
+
+	const browseView = persistBrowserLocal(writable('grid'), 'browseView');
 
 	let isOpen = $state(false);
 
@@ -71,10 +77,10 @@
 
 	<Container>
 		<Row cols={{ sm: 1, xs: 1 }}>
-			<Col class="col-sm-8">
+			<Col class="col-sm-7">
 				<Breadcrumb path={data.path} {sortby} {order}></Breadcrumb>
 			</Col>
-			<Col class="col-sm-4">
+			<Col class="col-sm-5">
 				<InputGroup>
 					<InputGroupText><Icon name="sort-down" /></InputGroupText>
 					<Input
@@ -87,51 +93,96 @@
 						<option value="dateTime ascending">date-time ascending</option>
 						<option value="dateTime descending">date-time descending</option>
 					</Input>
+
+					<Button active={$browseView == 'grid'} onclick={() => browseView.set('grid')}>
+						<Icon name="grid" />
+					</Button>
+					<Button active={$browseView == 'list'} onclick={() => browseView.set('list')}>
+						<Icon name="list" />
+					</Button>
 				</InputGroup>
 			</Col>
 		</Row>
 	</Container>
 </Container>
 
-<Container>
-	{#if $navigating}
-		<div use:moveToHash>
-			<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
+{#if $browseView == 'grid'}
+	<Container>
+		{#if $navigating}
+			<div use:moveToHash>
+				<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
+					{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
+						<Col class="mt-3">
+							<GridItem name="loading_{i}" type="placeholder" {sortby} {order} />
+						</Col>
+					{/each}
+				</Row>
+			</div>
+		{:else}
+			<div use:moveToHash>
+				<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
+					{#if data.directories}
+						{#each data.directories as object}
+							<Col class="mt-3">
+								<GridItem name={object.name} type="directory" {sortby} {order} />
+							</Col>
+						{/each}
+					{/if}
+					{#if data.archives}
+						{#each data.archives as object}
+							<Col class="mt-3">
+								<GridItem name={object.name} type="zip" {sortby} {order} />
+							</Col>
+						{/each}
+					{/if}
+					{#if data.files}
+						{#each data.files as object}
+							<Col class="mt-3">
+								<GridItem name={object.name} type="file" {sortby} {order} />
+							</Col>
+						{/each}
+					{/if}
+				</Row>
+			</div>
+		{/if}
+	</Container>
+{/if}
+
+{#if $browseView == 'list'}
+	<Container>
+		{#if $navigating}
+			<div use:moveToHash>
 				{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
-					<Col class="mt-3">
-						<ThumbnailCard name="loading_{i}" type="placeholder" {sortby} {order} />
-					</Col>
+					<ListItem name="loading_{i}" type="placeholder" {sortby} {order} dateTime={new Date()} />
 				{/each}
-			</Row>
-		</div>
-	{:else}
-		<div use:moveToHash>
-			<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
+			</div>
+		{:else}
+			<div use:moveToHash>
 				{#if data.directories}
 					{#each data.directories as object}
-						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="directory" {sortby} {order} />
-						</Col>
+						<ListItem
+							name={object.name}
+							type="directory"
+							{sortby}
+							{order}
+							dateTime={object.dateTime}
+						/>
 					{/each}
 				{/if}
 				{#if data.archives}
 					{#each data.archives as object}
-						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="zip" {sortby} {order} />
-						</Col>
+						<ListItem name={object.name} type="zip" {sortby} {order} dateTime={object.dateTime} />
 					{/each}
 				{/if}
 				{#if data.files}
 					{#each data.files as object}
-						<Col class="mt-3">
-							<ThumbnailCard name={object.name} type="file" {sortby} {order} />
-						</Col>
+						<ListItem name={object.name} type="file" {sortby} {order} dateTime={object.dateTime} />
 					{/each}
 				{/if}
-			</Row>
-		</div>
-	{/if}
-</Container>
+			</div>
+		{/if}
+	</Container>
+{/if}
 
 {#if $navigating}
 	<div

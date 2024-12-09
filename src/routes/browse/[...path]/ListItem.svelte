@@ -1,16 +1,8 @@
 <script lang="ts">
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
-	import {
-		Card,
-		Icon,
-		Image,
-		CardBody,
-		CardText,
-		Spinner,
-		CardFooter
-	} from '@sveltestrap/sveltestrap';
+	import { Icon, Image, Spinner, Row, Col } from '@sveltestrap/sveltestrap';
 
-	let { name, type, sortby, order } = $props();
+	let { name, type, sortby, order, dateTime } = $props();
 
 	let loaded = $state(false);
 	function getLink(): string {
@@ -61,7 +53,7 @@
 				const filetype = determinFileType(name);
 				switch (filetype) {
 					case 'image':
-						return `/get/thumbnail/${name}`;
+						return `/get/list_thumbnail/${name}`;
 					case 'audio':
 						return AUDIO_IMAGE_SOURCE;
 					case 'video':
@@ -120,27 +112,27 @@
 
 	const DIRECTORY_IMAGE_SOURCE = `
 		data:image/svg+xml;utf8,
-		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" fill="${DIRECTORY_ICON_COLOR}" class="bi bi-folder " viewBox="-8 -8 32 32">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="${DIRECTORY_ICON_COLOR}" class="bi bi-folder " viewBox="-8 -8 32 32">
 			<path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z"/>
 		</svg>`;
 
 	const ZIP_IMAGE_SOURCE = `
 		data:image/svg+xml;utf8,
-		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" fill="${ZIP_ICON_COLOR}" class="bi bi-file-zip" viewBox="-8 -8 32 32">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="${ZIP_ICON_COLOR}" class="bi bi-file-zip" viewBox="-8 -8 32 32">
 			<path d="M6.5 7.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v.938l.4 1.599a1 1 0 0 1-.416 1.074l-.93.62a1 1 0 0 1-1.109 0l-.93-.62a1 1 0 0 1-.415-1.074l.4-1.599zm2 0h-1v.938a1 1 0 0 1-.03.243l-.4 1.598.93.62.93-.62-.4-1.598a1 1 0 0 1-.03-.243z"/>
 			<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm5.5-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9v1H8v1h1v1H8v1h1v1H7.5V5h-1V4h1V3h-1V2h1z"/>
 		</svg>`;
 
 	const VIDEO_IMAGE_SOURCE = `
 		data:image/svg+xml;utf8,
-		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" fill="${VIDEO_ICON_COLOR}" class="bi bi-file-play" viewBox="-8 -8 32 32">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="${VIDEO_ICON_COLOR}" class="bi bi-file-play" viewBox="-8 -8 32 32">
 			<path d="M6 10.117V5.883a.5.5 0 0 1 .757-.429l3.528 2.117a.5.5 0 0 1 0 .858l-3.528 2.117a.5.5 0 0 1-.757-.43z"/>
 			<path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
 		</svg>`;
 
 	const AUDIO_IMAGE_SOURCE = `
 		data:image/svg+xml;utf8,
-		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" fill="${AUDIO_ICON_COLOR}" class="bi bi-file-music" viewBox="-8 -8 32 32">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="${AUDIO_ICON_COLOR}" class="bi bi-file-music" viewBox="-8 -8 32 32">
 			<path d="M10.304 3.13a1 1 0 0 1 1.196.98v1.8l-2.5.5v5.09c0 .495-.301.883-.662 1.123C7.974 12.866 7.499 13 7 13s-.974-.134-1.338-.377C5.302 12.383 5 11.995 5 11.5s.301-.883.662-1.123C6.026 10.134 6.501 10 7 10c.356 0 .7.068 1 .196V4.41a1 1 0 0 1 .804-.98z"/>
 			<path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
 		</svg>`;
@@ -153,37 +145,32 @@
 	`;
 </script>
 
-<Card
-	data-id={createElementId(getFilenameFromKey(name, type))}
-	class="border"
-	style="border-color: {getIconColor()} !important;"
->
-	<a href={getLink()}>
+<Row id={createElementId(getFilenameFromKey(name, type))} class="pt-3 pb-3 ms-1 me-1 border-bottom">
+	<Col xs={3} lg={2}>
 		<Image
-			class="card-img-top"
+			style="height: 64px; object-fit: cover;"
 			loading="lazy"
 			src={getImageSource()}
-			style="height: 300px; object-fit: cover;"
 			onload={() => {
 				loaded = true;
 			}}
 		></Image>
-	</a>
-	<CardBody style="height: 6em; overflow:hidden;" class="fade show">
-		{#if type == 'placeholder'}
-			<CardText class="placeholder-glow">
+	</Col>
+	<Col>
+		<a href={getLink()}>
+			{#if type == 'placeholder'}
 				<span class="placeholder col-7"></span>
-			</CardText>
-		{:else}
-			<CardText>
+			{:else}
 				<Icon name={getIcon()} style="color:{getIconColor()};"></Icon>
 				&nbsp;{getFilenameFromKey(name, type)}
-			</CardText>
-		{/if}
-	</CardBody>
-	{#if !loaded}
-		<div class="position-absolute bottom-0 end-0">
-			<Spinner type="grow" size="sm" style="color:{getIconColor()}; margin: 1em;"></Spinner>
-		</div>
-	{/if}
-</Card>
+			{/if}
+
+			{#if !loaded}
+				<Spinner type="grow" size="sm" style="color:{getIconColor()};"></Spinner>
+			{/if}
+		</a>
+	</Col>
+	<Col class="col-3">
+		{new Date(dateTime).toLocaleString()}
+	</Col>
+</Row>
