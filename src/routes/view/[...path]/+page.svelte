@@ -32,12 +32,19 @@
 	const { data } = $props();
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
 	const sortVal = derived(sort, extractSort);
+	const files = derived(sortVal, (v) => {
+		return {
+			objects: data.files.toSorted((a: any, b: any) => compareItems(a, b, v.sortBy, v.order))
+		};
+	});
 
-	data.files.sort((a: any, b: any) => compareItems(a, b, $sortVal.sortBy, $sortVal.order));
-
-	const index = data.files.findIndex((e: any) => e.name == data.current);
-	const previous = index > 0 ? data.files[index - 1].name : null;
-	const next = index < data.files.length - 2 ? data.files[index + 1].name : null;
+	const index = derived(files, (files) =>
+		files.objects.findIndex((e: any) => e.name == data.current)
+	);
+	const previous = derived(index, (index) => (index > 0 ? $files.objects[index - 1].name : null));
+	const next = derived(index, (index) =>
+		index < $files.objects.length - 1 ? $files.objects[index + 1].name : null
+	);
 
 	let filetype: string | false = $state('');
 	let isOpen = $state(false);
@@ -54,14 +61,14 @@
 	function handler(e: CustomEvent<SwipeEventData>) {
 		switch (e.detail.dir) {
 			case 'Left':
-				if (next) {
-					goto(`/view/${next}`);
+				if ($next) {
+					goto(`/view/${$next}`);
 				}
 				break;
 
 			case 'Right':
-				if (previous) {
-					goto(`/view/${previous}`);
+				if ($previous) {
+					goto(`/view/${$previous}`);
 				}
 				break;
 		}
@@ -99,7 +106,7 @@
 				class="position-absolute top-0 start-0 h-100"
 				style="width:20%;"
 				onclick={() => {
-					if (previous != null) goto(`/view/${previous}`);
+					if ($previous != null) goto(`/view/${$previous}`);
 				}}
 			>
 				<Icon name="chevron-left"></Icon>
@@ -110,7 +117,7 @@
 				class="position-absolute top-0 end-0 h-100 w-10"
 				style="width:20%;"
 				onclick={() => {
-					if (next != null) goto(`/view/${next}`);
+					if ($next != null) goto(`/view/${$next}`);
 				}}
 			>
 				<Icon name="chevron-right"></Icon>
@@ -133,12 +140,12 @@
 			</Nav>
 			<Nav navbar>
 				<NavItem>
-					<NavLink disabled={previous == null} href={`/view/${previous}`}>
+					<NavLink disabled={$previous == null} href={`/view/${$previous}`}>
 						<Icon name="chevron-left"></Icon>&nbsp;Previous
 					</NavLink>
 				</NavItem>
 				<NavItem>
-					<NavLink disabled={next == null} href={`/view/${next}`}>
+					<NavLink disabled={$next == null} href={`/view/${$next}`}>
 						<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 						<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
 					</NavLink>
@@ -181,8 +188,8 @@
 			<Col>
 				<Button
 					class="m-1 w-100"
-					disabled={previous == null}
-					onclick={() => goto(`/view/${previous}`)}
+					disabled={$previous == null}
+					onclick={() => goto(`/view/${$previous}`)}
 				>
 					<Icon name="chevron-left"></Icon>&nbsp;Previous
 				</Button>
@@ -191,8 +198,8 @@
 				<Button
 					class="m-1 w-100"
 					color="primary"
-					disabled={next == null}
-					onclick={() => goto(`/view/${next}`)}
+					disabled={$next == null}
+					onclick={() => goto(`/view/${$next}`)}
 				>
 					<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 					<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
