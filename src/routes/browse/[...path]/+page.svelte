@@ -1,9 +1,6 @@
 <script lang="ts">
 	import {
-		Accordion,
-		AccordionItem,
 		Button,
-		ButtonGroup,
 		Col,
 		Collapse,
 		Container,
@@ -21,18 +18,26 @@
 		Spinner
 	} from '@sveltestrap/sveltestrap';
 
-	import { goto } from '$app/navigation';
 	import { navigating, page } from '$app/stores';
 	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
-	import { writable } from 'svelte/store';
+	import { derived, writable } from 'svelte/store';
 	import Breadcrumb from '$lib/Breadcrumb.svelte';
 	import GridItem from './GridItem.svelte';
 	import ListItem from './ListItem.svelte';
+	import { compareItems, extractSort } from '$lib/utils';
 
 	const { data } = $props();
 
 	const browseView = persistBrowserLocal(writable('grid'), 'browseView');
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort')
+	const sortVal = derived(sort, extractSort)
+
+	$inspect(sortVal)
+
+	data.files.sort((a: any, b: any) => compareItems(a, b, $sortVal.sortBy, $sortVal.order));
+	data.archives.sort((a: any, b: any) => compareItems(a, b, $sortVal.sortBy, $sortVal.order));
+	data.directories.sort((a: any, b: any) => compareItems(a, b, $sortVal.sortBy, $sortVal.order));
+
 	let isOpen = $state(false);
 
 	function handleUpdate(event: CustomEvent<boolean>) {

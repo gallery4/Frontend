@@ -9,7 +9,6 @@ export async function fetchList(
     var searchParams = backendUrl.searchParams
     searchParams.set('path', path);
     backendUrl.search = searchParams.toString();
-
-    console.log(fetch)
+    
     return fetch(backendUrl);
 }

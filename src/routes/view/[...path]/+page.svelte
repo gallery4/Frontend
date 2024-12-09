@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { navigating } from '$app/stores';
 	import Breadcrumb from '$lib/Breadcrumb.svelte';
-	import { determinFileType, getFilenameFromKey } from '$lib/utils.js';
+	import { compareItems, determinFileType, extractSort, getFilenameFromKey } from '$lib/utils.js';
 	import {
 		Button,
 		Col,
@@ -10,6 +10,9 @@
 		Container,
 		Icon,
 		Image,
+		Input,
+		InputGroup,
+		InputGroupText,
 		Nav,
 		Navbar,
 		NavbarBrand,
@@ -23,8 +26,18 @@
 	import 'vidstack/bundle';
 	import { swipeable } from '@react2svelte/swipeable';
 	import type { SwipeEventData } from '@react2svelte/swipeable';
+	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
+	import { derived, writable } from 'svelte/store';
 
 	const { data } = $props();
+	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
+	const sortVal = derived(sort, extractSort);
+
+	data.files.sort((a: any, b: any) => compareItems(a, b, $sortVal.sortBy, $sortVal.order));
+
+	const index = data.files.findIndex((e: any) => e.name == data.current);
+	const previous = index > 0 ? data.files[index - 1].name : null;
+	const next = index < data.files.length - 2 ? data.files[index + 1].name : null;
 
 	let filetype: string | false = $state('');
 	let isOpen = $state(false);
@@ -41,14 +54,14 @@
 	function handler(e: CustomEvent<SwipeEventData>) {
 		switch (e.detail.dir) {
 			case 'Left':
-				if (data.next) {
-					goto(`/view/${data.next}`);
+				if (next) {
+					goto(`/view/${next}`);
 				}
 				break;
 
 			case 'Right':
-				if (data.previous) {
-					goto(`/view/${data.previous}`);
+				if (previous) {
+					goto(`/view/${previous}`);
 				}
 				break;
 		}
@@ -86,8 +99,7 @@
 				class="position-absolute top-0 start-0 h-100"
 				style="width:20%;"
 				onclick={() => {
-					if (data.previous != null)
-						goto(`/view/${data.previous}`);
+					if (previous != null) goto(`/view/${previous}`);
 				}}
 			>
 				<Icon name="chevron-left"></Icon>
@@ -98,8 +110,7 @@
 				class="position-absolute top-0 end-0 h-100 w-10"
 				style="width:20%;"
 				onclick={() => {
-					if (data.next != null)
-						goto(`/view/${data.next}`);
+					if (next != null) goto(`/view/${next}`);
 				}}
 			>
 				<Icon name="chevron-right"></Icon>
@@ -122,18 +133,12 @@
 			</Nav>
 			<Nav navbar>
 				<NavItem>
-					<NavLink
-						disabled={data.previous == null}
-						href={`/view/${data.previous}`}
-					>
+					<NavLink disabled={previous == null} href={`/view/${previous}`}>
 						<Icon name="chevron-left"></Icon>&nbsp;Previous
 					</NavLink>
 				</NavItem>
 				<NavItem>
-					<NavLink
-						disabled={data.next == null}
-						href={`/view/${data.next}`}
-					>
+					<NavLink disabled={next == null} href={`/view/${next}`}>
 						<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 						<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
 					</NavLink>
@@ -142,7 +147,24 @@
 		</Collapse>
 	</Navbar>
 
-	<Breadcrumb path={data.current}></Breadcrumb>
+	<Container>
+		<Row cols={{ sm: 1, xs: 1 }}>
+			<Col class="col-sm-7">
+				<Breadcrumb path={data.current}></Breadcrumb>
+			</Col>
+			<Col class="col-sm-5">
+				<InputGroup>
+					<InputGroupText><Icon name="sort-down" /></InputGroupText>
+					<Input type="select" bind:value={$sort}>
+						<option value="name ascending">name ascending</option>
+						<option value="name descending">name descending</option>
+						<option value="dateTime ascending">date-time ascending</option>
+						<option value="dateTime descending">date-time descending</option>
+					</Input>
+				</InputGroup>
+			</Col>
+		</Row>
+	</Container>
 </Container>
 
 {#if filetype == 'video' || filetype == 'audio'}
@@ -159,8 +181,8 @@
 			<Col>
 				<Button
 					class="m-1 w-100"
-					disabled={data.previous == null}
-					onclick={() => goto(`/view/${data.previous}`)}
+					disabled={previous == null}
+					onclick={() => goto(`/view/${previous}`)}
 				>
 					<Icon name="chevron-left"></Icon>&nbsp;Previous
 				</Button>
@@ -169,8 +191,8 @@
 				<Button
 					class="m-1 w-100"
 					color="primary"
-					disabled={data.next == null}
-					onclick={() => goto(`/view/${data.next}`)}
+					disabled={next == null}
+					onclick={() => goto(`/view/${next}`)}
 				>
 					<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 					<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>

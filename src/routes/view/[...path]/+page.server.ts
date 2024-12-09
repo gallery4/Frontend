@@ -19,7 +19,6 @@ export const load: PageServerLoad = async ({ params, url }) => {
 
     return {
         current: pathVal,
-        previous: index > 0 ? data.files[index - 1].name : null,
-        next: index < data.files.length - 2 ? data.files[index + 1].name : null,
+        files: data.files,
     }
 }
