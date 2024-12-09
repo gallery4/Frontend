@@ -42,13 +42,13 @@
 		switch (e.detail.dir) {
 			case 'Left':
 				if (data.next) {
-					goto(`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`);
+					goto(`/view/${data.next}`);
 				}
 				break;
 
 			case 'Right':
 				if (data.previous) {
-					goto(`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`);
+					goto(`/view/${data.previous}`);
 				}
 				break;
 		}
@@ -87,7 +87,7 @@
 				style="width:20%;"
 				onclick={() => {
 					if (data.previous != null)
-						goto(`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`);
+						goto(`/view/${data.previous}`);
 				}}
 			>
 				<Icon name="chevron-left"></Icon>
@@ -99,7 +99,7 @@
 				style="width:20%;"
 				onclick={() => {
 					if (data.next != null)
-						goto(`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`);
+						goto(`/view/${data.next}`);
 				}}
 			>
 				<Icon name="chevron-right"></Icon>
@@ -124,7 +124,7 @@
 				<NavItem>
 					<NavLink
 						disabled={data.previous == null}
-						href={`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`}
+						href={`/view/${data.previous}`}
 					>
 						<Icon name="chevron-left"></Icon>&nbsp;Previous
 					</NavLink>
@@ -132,7 +132,7 @@
 				<NavItem>
 					<NavLink
 						disabled={data.next == null}
-						href={`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`}
+						href={`/view/${data.next}`}
 					>
 						<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 						<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
@@ -142,7 +142,7 @@
 		</Collapse>
 	</Navbar>
 
-	<Breadcrumb sortby={data.sortby} order={data.order} path={data.current}></Breadcrumb>
+	<Breadcrumb path={data.current}></Breadcrumb>
 </Container>
 
 {#if filetype == 'video' || filetype == 'audio'}
@@ -160,7 +160,7 @@
 				<Button
 					class="m-1 w-100"
 					disabled={data.previous == null}
-					onclick={() => goto(`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`)}
+					onclick={() => goto(`/view/${data.previous}`)}
 				>
 					<Icon name="chevron-left"></Icon>&nbsp;Previous
 				</Button>
@@ -170,7 +170,7 @@
 					class="m-1 w-100"
 					color="primary"
 					disabled={data.next == null}
-					onclick={() => goto(`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`)}
+					onclick={() => goto(`/view/${data.next}`)}
 				>
 					<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 					<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>

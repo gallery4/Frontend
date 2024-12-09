@@ -3,12 +3,8 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params, url, fetch }) => {
     const path = params.path
-    const sortby: "name" | "dateTime" 
-        = url.searchParams.get("sortby") != 'dateTime' ? 'name' : 'dateTime'
-    const order: "ascending" | "descending" 
-        = url.searchParams.get("order") != 'descending' ? 'ascending' : 'descending'
-
-    const resp = await fetchList(path, sortby, order, fetch);
+    
+    const resp = await fetchList(path, fetch);
     const data = await resp.json();
 
     return {

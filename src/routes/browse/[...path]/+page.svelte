@@ -32,17 +32,12 @@
 	const { data } = $props();
 
 	const browseView = persistBrowserLocal(writable('grid'), 'browseView');
-
+	const sort = persistBrowserLocal(writable('name ascending'), 'sort')
 	let isOpen = $state(false);
 
 	function handleUpdate(event: CustomEvent<boolean>) {
 		isOpen = event.detail;
 	}
-
-	let sort = $state('name ascending');
-
-	const sortby = $derived(sort.startsWith('dateTime') ? 'dateTime' : 'name');
-	const order = $derived(sort.endsWith('descending') ? 'descending' : 'ascending');
 
 	function moveToHash(node: Element) {
 		const hash = $page.url.hash;
@@ -78,15 +73,14 @@
 	<Container>
 		<Row cols={{ sm: 1, xs: 1 }}>
 			<Col class="col-sm-7">
-				<Breadcrumb path={data.path} {sortby} {order}></Breadcrumb>
+				<Breadcrumb path={data.path}></Breadcrumb>
 			</Col>
 			<Col class="col-sm-5">
 				<InputGroup>
 					<InputGroupText><Icon name="sort-down" /></InputGroupText>
 					<Input
 						type="select"
-						bind:value={sort}
-						onchange={() => goto(`/browse/${data.path}?sortby=${sortby}&order=${order}`)}
+						bind:value={$sort}
 					>
 						<option value="name ascending">name ascending</option>
 						<option value="name descending">name descending</option>
@@ -113,7 +107,7 @@
 				<Row cols={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}>
 					{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
 						<Col class="mt-3">
-							<GridItem name="loading_{i}" type="placeholder" {sortby} {order} />
+							<GridItem name="loading_{i}" type="placeholder" />
 						</Col>
 					{/each}
 				</Row>
@@ -124,21 +118,21 @@
 					{#if data.directories}
 						{#each data.directories as object}
 							<Col class="mt-3">
-								<GridItem name={object.name} type="directory" {sortby} {order} />
+								<GridItem name={object.name} type="directory" />
 							</Col>
 						{/each}
 					{/if}
 					{#if data.archives}
 						{#each data.archives as object}
 							<Col class="mt-3">
-								<GridItem name={object.name} type="zip" {sortby} {order} />
+								<GridItem name={object.name} type="zip" />
 							</Col>
 						{/each}
 					{/if}
 					{#if data.files}
 						{#each data.files as object}
 							<Col class="mt-3">
-								<GridItem name={object.name} type="file" {sortby} {order} />
+								<GridItem name={object.name} type="file"/>
 							</Col>
 						{/each}
 					{/if}
@@ -153,7 +147,7 @@
 		{#if $navigating}
 			<div use:moveToHash>
 				{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
-					<ListItem name="loading_{i}" type="placeholder" {sortby} {order} dateTime={new Date()} />
+					<ListItem name="loading_{i}" type="placeholder" dateTime={new Date()} />
 				{/each}
 			</div>
 		{:else}
@@ -163,20 +157,18 @@
 						<ListItem
 							name={object.name}
 							type="directory"
-							{sortby}
-							{order}
 							dateTime={object.dateTime}
 						/>
 					{/each}
 				{/if}
 				{#if data.archives}
 					{#each data.archives as object}
-						<ListItem name={object.name} type="zip" {sortby} {order} dateTime={object.dateTime} />
+						<ListItem name={object.name} type="zip" dateTime={object.dateTime} />
 					{/each}
 				{/if}
 				{#if data.files}
 					{#each data.files as object}
-						<ListItem name={object.name} type="file" {sortby} {order} dateTime={object.dateTime} />
+						<ListItem name={object.name} type="file" dateTime={object.dateTime} />
 					{/each}
 				{/if}
 			</div>
