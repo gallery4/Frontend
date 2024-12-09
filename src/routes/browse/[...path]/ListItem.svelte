@@ -53,7 +53,7 @@
 				const filetype = determinFileType(name);
 				switch (filetype) {
 					case 'image':
-						return `/get/thumbnail/${name}`;
+						return `/get/list_thumbnail/${name}`;
 					case 'audio':
 						return AUDIO_IMAGE_SOURCE;
 					case 'video':
