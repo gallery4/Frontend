@@ -3,7 +3,7 @@
 	import { createElementId } from './utils';
 	import { goto } from '$app/navigation';
 
-	const { path, sortby, order } = $props();
+	const { path } = $props();
 	let data: BreadcrumbData[] = $state(createBreadcrumb(path));
 
 	let pathVal = $state(path);
@@ -51,7 +51,7 @@
 
 	function gotoBrowse(path: string) {
 		const b = data.find((b) => b.path == path);
-		if (b) goto(`/browse/${b.path}?sortby=${sortby}&order=${order}#${b.targetId}`);
+		if (b) goto(`/browse/${b.path}#${b.targetId}`);
 	}
 </script>
 
@@ -64,7 +64,7 @@
 				</li>
 			{:else}
 				<li class="breadcrumb-item">
-					<a href="/browse/{b.path}?sortby={sortby}&order={order}#{b.targetId}">
+					<a href="/browse/{b.path}#{b.targetId}">
 						{b.name}
 					</a>
 				</li>

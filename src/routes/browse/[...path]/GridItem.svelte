@@ -10,17 +10,17 @@
 		CardFooter
 	} from '@sveltestrap/sveltestrap';
 
-	let { name, type, sortby, order } = $props();
+	let { name, type } = $props();
 
 	let loaded = $state(false);
 	function getLink(): string {
 		switch (type) {
 			case 'file':
-				return `/view/${name}?sortby=${sortby}&order=${order}`;
+				return `/view/${name}`;
 
 			case 'directory':
 			case 'zip':
-				return `/browse/${name}?sortby=${sortby}&order=${order}`;
+				return `/browse/${name}`;
 		}
 
 		return '';

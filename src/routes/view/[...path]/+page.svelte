@@ -1,8 +1,13 @@
 <script lang="ts">
+	import 'vidstack/bundle';
+	import { compareItems, determinFileType, extractSort, getFilenameFromKey } from '$lib/utils.js';
 	import { goto } from '$app/navigation';
 	import { navigating } from '$app/stores';
+	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
+	import { swipeable } from '@react2svelte/swipeable';
+	import { writable } from 'svelte/store';
 	import Breadcrumb from '$lib/Breadcrumb.svelte';
-	import { determinFileType, getFilenameFromKey } from '$lib/utils.js';
+	import type { SwipeEventData } from '@react2svelte/swipeable';
 	import {
 		Button,
 		Col,
@@ -10,6 +15,9 @@
 		Container,
 		Icon,
 		Image,
+		Input,
+		InputGroup,
+		InputGroupText,
 		Nav,
 		Navbar,
 		NavbarBrand,
@@ -20,13 +28,20 @@
 		Spinner
 	} from '@sveltestrap/sveltestrap';
 
-	import 'vidstack/bundle';
-	import { swipeable } from '@react2svelte/swipeable';
-	import type { SwipeEventData } from '@react2svelte/swipeable';
-
 	const { data } = $props();
+	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
+	const {sortBy, order} = $derived(extractSort($sort));
 
-	let filetype: string | false = $state('');
+	const files = $derived(data.files.toSorted((a: any, b: any) =>
+		compareItems(a, b, sortBy, order)
+	));
+
+	const index = $derived(files.findIndex((e: any) => e.name == data.current));
+	const previous = $derived(index > 0 ? files[index - 1].name : null);
+	const next = $derived(index < files.length - 1 ? files[index + 1].name : null);
+
+	const filetype = $derived(determinFileType(data.current));
+	
 	let isOpen = $state(false);
 	let isImageLoaded = $state(false);
 
@@ -34,21 +49,17 @@
 		isOpen = event.detail;
 	}
 
-	$effect(() => {
-		filetype = determinFileType(data.current);
-	});
-
 	function handler(e: CustomEvent<SwipeEventData>) {
 		switch (e.detail.dir) {
 			case 'Left':
-				if (data.next) {
-					goto(`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`);
+				if (next) {
+					goto(`/view/${next}`);
 				}
 				break;
 
 			case 'Right':
-				if (data.previous) {
-					goto(`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`);
+				if (previous) {
+					goto(`/view/${previous}`);
 				}
 				break;
 		}
@@ -86,8 +97,7 @@
 				class="position-absolute top-0 start-0 h-100"
 				style="width:20%;"
 				onclick={() => {
-					if (data.previous != null)
-						goto(`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`);
+					if (previous != null) goto(`/view/${previous}`);
 				}}
 			>
 				<Icon name="chevron-left"></Icon>
@@ -98,8 +108,7 @@
 				class="position-absolute top-0 end-0 h-100 w-10"
 				style="width:20%;"
 				onclick={() => {
-					if (data.next != null)
-						goto(`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`);
+					if (next != null) goto(`/view/${next}`);
 				}}
 			>
 				<Icon name="chevron-right"></Icon>
@@ -122,18 +131,12 @@
 			</Nav>
 			<Nav navbar>
 				<NavItem>
-					<NavLink
-						disabled={data.previous == null}
-						href={`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`}
-					>
+					<NavLink disabled={previous == null} href={`/view/${previous}`}>
 						<Icon name="chevron-left"></Icon>&nbsp;Previous
 					</NavLink>
 				</NavItem>
 				<NavItem>
-					<NavLink
-						disabled={data.next == null}
-						href={`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`}
-					>
+					<NavLink disabled={next == null} href={`/view/${next}`}>
 						<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 						<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
 					</NavLink>
@@ -142,7 +145,24 @@
 		</Collapse>
 	</Navbar>
 
-	<Breadcrumb sortby={data.sortby} order={data.order} path={data.current}></Breadcrumb>
+	<Container>
+		<Row cols={{ sm: 1, xs: 1 }}>
+			<Col class="col-sm-7">
+				<Breadcrumb path={data.current}></Breadcrumb>
+			</Col>
+			<Col class="col-sm-5">
+				<InputGroup>
+					<InputGroupText><Icon name="sort-down" /></InputGroupText>
+					<Input type="select" bind:value={$sort}>
+						<option value="name ascending">name ascending</option>
+						<option value="name descending">name descending</option>
+						<option value="dateTime ascending">date-time ascending</option>
+						<option value="dateTime descending">date-time descending</option>
+					</Input>
+				</InputGroup>
+			</Col>
+		</Row>
+	</Container>
 </Container>
 
 {#if filetype == 'video' || filetype == 'audio'}
@@ -159,8 +179,8 @@
 			<Col>
 				<Button
 					class="m-1 w-100"
-					disabled={data.previous == null}
-					onclick={() => goto(`/view/${data.previous}?sortby=${data.sortby}&order=${data.order}`)}
+					disabled={previous == null}
+					onclick={() => goto(`/view/${previous}`)}
 				>
 					<Icon name="chevron-left"></Icon>&nbsp;Previous
 				</Button>
@@ -169,8 +189,8 @@
 				<Button
 					class="m-1 w-100"
 					color="primary"
-					disabled={data.next == null}
-					onclick={() => goto(`/view/${data.next}?sortby=${data.sortby}&order=${data.order}`)}
+					disabled={next == null}
+					onclick={() => goto(`/view/${next}`)}
 				>
 					<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
 					<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
