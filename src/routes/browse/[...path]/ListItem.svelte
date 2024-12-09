@@ -145,7 +145,7 @@
 	`;
 </script>
 
-<Row id={createElementId(getFilenameFromKey(name, type))} class="pt-3 pb-3 ms-1 me-1 border-bottom">
+<Row data-id={createElementId(getFilenameFromKey(name, type))} class="pt-3 pb-3 ms-1 me-1 border-bottom">
 	<Col xs={3} lg={2}>
 		<Image
 			style="height: 64px; object-fit: cover;"
