@@ -117,7 +117,7 @@
 	</Container>
 {/if}
 
-<Container class="sticky-top text-bg-light">
+<Container class="sticky-top text-bg-light pb-3	" fluid>
 	<Navbar dark expand="md" container="md">
 		<NavbarBrand href="/">Gallery</NavbarBrand>
 		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
@@ -147,10 +147,10 @@
 
 	<Container>
 		<Row cols={{ sm: 1, xs: 1 }}>
-			<Col class="col-sm-7">
+			<Col md={7}>
 				<Breadcrumb path={data.current}></Breadcrumb>
 			</Col>
-			<Col class="col-sm-5">
+			<Col md={5}>
 				<InputGroup>
 					<InputGroupText><Icon name="sort-down" /></InputGroupText>
 					<Input type="select" bind:value={$sort}>
