@@ -54,7 +54,7 @@
 	}
 </script>
 
-<InputGroup class="mb-3">
+<InputGroup>
 	<InputGroupText><Icon name="sign-turn-right" /></InputGroupText>
 	<Button onclick={() => gotoBrowse(data[0].path)} disabled={data.length == 1}>
 		<Icon name="slash" />

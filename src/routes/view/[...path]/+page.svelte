@@ -117,7 +117,7 @@
 	</Container>
 {/if}
 
-<Container class="text-bg-light pb-3" fluid>
+<Container class="text-bg-light pb-2" fluid>
 	<Navbar dark expand="md" container="md">
 		<NavbarBrand href="/">Gallery</NavbarBrand>
 		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
@@ -166,10 +166,9 @@
 </Container>
 
 {#if filetype == 'video' || filetype == 'audio'}
-	<Container>
+	<Container class="mx-auto m-3" style="max-width:576px">
 		<media-player
-			class="mx-auto d-block m-2"
-			style="max-width:480px; max-height=360px;"
+			class="d-block"
 			title={getFilenameFromKey(data.current, 'media')}
 			src="/get/file/{data.current}"
 		>

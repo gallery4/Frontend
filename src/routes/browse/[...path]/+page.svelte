@@ -68,7 +68,7 @@
 	<title>Gallery - Browse: {data.path}</title>
 </svelte:head>
 
-<Container class="sticky-top text-bg-light pb-3" fluid >
+<Container class="sticky-top text-bg-light pb-2" fluid >
 	<Navbar dark expand="md" container="md">
 		<NavbarBrand href="/">Gallery</NavbarBrand>
 		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
