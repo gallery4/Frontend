@@ -30,18 +30,18 @@
 
 	const { data } = $props();
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
-	const {sortBy, order} = $derived(extractSort($sort));
+	const { sortBy, order } = $derived(extractSort($sort));
 
-	const files = $derived(data.files.toSorted((a: any, b: any) =>
-		compareItems(a, b, sortBy, order)
-	));
+	const files = $derived(
+		data.files.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
+	);
 
 	const index = $derived(files.findIndex((e: any) => e.name == data.current));
 	const previous = $derived(index > 0 ? files[index - 1].name : null);
 	const next = $derived(index < files.length - 1 ? files[index + 1].name : null);
 
 	const filetype = $derived(determinFileType(data.current));
-	
+
 	let isOpen = $state(false);
 	let isImageLoaded = $state(false);
 
@@ -72,7 +72,7 @@
 
 {#if filetype == 'image'}
 	<Container>
-		<div class="position-absolute top-0 start-0 h-100 w-100" style="padding-top:10em;">
+		<div class="position-absolute top-0 start-0 h-100 w-100" style="margin-top:7em;">
 			{#if !isImageLoaded}
 				<div
 					class="position-absolute top-50 start-50 translate-middle justify-content-center"
@@ -86,7 +86,7 @@
 				<Image
 					src="/get/image/{data.current}"
 					class="h-100 w-100"
-					style="object-fit:contain; padding-top:6em;"
+					style="object-fit:contain;"
 					onload={() => (isImageLoaded = true)}
 				></Image>
 			</div>
@@ -117,7 +117,7 @@
 	</Container>
 {/if}
 
-<Container class="sticky-top text-bg-light pb-3	" fluid>
+<Container class="text-bg-light pb-3" fluid>
 	<Navbar dark expand="md" container="md">
 		<NavbarBrand href="/">Gallery</NavbarBrand>
 		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
@@ -167,7 +167,12 @@
 
 {#if filetype == 'video' || filetype == 'audio'}
 	<Container>
-		<media-player title={getFilenameFromKey(data.current, 'media')} src="/get/file/{data.current}">
+		<media-player
+			class="mx-auto d-block m-2"
+			style="max-width:480px; max-height=360px;"
+			title={getFilenameFromKey(data.current, 'media')}
+			src="/get/file/{data.current}"
+		>
 			<media-provider></media-provider>
 			<media-video-layout></media-video-layout>
 			<media-audio-layout></media-audio-layout>
