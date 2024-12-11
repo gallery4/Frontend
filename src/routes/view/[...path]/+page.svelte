@@ -72,7 +72,7 @@
 
 {#if filetype == 'image'}
 	<Container>
-		<div class="position-absolute top-0 start-0 h-100 w-100" style="margin-top:7em;">
+		<div class="position-absolute top-0 start-0 h-100 w-100">
 			{#if !isImageLoaded}
 				<div
 					class="position-absolute top-50 start-50 translate-middle justify-content-center"
@@ -82,7 +82,9 @@
 				</div>
 			{/if}
 
-			<div class="position-absolute top-0 start-0 h-100 w-100" use:swipeable on:swiped={handler}>
+			<div class="position-absolute top-0 start-0 h-100 w-100 z-n1" 
+			 	style="padding-top:70px;"
+				use:swipeable on:swiped={handler}>
 				<Image
 					src="/get/image/{data.current}"
 					class="h-100 w-100"
@@ -118,11 +120,25 @@
 {/if}
 
 <Container class="text-bg-light pb-2" fluid>
-	<Navbar dark expand="md" container="md">
+	<Navbar dark expand="lg" container="lg">
 		<NavbarBrand href="/">Gallery</NavbarBrand>
 		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
-		<Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
-			<Nav class="ms-auto" navbar>
+		<Collapse {isOpen} navbar expand="lg" on:update={handleUpdate}>
+			<Nav class="ms-auto mt-lg-0 mt-3 col-lg-5" navbar>
+				<Breadcrumb path={data.current}></Breadcrumb>
+			</Nav>
+			<Nav navbar class="ms-lg-1 mt-lg-0 mt-3">
+				<InputGroup>
+					<InputGroupText><Icon name="sort-down" /></InputGroupText>
+					<Input type="select" bind:value={$sort}>
+						<option value="name ascending">name ascending</option>
+						<option value="name descending">name descending</option>
+						<option value="dateTime ascending">date-time ascending</option>
+						<option value="dateTime descending">date-time descending</option>
+					</Input>
+				</InputGroup>
+			</Nav>
+			<Nav navbar class="ms-auto">
 				<NavItem>
 					<NavLink href="/get/file/{data.current}" target="_blank">
 						<Icon name="download"></Icon>&nbsp;Get
@@ -137,32 +153,13 @@
 				</NavItem>
 				<NavItem>
 					<NavLink disabled={next == null} href={`/view/${next}`}>
-						<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
-						<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
+						<div class="d-lg-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
+						<div class="d-none d-lg-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
 					</NavLink>
 				</NavItem>
 			</Nav>
 		</Collapse>
 	</Navbar>
-
-	<Container>
-		<Row cols={{ sm: 1, xs: 1 }}>
-			<Col md={7}>
-				<Breadcrumb path={data.current}></Breadcrumb>
-			</Col>
-			<Col md={5}>
-				<InputGroup>
-					<InputGroupText><Icon name="sort-down" /></InputGroupText>
-					<Input type="select" bind:value={$sort}>
-						<option value="name ascending">name ascending</option>
-						<option value="name descending">name descending</option>
-						<option value="dateTime ascending">date-time ascending</option>
-						<option value="dateTime descending">date-time descending</option>
-					</Input>
-				</InputGroup>
-			</Col>
-		</Row>
-	</Container>
 </Container>
 
 {#if filetype == 'video' || filetype == 'audio'}
