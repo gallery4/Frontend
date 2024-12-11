@@ -68,25 +68,15 @@
 	<title>Gallery - Browse: {data.path}</title>
 </svelte:head>
 
-<Container class="sticky-top text-bg-light pb-2" fluid >
-	<Navbar dark expand="md" container="md">
+<Container class="sticky-top text-bg-light" fluid>
+	<Navbar dark expand="lg" container="lg">
 		<NavbarBrand href="/">Gallery</NavbarBrand>
 		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
-		<Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
-			<Nav class="ms-auto" navbar>
-				<NavItem>
-					<NavLink href="/about"><Icon name="info-circle"></Icon>&nbsp;About</NavLink>
-				</NavItem>
-			</Nav>
-		</Collapse>
-	</Navbar>
-
-	<Container fluid>
-		<Row cols={{ sm: 1, xs: 1 }}>
-			<Col md={7}>
+		<Collapse {isOpen} navbar expand="lg" on:update={handleUpdate}>
+			<Nav class="ms-auto mt-lg-0 mt-3 col-lg-5" navbar>
 				<Breadcrumb path={data.path}></Breadcrumb>
-			</Col>
-			<Col md={5}>
+			</Nav>
+			<Nav navbar class="ms-lg-1 mt-lg-0 mt-3">
 				<InputGroup>
 					<InputGroupText><Icon name="sort-down" /></InputGroupText>
 					<Input type="select" bind:value={$sort}>
@@ -103,9 +93,14 @@
 						<Icon name="list" />
 					</Button>
 				</InputGroup>
-			</Col>
-		</Row>
-	</Container>
+			</Nav>
+			<Nav class="ms-auto" navbar>
+				<NavItem>
+					<NavLink href="/about"><Icon name="info-circle"/>&nbsp;About</NavLink>
+				</NavItem>
+			</Nav>
+		</Collapse>
+	</Navbar>
 </Container>
 
 {#if $browseView == 'grid'}
