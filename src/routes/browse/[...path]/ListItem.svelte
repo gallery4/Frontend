@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
-	import { Icon, Image, Spinner, Row, Col } from '@sveltestrap/sveltestrap';
+	import { Icon, Spinner, Row, Col } from '@sveltestrap/sveltestrap';
 	import { tippy } from 'svelte-tippy';
 	import 'tippy.js/dist/tippy.css';
+	import 'vidstack/bundle';
 
 	let { name, type, dateTime } = $props();
+	const filetype = $derived(determinFileType(name));
+
 	let loaded = $state(false);
+
+	const hoverThumbImage = $derived(`/get/list_thumbnail/${name}?width=300&height=300"`);
 
 	function getLink(): string {
 		switch (type) {
@@ -23,8 +28,6 @@
 	function getIcon(): string {
 		switch (type) {
 			case 'file':
-				const filetype = determinFileType(name);
-
 				switch (filetype) {
 					case 'image':
 						return 'image';
@@ -52,10 +55,9 @@
 	function getImageSource(): string {
 		switch (type) {
 			case 'file':
-				const filetype = determinFileType(name);
 				switch (filetype) {
 					case 'image':
-						return `/get/list_thumbnail/${name}`;
+						return `/get/list_thumbnail/${name}?width=150&height=100`;
 					case 'audio':
 						return AUDIO_IMAGE_SOURCE;
 					case 'video':
@@ -80,7 +82,6 @@
 	function getIconColor(): string {
 		switch (type) {
 			case 'file':
-				const filetype = determinFileType(name);
 				switch (filetype) {
 					case 'image':
 						return IMAGE_ICON_COLOR;
@@ -145,8 +146,6 @@
 			<path d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5m2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2z"/>
 		</svg>
 	`;
-
-	const hoverThumbImage = $derived(`/get/list_thumbnail/${name}?width=300&height=300"`);
 </script>
 
 <Row
@@ -154,21 +153,47 @@
 	class="pt-3 pb-3 ms-1 me-1 border-bottom"
 >
 	<Col xs={3} lg={2}>
-		<img
-			alt="thumbnail"
-			style="height: 64px;"
-			loading="lazy"
-			src={getImageSource()}
-			onload={() => {
-				loaded = true;
-			}}
-			use:tippy={type == 'file' && determinFileType(name) == 'image'
-				? {
+		{#if type == 'file'}
+			{#if filetype == 'video'}
+				<media-player
+					
+					title={getFilenameFromKey(name, 'media')}
+					src="/get/file/{name}"
+				>
+					<media-provider></media-provider>
+					<media-video-layout></media-video-layout>
+				</media-player>
+			{:else if filetype == 'audio'}
+				<img alt="thumbnail" style="height: 100px;" loading="lazy" src={getImageSource()} />
+			{:else if filetype == 'image'}
+				<img
+					alt="thumbnail"
+					style="height: 100px;"
+					loading="lazy"
+					src={getImageSource()}
+					onload={() => {
+						loaded = true;
+					}}
+					use:tippy={{
 						allowHTML: true,
 						content: `<img src="${hoverThumbImage}></img>`
-					}
-				: { content: name }}
-		/>
+					}}
+				/>
+			{/if}
+		{:else}
+			{#if !loaded}
+				<Spinner type="grow" style="color:{getIconColor()};" />
+			{/if}
+			<img
+				alt="thumbnail"
+				style="height: 100px;"
+				loading="lazy"
+				src={getImageSource()}
+				onload={() => {
+					loaded = true;
+				}}
+			/>
+		{/if}
 	</Col>
 	<Col>
 		<a href={getLink()}>
@@ -178,11 +203,17 @@
 				<Icon name={getIcon()} style="color:{getIconColor()};"></Icon>
 				&nbsp;{getFilenameFromKey(name, type)}
 			{/if}
-
-			{#if !loaded}
-				<Spinner type="grow" size="sm" style="color:{getIconColor()};"></Spinner>
-			{/if}
 		</a>
+		{#if type == 'file' && filetype == 'audio'}
+			<media-player
+				class="d-block"
+				title={getFilenameFromKey(name, 'media')}
+				src="/get/file/{name}"
+			>
+				<media-provider></media-provider>
+				<media-audio-layout></media-audio-layout>
+			</media-player>
+		{/if}
 	</Col>
 	<Col class="col-3">
 		{new Date(dateTime).toLocaleString()}
