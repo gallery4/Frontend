@@ -151,8 +151,9 @@
 <Row
 	data-id={createElementId(getFilenameFromKey(name, type))}
 	class="pt-3 pb-3 ms-1 me-1 border-bottom"
+	cols={{xs:1, md:3}}
 >
-	<Col xs={3} lg={2}>
+	<Col >
 		{#if type == 'file'}
 			{#if filetype == 'video'}
 				<media-player
@@ -168,7 +169,8 @@
 			{:else if filetype == 'image'}
 				<img
 					alt="thumbnail"
-					style="height: 100px;"
+					class="thumbnail"
+					style="height: 100px; width: 150px; object-fit:contain;"
 					loading="lazy"
 					src={getImageSource()}
 					onload={() => {
@@ -176,7 +178,7 @@
 					}}
 					use:tippy={{
 						allowHTML: true,
-						content: `<img src="${hoverThumbImage}></img>`
+						content: `<img src="${hoverThumbImage} class="rounded"></img>`
 					}}
 				/>
 			{/if}
