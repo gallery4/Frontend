@@ -151,22 +151,21 @@
 <Row
 	data-id={createElementId(getFilenameFromKey(name, type))}
 	class="pt-3 pb-3 ms-1 me-1 border-bottom"
-	cols={{xs:1, md:3}}
+	cols={{ xs: 1, md: 3 }}
 >
-	<Col >
+	<Col>
 		{#if type == 'file'}
 			{#if filetype == 'video'}
-				<media-player
-					
-					title={getFilenameFromKey(name, 'media')}
-					src="/get/file/{name}"
-				>
+				<media-player title={getFilenameFromKey(name, 'media')} src="/get/file/{name}">
 					<media-provider></media-provider>
 					<media-video-layout></media-video-layout>
 				</media-player>
 			{:else if filetype == 'audio'}
 				<img alt="thumbnail" style="height: 100px;" loading="lazy" src={getImageSource()} />
 			{:else if filetype == 'image'}
+				{#if !loaded}
+					<Spinner size="sm" type="grow" style="color:{getIconColor()};" />
+				{/if}
 				<img
 					alt="thumbnail"
 					class="thumbnail"
@@ -183,9 +182,6 @@
 				/>
 			{/if}
 		{:else}
-			{#if !loaded}
-				<Spinner type="grow" style="color:{getIconColor()};" />
-			{/if}
 			<img
 				alt="thumbnail"
 				style="height: 100px;"
