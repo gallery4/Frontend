@@ -12,8 +12,6 @@
 		PaginationItem,
 		PaginationLink
 	} from '@sveltestrap/sveltestrap';
-	import { swipeable } from '@react2svelte/swipeable';
-	import type { SwipeEventData } from '@react2svelte/swipeable';
 
 	export const ssr = false;
 
@@ -71,7 +69,7 @@
 	}
 </script>
 
-<div class="container" use:swipeable on:swiped={handlerSwipe}>
+<div class="container">
 	<canvas id="the-canvas" class="mx-auto d-block mb-5"></canvas>
 	<Button
 		color="link"
