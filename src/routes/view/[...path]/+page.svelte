@@ -82,9 +82,12 @@
 				</div>
 			{/if}
 
-			<div class="position-absolute top-0 start-0 h-100 w-100 z-n1" 
-			 	style="padding-top:70px;"
-				use:swipeable on:swiped={handler}>
+			<div
+				class="position-absolute top-0 start-0 h-100 w-100 z-n1"
+				style="padding-top:65px;"
+				use:swipeable
+				on:swiped={handler}
+			>
 				<Image
 					src="/get/image/{data.current}"
 					class="h-100 w-100"
@@ -115,6 +118,15 @@
 			>
 				<Icon name="chevron-right"></Icon>
 			</Button>
+		</div>
+	</Container>
+{/if}
+
+{#if filetype == 'pdf'}
+	<Container>
+		<div class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1"
+		style="padding-top:65px;">
+			<embed src="/get/file/{data.current}" width="100%" height="99%"/>
 		</div>
 	</Container>
 {/if}
