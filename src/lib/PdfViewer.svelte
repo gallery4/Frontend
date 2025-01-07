@@ -51,22 +51,6 @@
 	$effect(async () => {
 		if (pdf) await render();
 	});
-
-	function handlerSwipe(e: CustomEvent<SwipeEventData>) {
-		switch (e.detail.dir) {
-			case 'Right':
-				if (pageNumber > 1) {
-					pageNumber--;
-				}
-				break;
-
-			case 'Left':
-				if (pageNumber < pdf.numPages) {
-					pageNumber++;
-				}
-				break;
-		}
-	}
 </script>
 
 <div>
