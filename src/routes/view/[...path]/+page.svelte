@@ -28,6 +28,7 @@
 		Spinner
 	} from '@sveltestrap/sveltestrap';
 	import SvelteReader from 'svelte-reader';
+	import PdfViewer from '$lib/PdfViewer.svelte';
 
 	const { data } = $props();
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
@@ -125,18 +126,22 @@
 
 {#if filetype == 'pdf'}
 	<Container>
-		<div class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1"
-		style="padding-top:65px;">
-			<embed src="/get/file/{data.current}" width="100%" height="99%"/>
+		<div
+			class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1 overflow-auto"
+			style="padding-top:65px;"
+		>
+			<PdfViewer url="/get/file/{data.current}" />
 		</div>
 	</Container>
 {/if}
 
 {#if filetype == 'epub'}
 	<Container>
-		<div class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1"
-		style="padding-top:65px;">
-			<SvelteReader url="/get/file/{data.current}" />
+		<div
+			class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1"
+			style="padding-top:65px;"
+		>
+			<SvelteReader url="/get/file/{data.current}" title="&nbsp;"/>
 		</div>
 	</Container>
 {/if}
