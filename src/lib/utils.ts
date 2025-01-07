@@ -22,6 +22,10 @@ export function determinFileType(name: string): string | false {
     if (mimetype == "application/pdf"){
         return "pdf"
     }
+
+    if (mimetype == "application/epub+zip"){
+        return "epub"
+    }
     return mimetype.substring(0, mimetype.indexOf('/'));
 }
 
