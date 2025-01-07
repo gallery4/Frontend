@@ -98,7 +98,7 @@ const IMAGE_ICON_COLOR = 'lightblue';
 const AUDIO_ICON_COLOR = 'yellow';
 const PLACEHOLDER_ICON_COLOR = 'darkgray';
 const PDF_ICON_COLOR = 'red';
-const EPUB_ICON_COLOR = 'lime';
+const EPUB_ICON_COLOR = 'limegreen';
 
 const DIRECTORY_IMAGE_SOURCE = `
     data:image/svg+xml;utf8,
