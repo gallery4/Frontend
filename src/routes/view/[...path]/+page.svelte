@@ -141,7 +141,7 @@
 			class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1"
 			style="padding-top:65px;"
 		>
-			<SvelteReader url="/get/file/{data.current}" />
+			<SvelteReader url="/get/file/{data.current}" title="&nbsp;"/>
 		</div>
 	</Container>
 {/if}
