@@ -69,7 +69,7 @@
 	}
 </script>
 
-<div class="container">
+<div>
 	<canvas id="the-canvas" class="mx-auto d-block mb-5"></canvas>
 	<Button
 		color="link"
