@@ -19,6 +19,9 @@ export function determinFileType(name: string): string | false {
         return false
     }
 
+    if (mimetype == "application/pdf"){
+        return "pdf"
+    }
     return mimetype.substring(0, mimetype.indexOf('/'));
 }
 
