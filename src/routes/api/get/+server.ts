@@ -1,30 +1,27 @@
 import { env } from '$env/dynamic/private';
-import { ImageClient } from '$lib/grpc/image.client';
 import { ChannelCredentials } from '@grpc/grpc-js';
 import { GrpcTransport } from '@protobuf-ts/grpc-transport';
-
+import { DownloadClient } from '$lib/grpc/download.client';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ request, cookies }) => {
+export const GET: RequestHandler = async ({ request }) => {
   let transport = new GrpcTransport({
     host: env.BACKEND_URL ?? 'localhost:5026',
     channelCredentials: ChannelCredentials.createInsecure(),
   })
 
-  let client = new ImageClient(transport)
+  let client = new DownloadClient(transport)
   const url = new URL(request.url)
   let path = url.searchParams.get('path') ?? ''
 
-  const stream = client.thumbnail({ path })
+  const stream = client.get({ path })
 
   let filename = ''
-  let contentType = ''
   let buffer = new ArrayBuffer(0, { maxByteLength: 4 * 1024 * 1024 * 1024 })
 
   for await (let message of stream.responses) {
     if (filename == '') {
       filename = message.filename
-      contentType = message.contentType
     }
 
     let offset = buffer.byteLength
@@ -36,7 +33,6 @@ export const GET: RequestHandler = async ({ request, cookies }) => {
 
   return new Response(buffer, {
     headers: {
-      'content-type': contentType,
       'content-disposition':
         `attachment; filename="${encodeURIComponent(filename)}"`,
       'content-length': `${buffer.byteLength}`

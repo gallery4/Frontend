@@ -1,7 +1,10 @@
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { fetchList } from "$lib/server";
 import path from "path-browserify"
+import { GrpcTransport } from "@protobuf-ts/grpc-transport";
+import { env } from "$env/dynamic/private";
+import { ChannelCredentials } from "@grpc/grpc-js";
+import { BrowseClient } from "$lib/grpc/browse.client";
 
 export const load: PageServerLoad = async ({ params, url }) => {
     const pathVal = params.path;
@@ -12,13 +15,21 @@ export const load: PageServerLoad = async ({ params, url }) => {
 
     const parent = path.dirname(pathVal)
 
-    const resp = await fetchList(parent, fetch);
-    const data = await resp.json();
+    let transport = new GrpcTransport({
+        host: env.BACKEND_URL ?? 'localhost:5026',
+        channelCredentials: ChannelCredentials.createInsecure(),
+    })
 
-    const index = data.files.findIndex((e:any) => e.name == pathVal)
+    let client = new BrowseClient(transport)
+
+    const call = await client.list({
+        path: parent
+    })
+
+    const index = call.response.files.findIndex((e: any) => e.name == pathVal)
 
     return {
         current: pathVal,
-        files: data.files,
+        files: call.response.files,
     }
 }

@@ -2,33 +2,21 @@
 	import 'vidstack/bundle';
 	import { compareItems, determinFileType, extractSort, getFilenameFromKey } from '$lib/utils.js';
 	import { goto } from '$app/navigation';
-	import { navigating } from '$app/stores';
 	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
 	import { swipeable } from '@react2svelte/swipeable';
 	import { writable } from 'svelte/store';
-	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import type { SwipeEventData } from '@react2svelte/swipeable';
-	import {
-		Button,
-		Col,
-		Collapse,
-		Container,
-		Icon,
-		Image,
-		Input,
-		InputGroup,
-		InputGroupText,
-		Nav,
-		Navbar,
-		NavbarBrand,
-		NavbarToggler,
-		NavItem,
-		NavLink,
-		Row,
-		Spinner
-	} from '@sveltestrap/sveltestrap';
 	import SvelteReader from 'svelte-reader';
-	import PdfViewer from '$lib/components/PdfViewer.svelte';
+	// import PdfViewer from '$lib/components/PdfViewer.svelte';
+
+	import { Icon } from 'svelte-icon';
+	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
+	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
+	import Container from '$lib/components/Container.svelte';
+	import Content from '$lib/components/Content.svelte';
+	import NavBar from '$lib/components/NavBar.svelte';
+	import SideBar from '$lib/components/SideBar.svelte';
+	import { page } from '$app/state';
 
 	const { data } = $props();
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
@@ -44,12 +32,7 @@
 
 	const filetype = $derived(determinFileType(data.current));
 
-	let isOpen = $state(false);
 	let isImageLoaded = $state(false);
-
-	function handleUpdate(event: CustomEvent<boolean>) {
-		isOpen = event.detail;
-	}
 
 	function handler(e: CustomEvent<SwipeEventData>) {
 		switch (e.detail.dir) {
@@ -66,95 +49,141 @@
 				break;
 		}
 	}
+
+	let showMenu = $state(false);
 </script>
 
 <svelte:head>
 	<title>Gallery - View: {data.current}</title>
 </svelte:head>
 
-{#if filetype == 'image'}
-	<Container>
-		<div class="position-absolute top-0 start-0 h-100 w-100">
-			{#if !isImageLoaded}
-				<div
-					class="position-absolute top-50 start-50 translate-middle justify-content-center"
-					style="background-color:#00000080; padding: 1em;"
-				>
-					<Spinner type="border"></Spinner> Loading
-				</div>
-			{/if}
+<Container bind:showMenu>
+	<Content>
+		<NavBar bind:showMenu title="Browse: {data.current}" />
+		{#if filetype == 'image'}
+			<div class="top-18 fixed bottom-0 end-0 start-0">
+				{#if !isImageLoaded}
+					<div class="h-full w-full">
+						<span class="loading loading-dots loading-sm"></span>
+					</div>
+				{/if}
 
-			<div
-				class="position-absolute top-0 start-0 h-100 w-100 z-n1"
-				style="padding-top:65px;"
-				use:swipeable
-				on:swiped={handler}
-			>
-				<Image
-					src="/get/image/{data.current}"
-					class="h-100 w-100"
-					style="object-fit:contain;"
-					onload={() => (isImageLoaded = true)}
-				></Image>
+				<div class="h-full w-full" use:swipeable onswiped={handler}>
+					<img
+						alt={getFilenameFromKey(data.current, 'image')}
+						src={(() => {
+							const url = new URL('/api/image', page.url.origin);
+							url.searchParams.set('path', data.current);
+							return url.toString();
+						})()}
+						class="h-full w-full"
+						style="object-fit:contain;"
+						onload={() => (isImageLoaded = true)}
+					/>
+				</div>
+
+				<button
+					class="fixed inset-y-1/2 start-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
+					onclick={() => {
+						if (previous != null) goto(`/view/${previous}`);
+					}}
+				>
+					<Icon data={prevIcon} class="mx-auto"></Icon>
+				</button>
+
+				<button
+					class="fixed inset-y-1/2 end-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
+					onclick={() => {
+						if (next != null) goto(`/view/${next}`);
+					}}
+				>
+					<Icon data={nextIcon} class="mx-auto"></Icon>
+				</button>
 			</div>
 
-			<Button
-				color="link"
-				outline
-				class="position-absolute top-0 start-0 h-100"
-				style="width:20%;"
-				onclick={() => {
-					if (previous != null) goto(`/view/${previous}`);
-				}}
-			>
-				<Icon name="chevron-left"></Icon>
-			</Button>
-			<Button
-				color="link"
-				outline
-				class="position-absolute top-0 end-0 h-100 w-10"
-				style="width:20%;"
-				onclick={() => {
-					if (next != null) goto(`/view/${next}`);
-				}}
-			>
-				<Icon name="chevron-right"></Icon>
-			</Button>
-		</div>
-	</Container>
-{/if}
+			<!--
+		{:else if filetype == 'pdf'}
+			<div>
+				<div
+					class="position-absolute h-100 w-100 h-100 w-100 z-n1 start-0 top-0 overflow-auto"
+					style="padding-top:65px;"
+				>
+					<PdfViewer url="/get/file/{data.current}" />
+				</div>
+			</div>
+			
+			TODO: restore the epub reader.
+			{:else if filetype == 'epub'}
+				<Container>
+					<div
+						class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1"
+						style="padding-top:65px;"
+					>
+						<SvelteReader url="/get/file/{data.current}" title="&nbsp;"/>
+					</div>
+				</Container>
+			{/if}
+		-->
+		{:else if filetype == 'video' || filetype == 'audio'}
+			<div class="mx-auto mt-4 max-w-[1024px]">
+				<media-player
+					class="d-block"
+					title={getFilenameFromKey(data.current, 'media')}
+					src="/api/get/{data.current}"
+				>
+					<media-provider></media-provider>
+					<media-video-layout></media-video-layout>
+					<media-audio-layout></media-audio-layout>
+				</media-player>
+			</div>
 
-{#if filetype == 'pdf'}
-	<Container>
-		<div
-			class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1 overflow-auto"
-			style="padding-top:65px;"
-		>
-			<PdfViewer url="/get/file/{data.current}" />
-		</div>
-	</Container>
-{/if}
+			<div>
+				<div class="join">
+					<button
+						class="btn join-item"
+						onclick={() => {
+							if (previous != null) goto(`/view/${previous}`);
+						}}
+					>
+						<Icon data={prevIcon} class="mx-auto"></Icon>&nbsp;Previous
+					</button>
 
-{#if filetype == 'epub'}
-	<Container>
-		<div
-			class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1"
-			style="padding-top:65px;"
-		>
-			<SvelteReader url="/get/file/{data.current}" title="&nbsp;"/>
-		</div>
-	</Container>
-{/if}
+					<button
+						class="btn join-item"
+						onclick={() => {
+							if (next != null) goto(`/view/${next}`);
+						}}
+					>
+						<Icon data={nextIcon} class="mx-auto"></Icon>&nbsp;Next
+					</button>
+				</div>
+			</div>
+		{/if}
+	</Content>
+	<SideBar bind:showMenu>
+		<!--ul class="menu">
+			<li class="menu-title">View</li>
+			<li>
+				<button
+					class={$browseView == 'grid' ? 'menu-active' : ''}
+					onclick={() => $browseView = 'grid'}
+				>
+					<Icon data={viewGridIcon} /> Grid
+				</button>
+			</li>
 
-<Container class="text-bg-light pb-2" fluid>
-	<Navbar dark expand="lg" container="lg">
-		<NavbarBrand href="/">Gallery</NavbarBrand>
-		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
-		<Collapse {isOpen} navbar expand="lg" on:update={handleUpdate}>
-			<Nav class="ms-auto mt-lg-0 mt-3 col-lg-5" navbar>
-				<Breadcrumb path={data.current}></Breadcrumb>
-			</Nav>
-			<Nav navbar class="ms-lg-1 mt-lg-0 mt-3">
+			<li>
+				<button
+					class={$browseView == 'list' ? 'menu-active' : ''}
+					onclick={() => $browseView = 'list'}
+				>
+					<Icon data={viewListIcon} /> List
+				</button>
+			</li>
+		</ul-->
+
+		<!-- TODO: Implement menut
+		<Nav navbar class="ms-lg-1 mt-lg-0 mt-3">
 				<InputGroup>
 					<InputGroupText><Icon name="sort-down" /></InputGroupText>
 					<Input type="select" bind:value={$sort}>
@@ -185,54 +214,6 @@
 					</NavLink>
 				</NavItem>
 			</Nav>
-		</Collapse>
-	</Navbar>
+		-->
+	</SideBar>
 </Container>
-
-{#if filetype == 'video' || filetype == 'audio'}
-	<Container class="mx-auto m-3" style="max-width:576px">
-		<media-player
-			class="d-block"
-			title={getFilenameFromKey(data.current, 'media')}
-			src="/get/file/{data.current}"
-		>
-			<media-provider></media-provider>
-			<media-video-layout></media-video-layout>
-			<media-audio-layout></media-audio-layout>
-		</media-player>
-	</Container>
-
-	<Container>
-		<Row cols={{ lg: 2, md: 2, sm: 1, xs: 1 }}>
-			<Col>
-				<Button
-					class="m-1 w-100"
-					disabled={previous == null}
-					onclick={() => goto(`/view/${previous}`)}
-				>
-					<Icon name="chevron-left"></Icon>&nbsp;Previous
-				</Button>
-			</Col>
-			<Col>
-				<Button
-					class="m-1 w-100"
-					color="primary"
-					disabled={next == null}
-					onclick={() => goto(`/view/${next}`)}
-				>
-					<div class="d-md-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
-					<div class="d-none d-md-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
-				</Button>
-			</Col>
-		</Row>
-	</Container>
-{/if}
-
-{#if $navigating}
-	<div
-		class="position-absolute top-50 start-50 translate-middle justify-content-center"
-		style="background-color:#00000080; padding: 1em;"
-	>
-		<Spinner type="border"></Spinner> Loading
-	</div>
-{/if}

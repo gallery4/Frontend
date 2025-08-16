@@ -1,11 +1,11 @@
-import {env} from '$env/dynamic/private';
-import {ImageClient} from '$lib/grpc/image.client';
-import {ChannelCredentials} from '@grpc/grpc-js';
-import {GrpcTransport} from '@protobuf-ts/grpc-transport';
+import { env } from '$env/dynamic/private';
+import { ImageClient } from '$lib/grpc/image.client';
+import { ChannelCredentials } from '@grpc/grpc-js';
+import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 
-import type {RequestHandler} from './$types';
+import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({request, cookies}) => {
+export const GET: RequestHandler = async ({ request, cookies }) => {
   let transport = new GrpcTransport({
     host: env.BACKEND_URL ?? 'localhost:5026',
     channelCredentials: ChannelCredentials.createInsecure(),
@@ -15,11 +15,11 @@ export const GET: RequestHandler = async ({request, cookies}) => {
   const url = new URL(request.url)
   let path = url.searchParams.get('path') ?? ''
 
-  const stream = client.view({path})
+  const stream = client.view({ path })
 
   let filename = ''
   let contentType = ''
-  let buffer = new ArrayBuffer(0, {maxByteLength: 4 * 1024 * 1024 * 1024})
+  let buffer = new ArrayBuffer(0, { maxByteLength: 4 * 1024 * 1024 * 1024 })
 
   for await (let message of stream.responses) {
     if (filename == '') {
@@ -38,7 +38,7 @@ export const GET: RequestHandler = async ({request, cookies}) => {
     headers: {
       'content-type': contentType,
       'content-disposition':
-          `attachment; filename="${encodeURIComponent(filename)}"`,
+        `attachment; filename="${encodeURIComponent(filename)}"`,
       'content-length': `${buffer.byteLength}`
     }
   })
