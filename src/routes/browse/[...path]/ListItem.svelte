@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { getIconColor, getIconImage, getIconName } from '$lib/icons';
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
 	import 'vidstack/bundle';
@@ -27,7 +28,12 @@
 		if (type != 'file') return getIconImage(type, false);
 
 		const filetype = determinFileType(name);
-		if (filetype == 'image') return `/api/thumbnail?path=${name}?width=150&height=100`;
+		if (filetype == 'image') {
+			let url = new URL('/api/thumbnail', page.url.origin);
+			url.searchParams.set('path', name);
+
+			return url.toString();
+		}
 
 		return getIconImage(type, filetype);
 	}
