@@ -25,6 +25,7 @@
 		if (filetype == 'image') {
 			let url = new URL('/api/thumbnail', page.url.origin);
 			url.searchParams.set('path', name);
+			url.searchParams.set('type', 'GRID');
 
 			return url.toString();
 		}
@@ -46,7 +47,7 @@
 		</a>
 	</div>
 	<div class="card-body">
-		<div class="h-[4em] mx-2 overflow-hidden">
+		<div class="mx-2 h-[4em] overflow-hidden">
 			<a href={getLink()}>{getFilenameFromKey(name, type)}</a>
 		</div>
 	</div>

@@ -6,15 +6,15 @@
  */
 export enum ListType {
     /**
-     * @generated from protobuf enum value: FILTER_UNKNOWN = 0;
+     * @generated from protobuf enum value: LIST_TYPE_UNKNOWN = 0;
      */
-    FILTER_UNKNOWN = 0,
+    UNKNOWN = 0,
     /**
-     * @generated from protobuf enum value: FILTER_LIST = 1;
+     * @generated from protobuf enum value: LIST_TYPE_LIST = 1;
      */
-    FILTER_LIST = 1,
+    LIST = 1,
     /**
-     * @generated from protobuf enum value: FILTER_GRID = 2;
+     * @generated from protobuf enum value: LIST_TYPE_GRID = 2;
      */
-    FILTER_GRID = 2
+    GRID = 2
 }

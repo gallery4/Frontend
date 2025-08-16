@@ -31,7 +31,7 @@
 		if (filetype == 'image') {
 			let url = new URL('/api/thumbnail', page.url.origin);
 			url.searchParams.set('path', name);
-
+			url.searchParams.set('type', 'LIST');
 			return url.toString();
 		}
 
@@ -39,8 +39,8 @@
 	}
 </script>
 
-<div id={createElementId(getFilenameFromKey(name, type))} class="flex shadow m-4">
-	<div class="w-16 flex-none m-1">
+<div id={createElementId(getFilenameFromKey(name, type))} class="m-4 flex shadow">
+	<div class="m-1 w-16 flex-none">
 		{#if type == 'file'}
 			{#if filetype == 'video'}
 				<media-player title={getFilenameFromKey(name, 'media')} src="/get/file/{name}">

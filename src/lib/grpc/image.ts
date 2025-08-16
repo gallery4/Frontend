@@ -11,6 +11,7 @@ import { UnknownFieldHandler } from "@protobuf-ts/runtime";
 import type { PartialMessage } from "@protobuf-ts/runtime";
 import { reflectionMergePartial } from "@protobuf-ts/runtime";
 import { MessageType } from "@protobuf-ts/runtime";
+import { ListType } from "./types";
 /**
  * @generated from protobuf message image.ThumbnailRequest
  */
@@ -19,6 +20,10 @@ export interface ThumbnailRequest {
      * @generated from protobuf field: string path = 1
      */
     path: string;
+    /**
+     * @generated from protobuf field: types.ListType listType = 2
+     */
+    listType: ListType;
 }
 /**
  * @generated from protobuf message image.ViewRequest
@@ -54,12 +59,14 @@ export interface ImageStreamResponse {
 class ThumbnailRequest$Type extends MessageType<ThumbnailRequest> {
     constructor() {
         super("image.ThumbnailRequest", [
-            { no: 1, name: "path", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 1, name: "path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "listType", kind: "enum", T: () => ["types.ListType", ListType, "LIST_TYPE_"] }
         ]);
     }
     create(value?: PartialMessage<ThumbnailRequest>): ThumbnailRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.path = "";
+        message.listType = 0;
         if (value !== undefined)
             reflectionMergePartial<ThumbnailRequest>(this, message, value);
         return message;
@@ -71,6 +78,9 @@ class ThumbnailRequest$Type extends MessageType<ThumbnailRequest> {
             switch (fieldNo) {
                 case /* string path */ 1:
                     message.path = reader.string();
+                    break;
+                case /* types.ListType listType */ 2:
+                    message.listType = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -87,6 +97,9 @@ class ThumbnailRequest$Type extends MessageType<ThumbnailRequest> {
         /* string path = 1; */
         if (message.path !== "")
             writer.tag(1, WireType.LengthDelimited).string(message.path);
+        /* types.ListType listType = 2; */
+        if (message.listType !== 0)
+            writer.tag(2, WireType.Varint).int32(message.listType);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

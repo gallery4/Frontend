@@ -4,6 +4,8 @@ import { ChannelCredentials } from '@grpc/grpc-js';
 import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 
 import type { RequestHandler } from './$types';
+import { ListType } from '$lib/grpc/types';
+import { $enum } from 'ts-enum-util';
 
 export const GET: RequestHandler = async ({ request, cookies }) => {
   let transport = new GrpcTransport({
@@ -14,8 +16,9 @@ export const GET: RequestHandler = async ({ request, cookies }) => {
   let client = new ImageClient(transport)
   const url = new URL(request.url)
   let path = url.searchParams.get('path') ?? ''
+  let type = $enum(ListType).getValueOrDefault(url.searchParams.get('type'), ListType.UNKNOWN);
 
-  const stream = client.thumbnail({ path })
+  const stream = client.thumbnail({ path: path, listType: type })
 
   let filename = ''
   let contentType = ''
