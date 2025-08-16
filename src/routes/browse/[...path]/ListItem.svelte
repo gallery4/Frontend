@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { getIconColor, getIconImage, getIconName } from '$lib/icons';
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
-	import { Icon, Spinner, Row, Col } from '@sveltestrap/sveltestrap';
-	import { tippy } from 'svelte-tippy';
-	import 'tippy.js/dist/tippy.css';
 	import 'vidstack/bundle';
 
 	let { name, type, dateTime } = $props();
@@ -11,7 +8,7 @@
 
 	let loaded = $state(false);
 
-	const hoverThumbImage = $derived(`/get/list_thumbnail/${name}?width=300&height=300"`);
+	const hoverThumbImage = $derived(`/api/thumbnail/${name}?width=300&height=300"`);
 
 	function getLink(): string {
 		switch (type) {
@@ -30,18 +27,14 @@
 		if (type != 'file') return getIconImage(type, false);
 
 		const filetype = determinFileType(name);
-		if (filetype == 'image') return `/get/list_thumbnail/${name}?width=150&height=100`;
+		if (filetype == 'image') return `/api/thumbnail?path=${name}?width=150&height=100`;
 
 		return getIconImage(type, filetype);
 	}
 </script>
 
-<Row
-	data-id={createElementId(getFilenameFromKey(name, type))}
-	class="pt-3 pb-3 ms-1 me-1 border-bottom"
-	cols={{ xs: 1, md: 3 }}
->
-	<Col>
+<div id={createElementId(getFilenameFromKey(name, type))} class="flex">
+	<div class="w-16 flex-none">
 		{#if type == 'file'}
 			{#if filetype == 'video'}
 				<media-player title={getFilenameFromKey(name, 'media')} src="/get/file/{name}">
@@ -52,7 +45,10 @@
 				<img alt="thumbnail" style="height: 100px;" loading="lazy" src={getImageSource()} />
 			{:else if filetype == 'image'}
 				{#if !loaded}
-					<Spinner size="sm" type="grow" style="color:{getIconColor(type, filetype)};" />
+					<span
+						class="loading loading-dots loading-sm"
+						style="color:{getIconColor(type, filetype)};"
+					></span>
 				{/if}
 				<img
 					alt="thumbnail"
@@ -63,11 +59,12 @@
 					onload={() => {
 						loaded = true;
 					}}
+				/>
+				<!--TODO: makde this hover
 					use:tippy={{
 						allowHTML: true,
 						content: `<img src="${hoverThumbImage} class="rounded"></img>`
-					}}
-				/>
+					}-->
 			{:else if filetype == 'pdf'}
 				<img alt="thumbnail" style="height: 100px;" loading="lazy" src={getImageSource()} />
 			{/if}
@@ -82,14 +79,14 @@
 				}}
 			/>
 		{/if}
-	</Col>
-	<Col>
+	</div>
+	<div class="w-64 flex-1">
 		<a href={getLink()}>
 			{#if type == 'placeholder'}
 				<span class="placeholder col-7"></span>
 			{:else}
-				<Icon name={getIconName(type, filetype)} style="color:{getIconColor(type, filetype)};"
-				></Icon>
+				<!--Icon name={getIconName(type, filetype)} style="color:{getIconColor(type, filetype)};"
+				></Icon -->
 				&nbsp;{getFilenameFromKey(name, type)}
 			{/if}
 		</a>
@@ -103,8 +100,8 @@
 				<media-audio-layout></media-audio-layout>
 			</media-player>
 		{/if}
-	</Col>
-	<Col class="col-3">
+	</div>
+	<div class="w-16 flex-1">
 		{new Date(dateTime).toLocaleString()}
-	</Col>
-</Row>
+	</div>
+</div>

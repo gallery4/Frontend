@@ -31,12 +31,6 @@
 		)
 	});
 
-	let isOpen = $state(false);
-
-	function handleUpdate(event: CustomEvent<boolean>) {
-		isOpen = event.detail;
-	}
-
 	function moveToHash(node: Element) {
 		const hash = $page.url.hash;
 		if (!hash) return;
@@ -61,7 +55,7 @@
 	<Content>
 		<NavBar bind:showMenu title="Browse: {data.response.path}" />
 		<div class="prose container mx-auto mt-4 max-w-[1024px]">
-			{#if $browseView == 'grid'}
+			{#if false /*$browseView == 'grid'*/}
 				<div use:moveToHash class="grid grid-cols-1 gap-8 md:grid-cols-3">
 					{#if directories}
 						{#each directories.objects as object}
@@ -79,7 +73,7 @@
 						{/each}
 					{/if}
 				</div>
-			{:else if $browseView == 'list'}
+			{:else if true /*$browseView == 'list'*/}
 				<div use:moveToHash>
 					{#if directories}
 						{#each directories.objects as object}
