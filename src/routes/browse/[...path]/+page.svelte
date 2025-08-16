@@ -13,6 +13,7 @@
 	import { Icon } from 'svelte-icon';
 	import viewGridIcon from '@mdi/svg/svg/view-grid.svg?raw';
 	import viewListIcon from '@mdi/svg/svg/view-list.svg?raw';
+	import { Timestamp } from '$lib/grpc/google/protobuf/timestamp';
 
 	const { data } = $props();
 
@@ -80,17 +81,29 @@
 				<div use:moveToHash>
 					{#if directories}
 						{#each directories.objects as object}
-							<ListItem name={object.name} type="directory" dateTime={object.dateTime} />
+							<ListItem
+								name={object.name}
+								type="directory"
+								dateTime={object.dateTime ? Timestamp.toDate(object.dateTime) : new Date()}
+							/>
 						{/each}
 					{/if}
 					{#if archives}
 						{#each archives.objects as object}
-							<ListItem name={object.name} type="zip" dateTime={object.dateTime} />
+							<ListItem
+								name={object.name}
+								type="zip"
+								dateTime={object.dateTime ? Timestamp.toDate(object.dateTime) : new Date()}
+							/>
 						{/each}
 					{/if}
 					{#if files}
 						{#each files.objects as object}
-							<ListItem name={object.name} type="file" dateTime={object.dateTime} />
+							<ListItem
+								name={object.name}
+								type="file"
+								dateTime={object.dateTime ? Timestamp.toDate(object.dateTime) : new Date()}
+							/>
 						{/each}
 					{/if}
 				</div>
@@ -103,7 +116,7 @@
 			<li>
 				<button
 					class={$browseView == 'grid' ? 'menu-active' : ''}
-					onclick={() => $browseView = 'grid'}
+					onclick={() => ($browseView = 'grid')}
 				>
 					<Icon data={viewGridIcon} /> Grid
 				</button>
@@ -112,7 +125,7 @@
 			<li>
 				<button
 					class={$browseView == 'list' ? 'menu-active' : ''}
-					onclick={() => $browseView = 'list'}
+					onclick={() => ($browseView = 'list')}
 				>
 					<Icon data={viewListIcon} /> List
 				</button>

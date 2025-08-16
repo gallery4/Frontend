@@ -46,8 +46,8 @@
 	}
 </script>
 
-<div id={createElementId(getFilenameFromKey(name, type))} class="m-4 flex shadow">
-	<div class="m-1 w-16 flex-none">
+<div id={createElementId(getFilenameFromKey(name, type))} class="h-30 m-4 flex shadow">
+	<div class="m-2 my-auto w-16 flex-none">
 		{#if type == 'file'}
 			{#if filetype == 'video'}
 				<media-player title={getFilenameFromKey(name, 'media')} src="/get/file/{name}">
@@ -70,7 +70,7 @@
 
 					<img
 						alt="thumbnail"
-						class="thumbnail w-[100px] h-[150px] object-contain"
+						class="thumbnail"
 						loading="lazy"
 						src={getImageSource()}
 						onload={() => {
@@ -93,16 +93,17 @@
 			/>
 		{/if}
 	</div>
-	<div class="w-64 flex-1">
+	<div class="m-1 my-2 w-64 flex-1">
 		<a href={getLink()}>
 			{#if type == 'placeholder'}
-				<span class="placeholder col-7"></span>
+				<span class="placeholder"></span>
 			{:else}
 				<!--Icon name={getIconName(type, filetype)} style="color:{getIconColor(type, filetype)};"
 				></Icon -->
 				&nbsp;{getFilenameFromKey(name, type)}
 			{/if}
 		</a>
+
 		{#if type == 'file' && filetype == 'audio'}
 			<media-player
 				class="d-block"
@@ -114,7 +115,7 @@
 			</media-player>
 		{/if}
 	</div>
-	<div class="w-16 flex-none">
+	<div class="w-24 my-2 flex-none">
 		{new Date(dateTime).toLocaleString()}
 	</div>
 </div>
