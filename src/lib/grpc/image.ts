@@ -24,6 +24,14 @@ export interface ThumbnailRequest {
      * @generated from protobuf field: types.ListType listType = 2
      */
     listType: ListType;
+    /**
+     * @generated from protobuf field: optional int32 width = 3
+     */
+    width?: number;
+    /**
+     * @generated from protobuf field: optional int32 height = 4
+     */
+    height?: number;
 }
 /**
  * @generated from protobuf message image.ViewRequest
@@ -60,7 +68,9 @@ class ThumbnailRequest$Type extends MessageType<ThumbnailRequest> {
     constructor() {
         super("image.ThumbnailRequest", [
             { no: 1, name: "path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "listType", kind: "enum", T: () => ["types.ListType", ListType, "LIST_TYPE_"] }
+            { no: 2, name: "listType", kind: "enum", T: () => ["types.ListType", ListType, "LIST_TYPE_"] },
+            { no: 3, name: "width", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "height", kind: "scalar", opt: true, T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<ThumbnailRequest>): ThumbnailRequest {
@@ -82,6 +92,12 @@ class ThumbnailRequest$Type extends MessageType<ThumbnailRequest> {
                 case /* types.ListType listType */ 2:
                     message.listType = reader.int32();
                     break;
+                case /* optional int32 width */ 3:
+                    message.width = reader.int32();
+                    break;
+                case /* optional int32 height */ 4:
+                    message.height = reader.int32();
+                    break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
@@ -100,6 +116,12 @@ class ThumbnailRequest$Type extends MessageType<ThumbnailRequest> {
         /* types.ListType listType = 2; */
         if (message.listType !== 0)
             writer.tag(2, WireType.Varint).int32(message.listType);
+        /* optional int32 width = 3; */
+        if (message.width !== undefined)
+            writer.tag(3, WireType.Varint).int32(message.width);
+        /* optional int32 height = 4; */
+        if (message.height !== undefined)
+            writer.tag(4, WireType.Varint).int32(message.height);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

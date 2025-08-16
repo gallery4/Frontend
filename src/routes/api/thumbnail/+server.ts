@@ -2,12 +2,11 @@ import { env } from '$env/dynamic/private';
 import { ImageClient } from '$lib/grpc/image.client';
 import { ChannelCredentials } from '@grpc/grpc-js';
 import { GrpcTransport } from '@protobuf-ts/grpc-transport';
-
 import type { RequestHandler } from './$types';
 import { ListType } from '$lib/grpc/types';
 import { $enum } from 'ts-enum-util';
 
-export const GET: RequestHandler = async ({ request, cookies }) => {
+export const GET: RequestHandler = async ({ request }) => {
   let transport = new GrpcTransport({
     host: env.BACKEND_URL ?? 'localhost:5026',
     channelCredentials: ChannelCredentials.createInsecure(),
@@ -18,7 +17,17 @@ export const GET: RequestHandler = async ({ request, cookies }) => {
   let path = url.searchParams.get('path') ?? ''
   let type = $enum(ListType).getValueOrDefault(url.searchParams.get('type'), ListType.UNKNOWN);
 
-  const stream = client.thumbnail({ path: path, listType: type })
+  const grpcReq = { path: path, listType: type, width: 0, height: 0 }
+
+  if (url.searchParams.has('width')) {
+    grpcReq.width = parseInt(url.searchParams.get('width') ?? '0')
+  }
+
+  if (url.searchParams.has('height')) {
+    grpcReq.height = parseInt(url.searchParams.get('height') ?? '0')
+  }
+
+  const stream = client.thumbnail(grpcReq)
 
   let filename = ''
   let contentType = ''

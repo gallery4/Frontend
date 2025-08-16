@@ -9,7 +9,14 @@
 
 	let loaded = $state(false);
 
-	const hoverThumbImage = $derived(`/api/thumbnail/${name}?width=300&height=300"`);
+	const hoverThumbImage = $derived.by(() => {
+		let url = new URL('/api/thumbnail', page.url.origin);
+		url.searchParams.set('path', name);
+		url.searchParams.set('type', 'LIST');
+		url.searchParams.set('width', '300');
+		url.searchParams.set('height', '300');
+		return url.toString();
+	});
 
 	function getLink(): string {
 		switch (type) {
@@ -56,21 +63,21 @@
 						style="color:{getIconColor(type, filetype)};"
 					></span>
 				{/if}
-				<img
-					alt="thumbnail"
-					class="thumbnail"
-					style="height: 100px; width: 150px; object-fit:contain;"
-					loading="lazy"
-					src={getImageSource()}
-					onload={() => {
-						loaded = true;
-					}}
-				/>
-				<!--TODO: makde this hover
-					use:tippy={{
-						allowHTML: true,
-						content: `<img src="${hoverThumbImage} class="rounded"></img>`
-					}-->
+				<div class="tooltip tooltip-right">
+					<div class="tooltip-content">
+						<img class="object-cover" src={hoverThumbImage} alt="hover" />
+					</div>
+
+					<img
+						alt="thumbnail"
+						class="thumbnail w-[100px] h-[150px] object-contain"
+						loading="lazy"
+						src={getImageSource()}
+						onload={() => {
+							loaded = true;
+						}}
+					/>
+				</div>
 			{:else if filetype == 'pdf'}
 				<img alt="thumbnail" style="height: 100px;" loading="lazy" src={getImageSource()} />
 			{/if}
@@ -107,7 +114,7 @@
 			</media-player>
 		{/if}
 	</div>
-	<div class="w-16 flex-1">
+	<div class="w-16 flex-none">
 		{new Date(dateTime).toLocaleString()}
 	</div>
 </div>
