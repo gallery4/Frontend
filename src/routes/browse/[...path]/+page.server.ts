@@ -1,16 +1,23 @@
-import { fetchList } from "$lib/server";
-import type { PageServerLoad } from "./$types";
+import {env} from '$env/dynamic/private';
+import {BrowseClient} from '$lib/grpc/browse.client';
+import {fetchList} from '$lib/server';
+import {ChannelCredentials} from '@grpc/grpc-js';
+import {GrpcTransport} from '@protobuf-ts/grpc-transport';
 
-export const load: PageServerLoad = async ({ params, url, fetch }) => {
-    const path = params.path
-    
-    const resp = await fetchList(path, fetch);
-    const data = await resp.json();
+import type {PageServerLoad} from './$types';
 
-    return {
-        path: data.path,
-        directories: data.directories,
-        archives: data.archives,
-        files: data.files,
-    };
+export const load: PageServerLoad = async ({params, url, fetch}) => {
+  let transport = new GrpcTransport({
+    host: env.BACKEND_URL ?? 'localhost:5026',
+    channelCredentials: ChannelCredentials.createInsecure(),
+  })
+
+  let client = new BrowseClient(transport)
+  const path = params.path
+
+  let call = await client.list({path})
+
+  return {
+    request: call.request, response: call.response
+  }
 }

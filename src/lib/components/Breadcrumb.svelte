@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button, Icon, Input, InputGroup, InputGroupText } from '@sveltestrap/sveltestrap';
-	import { createElementId } from './utils';
+	import { createElementId } from '../utils';
 	import { goto } from '$app/navigation';
 
 	const { path } = $props();

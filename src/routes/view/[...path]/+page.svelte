@@ -6,7 +6,7 @@
 	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
 	import { swipeable } from '@react2svelte/swipeable';
 	import { writable } from 'svelte/store';
-	import Breadcrumb from '$lib/Breadcrumb.svelte';
+	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import type { SwipeEventData } from '@react2svelte/swipeable';
 	import {
 		Button,
@@ -28,7 +28,7 @@
 		Spinner
 	} from '@sveltestrap/sveltestrap';
 	import SvelteReader from 'svelte-reader';
-	import PdfViewer from '$lib/PdfViewer.svelte';
+	import PdfViewer from '$lib/components/PdfViewer.svelte';
 
 	const { data } = $props();
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');

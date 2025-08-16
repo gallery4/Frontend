@@ -21,7 +21,7 @@
 	import { navigating, page } from '$app/stores';
 	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
 	import { writable } from 'svelte/store';
-	import Breadcrumb from '$lib/Breadcrumb.svelte';
+	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import GridItem from './GridItem.svelte';
 	import ListItem from './ListItem.svelte';
 	import { compareItems, extractSort } from '$lib/utils';
@@ -33,15 +33,15 @@
 	const { sortBy, order } = $derived(extractSort($sort));
 
 	const files = $derived({
-		objects: data.files.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
+		objects: data.response.files.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
 	});
 
 	const archives = $derived({
-		objects: data.archives.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
+		objects: data.response.archives.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
 	});
 
 	const directories = $derived({
-		objects: data.directories.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
+		objects: data.response.directories.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
 	});
 
 	let isOpen = $state(false);
@@ -65,7 +65,7 @@
 </script>
 
 <svelte:head>
-	<title>Gallery - Browse: {data.path}</title>
+	<title>Gallery - Browse: {data.response.path}</title>
 </svelte:head>
 
 <Container class="sticky-top text-bg-light" fluid>
@@ -74,7 +74,7 @@
 		<NavbarToggler on:click={() => (isOpen = !isOpen)} />
 		<Collapse {isOpen} navbar expand="lg" on:update={handleUpdate}>
 			<Nav class="ms-auto mt-lg-0 mt-3 col-lg-5" navbar>
-				<Breadcrumb path={data.path}></Breadcrumb>
+				<Breadcrumb path={data.response.path}></Breadcrumb>
 			</Nav>
 			<Nav navbar class="ms-lg-1 mt-lg-0 mt-3">
 				<InputGroup>
