@@ -46,8 +46,8 @@
 		</a>
 	</div>
 	<div class="card-body">
-		<div class="h-[4em] overflow-hidden">
-			<a href={getLink()}>{name}</a>
+		<div class="h-[4em] mx-2 overflow-hidden">
+			<a href={getLink()}>{getFilenameFromKey(name, type)}</a>
 		</div>
 	</div>
 </div>
