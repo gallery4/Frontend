@@ -1,3 +1,7 @@
+<script lang="ts">
+	import '../app.css';
+</script>
+
 <svelte:head>
 	<link
 		href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/cyborg/bootstrap.min.css"

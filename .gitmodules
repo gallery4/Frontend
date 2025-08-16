@@ -1,0 +1,3 @@
+[submodule "src/lib/grpc/protos"]
+	path = src/lib/grpc/protos
+	url = git@github.com:gallery4/Protos.git
