@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { navigating, page } from '$app/stores';
 	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
 	import { writable } from 'svelte/store';
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
@@ -10,6 +9,7 @@
 	import Content from '$lib/components/Content.svelte';
 	import NavBar from '$lib/components/NavBar.svelte';
 	import SideBar from '$lib/components/SideBar.svelte';
+	import { page } from '$app/state';
 
 	const { data } = $props();
 
@@ -32,7 +32,7 @@
 	});
 
 	function moveToHash(node: Element) {
-		const hash = $page.url.hash;
+		const hash = page.url.hash;
 		if (!hash) return;
 
 		const element = node.querySelector(`div[data-id="${hash.substring(1)}"]`);
