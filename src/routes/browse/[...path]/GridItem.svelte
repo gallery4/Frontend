@@ -1,20 +1,10 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { getIconColor, getIconImage, getIconName } from '$lib/icons';
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
-	import {
-		Card,
-		Icon,
-		Image,
-		CardBody,
-		CardText,
-		Spinner,
-		CardFooter
-	} from '@sveltestrap/sveltestrap';
 
 	let { name, type } = $props();
 
-	let loaded = $state(false);
-	
 	function getLink(): string {
 		switch (type) {
 			case 'file':
@@ -32,50 +22,32 @@
 		if (type != 'file') return getIconImage(type, false);
 
 		const filetype = determinFileType(name);
-		if (filetype == 'image') return `/get/grid_thumbnail/${name}`;
+		if (filetype == 'image') {
+			let url = new URL('/api/thumbnail', page.url.origin);
+			url.searchParams.set('path', name);
+
+			return url.toString();
+		}
 
 		return getIconImage(type, filetype);
 	}
 </script>
 
-<Card
-	data-id={createElementId(getFilenameFromKey(name, type))}
-	class="border"
-	style="border-color: {getIconColor(type, determinFileType(name))} !important;"
->
-	<a href={getLink()}>
-		<Image
-			class="card-img-top"
-			loading="lazy"
-			src={getImage()}
-			style="height: 300px; object-fit: cover;"
-			onload={() => {
-				loaded = true;
-			}}
-		></Image>
-	</a>
-	<CardBody style="height: 6em; overflow:hidden;" class="fade show">
-		{#if type == 'placeholder'}
-			<CardText class="placeholder-glow">
-				<span class="placeholder col-7"></span>
-			</CardText>
-		{:else}
-			<CardText>
-				<Icon
-					name={getIconName(type, determinFileType(name))}
-					style="color:{getIconColor(type, determinFileType(name))};"
-				></Icon>
-				&nbsp;{getFilenameFromKey(name, type)}
-			</CardText>
-		{/if}
-	</CardBody>
-	{#if !loaded}
-		<div class="position-absolute bottom-0 end-0">
-			<Spinner
-				type="grow"
-				size="sm"
-				style="color:{getIconColor(type, determinFileType(name))}; margin: 1em;"
-			></Spinner>
+<div class="card bg-base-100 h-full shadow-xl" id={createElementId(getFilenameFromKey(name, type))}>
+	<div class="mb-0 mt-0">
+		<a href={getLink()} aria-label={name} style="display:block; aspect-ratio: 3/4">
+			<img
+				class="card-img-top mb-0 mt-0 h-full"
+				alt={name}
+				loading="lazy"
+				src={getImage()}
+				style="object-fit: cover; object-position: 25% top"
+			/>
+		</a>
+	</div>
+	<div class="card-body">
+		<div class="h-[4em] overflow-hidden">
+			<a href={getLink()}>{name}</a>
 		</div>
-	{/if}
-</Card>
+	</div>
+</div>

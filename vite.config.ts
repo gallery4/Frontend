@@ -12,10 +12,5 @@ export default defineConfig(({ command, mode }) => {
 		resolve: {
 			alias: [{ find: 'path', replacement: 'path-browserify' }]
 		},
-		server: {
-			proxy: {
-				'/get': { target: env.BACKEND_URL, changeOrigin: true }
-			}
-		}
 	};
 });
