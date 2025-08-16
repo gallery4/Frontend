@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
 	import { writable } from 'svelte/store';
-	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import GridItem from './GridItem.svelte';
 	import ListItem from './ListItem.svelte';
 	import { compareItems, extractSort } from '$lib/utils';
@@ -10,6 +9,10 @@
 	import NavBar from '$lib/components/NavBar.svelte';
 	import SideBar from '$lib/components/SideBar.svelte';
 	import { page } from '$app/state';
+
+	import { Icon } from 'svelte-icon';
+	import viewGridIcon from '@mdi/svg/svg/view-grid.svg?raw';
+	import viewListIcon from '@mdi/svg/svg/view-list.svg?raw';
 
 	const { data } = $props();
 
@@ -73,7 +76,7 @@
 						{/each}
 					{/if}
 				</div>
-			{:else if  $browseView == 'list'}
+			{:else if $browseView == 'list'}
 				<div use:moveToHash>
 					{#if directories}
 						{#each directories.objects as object}
@@ -94,5 +97,26 @@
 			{/if}
 		</div>
 	</Content>
-	<SideBar bind:showMenu></SideBar>
+	<SideBar bind:showMenu>
+		<ul class="menu">
+			<li class="menu-title">View</li>
+			<li>
+				<button
+					class={$browseView == 'grid' ? 'menu-active' : ''}
+					onclick={() => $browseView = 'grid'}
+				>
+					<Icon data={viewGridIcon} /> Grid
+				</button>
+			</li>
+
+			<li>
+				<button
+					class={$browseView == 'list' ? 'menu-active' : ''}
+					onclick={() => $browseView = 'list'}
+				>
+					<Icon data={viewListIcon} /> List
+				</button>
+			</li>
+		</ul>
+	</SideBar>
 </Container>
