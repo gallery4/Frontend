@@ -55,7 +55,7 @@
 	<Content>
 		<NavBar bind:showMenu title="Browse: {data.response.path}" />
 		<div class="prose container mx-auto mt-4 max-w-[1024px]">
-			{#if false /*$browseView == 'grid'*/}
+			{#if $browseView == 'grid'}
 				<div use:moveToHash class="grid grid-cols-1 gap-8 md:grid-cols-3">
 					{#if directories}
 						{#each directories.objects as object}
@@ -73,7 +73,7 @@
 						{/each}
 					{/if}
 				</div>
-			{:else if true /*$browseView == 'list'*/}
+			{:else if  $browseView == 'list'}
 				<div use:moveToHash>
 					{#if directories}
 						{#each directories.objects as object}
