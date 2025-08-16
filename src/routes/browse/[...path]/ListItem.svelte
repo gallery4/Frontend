@@ -39,8 +39,8 @@
 	}
 </script>
 
-<div id={createElementId(getFilenameFromKey(name, type))} class="flex">
-	<div class="w-16 flex-none">
+<div id={createElementId(getFilenameFromKey(name, type))} class="flex shadow m-4">
+	<div class="w-16 flex-none m-1">
 		{#if type == 'file'}
 			{#if filetype == 'video'}
 				<media-player title={getFilenameFromKey(name, 'media')} src="/get/file/{name}">
