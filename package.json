@@ -42,7 +42,6 @@
 		"vite-plugin-devtools-json": "^1.0.0"
 	},
 	"dependencies": {
-		"@macfja/svelte-persistent-store": "^2.4.2",
 		"@mdi/svg": "^7.4.47",
 		"@protobuf-ts/plugin": "^2.11.1",
 		"@react2svelte/swipeable": "^0.1.4",
