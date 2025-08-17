@@ -39,38 +39,33 @@
 	});
 </script>
 
-<div class="card bg-base-100 h-full shadow-xl" id={createElementId(filename)}>
-	<div class="mb-0 mt-0">
-		<a href={linkUrl} aria-label={name} style="display:block; aspect-ratio: 3/4">
-			{#if type == 'file'}
-				{#if filetype == 'image'}
-					<img
-						class="card-img-top mb-0 mt-0 h-full"
-						alt={name}
-						loading="lazy"
-						src={thumbnailUrl}
-						style="object-fit: cover; object-position: 25% top"
-					/>
-				{:else}
-					<Icon
-						class="card-img-top h-full {getIconClass(type, filetype)}"
-						data={getIcon(type, filetype)}
-						width="359"
-						height="510"
-						viewBox="0 -8 24 48"
-					/>
-				{/if}
+<div class="card bg-base-100 h-full w-72 shadow-xl" id={createElementId(filename)}>
+	<a href={linkUrl} aria-label={name} style="display:block; aspect-ratio: 3/4">
+		{#if type == 'file'}
+			{#if filetype == 'image'}
+				<img
+					class="card-img-top mb-0 mt-0 h-full object-cover"
+					alt={name}
+					loading="lazy"
+					src={thumbnailUrl}
+				/>
 			{:else}
 				<Icon
-					class="card-img-top h-full {getIconClass(type, filetype)}"
+					class="mx-auto mt-16 {getIconClass(type, filetype)} object-cover object-center"
 					data={getIcon(type, filetype)}
-					width="359"
-					height="510"
-					viewBox="0 -8 24 48"
+					width="160"
+					height="160"
 				/>
 			{/if}
-		</a>
-	</div>
+		{:else}
+			<Icon
+				class="mx-auto mt-16 {getIconClass(type, filetype)} object-cover object-center"
+				data={getIcon(type, filetype)}
+				width="160"
+				height="160"
+			/>
+		{/if}
+	</a>
 	<div class="card-body">
 		<div class="mx-2 h-[4em] overflow-hidden">
 			{#if type == 'file' && filetype == 'audio'}
