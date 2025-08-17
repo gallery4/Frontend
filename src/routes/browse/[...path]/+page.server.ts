@@ -1,6 +1,5 @@
 import {env} from '$env/dynamic/private';
 import {BrowseClient} from '$lib/grpc/browse.client';
-import {fetchList} from '$lib/server';
 import {ChannelCredentials} from '@grpc/grpc-js';
 import {GrpcTransport} from '@protobuf-ts/grpc-transport';
 
