@@ -3,21 +3,17 @@
 	import * as pdfjsLib from 'pdfjs-dist';
 	import { onMount } from 'svelte';
 	import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url';
-	import type { PageViewport } from 'pdfjs-dist/types/src/display/display_utils.js';
-	import {
-		Button,
-		Container,
-		Icon,
-		Pagination,
-		PaginationItem,
-		PaginationLink
-	} from '@sveltestrap/sveltestrap';
+	import { Icon } from 'svelte-icon';
+	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
+	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
 
 	export const ssr = false;
 
 	const { url } = $props();
-	var pdf: pdfjsLib.PDFDocumentProxy = $state(null);
+	var pdf: pdfjsLib.PDFDocumentProxy | undefined = $state(undefined);
 	var pageNumber = $state(1);
+
+	let canvas: HTMLCanvasElement;
 
 	// The workerSrc property shall be specified.
 	pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
@@ -28,6 +24,9 @@
 	});
 
 	async function render(): Promise<void> {
+		if (!pdf) {
+			return;
+		}
 		// Fetch the first page
 		var page = await pdf.getPage(pageNumber);
 
@@ -35,74 +34,47 @@
 		var viewport = page.getViewport({ scale: scale });
 
 		// Prepare canvas using PDF page dimensions
-		var canvas = document.getElementById('the-canvas');
+
 		var context = canvas.getContext('2d');
 		canvas.height = viewport.height;
 		canvas.width = viewport.width;
 
+		if (context == null) {
+			return;
+		}
+
 		// Render PDF page into canvas context
 		var renderContext = {
+			canvas,
 			canvasContext: context,
 			viewport: viewport
 		};
 		await page.render(renderContext).promise;
 	}
 
-	$effect(async () => {
-		if (pdf) await render();
+	$effect(() => {
+		if (pdf) render();
 	});
 </script>
 
-<div>
-	<canvas id="the-canvas" class="mx-auto d-block mb-5"></canvas>
-	<Button
-		color="link"
-		outline
-		class="position-fixed top-0 start-0 h-100"
-		style="width:20%;"
-		on:click={() => {
+<div class="h-full w-full">
+	<canvas class="d-block mx-auto" bind:this={canvas}></canvas>
+
+	<button
+		class="fixed inset-y-1/2 start-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
+		onclick={() => {
 			if (pageNumber > 1) pageNumber--;
 		}}
 	>
-		<Icon name="chevron-left"></Icon>
-	</Button>
-	<Button
-		color="link"
-		outline
-		class="position-fixed top-0 end-0 h-100 w-10"
-		style="width:20%;"
-		on:click={() => {
-			if (pageNumber < pdf.numPages) pageNumber++;
+		<Icon data={prevIcon} class="mx-auto"></Icon>
+	</button>
+
+	<button
+		class="fixed inset-y-1/2 end-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
+		onclick={() => {
+			if (pageNumber < (pdf?.numPages ?? 0)) pageNumber++;
 		}}
 	>
-		<Icon name="chevron-right"></Icon>
-	</Button>
+		<Icon data={nextIcon} class="mx-auto"></Icon>
+	</button>
 </div>
-
-<Pagination class="position-fixed bottom-0 start-50 translate-middle-x">
-	<PaginationItem>
-		<PaginationLink on:click={() => (pageNumber = 1)}>
-			<Icon name="chevron-bar-left" />
-		</PaginationLink>
-	</PaginationItem>
-	<PaginationItem disabled={pageNumber <= 1}>
-		<PaginationLink on:click={() => pageNumber--}>
-			<Icon name="chevron-left" />
-		</PaginationLink>
-	</PaginationItem>
-	<PaginationItem active>
-		<PaginationLink>
-			{pageNumber}
-		</PaginationLink>
-	</PaginationItem>
-	<PaginationItem disabled={pageNumber >= pdf?.numPages}>
-		<PaginationLink on:click={() => pageNumber++}>
-			<Icon name="chevron-right" />
-		</PaginationLink>
-	</PaginationItem>
-	<PaginationItem>
-		<PaginationLink on:click={() => (pageNumber = pdf.numPages)}>
-			<Icon name="chevron-bar-right" />
-		</PaginationLink>
-	</PaginationItem>
-</Pagination>

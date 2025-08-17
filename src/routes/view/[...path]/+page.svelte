@@ -7,7 +7,7 @@
 	import { writable } from 'svelte/store';
 	import type { SwipeEventData } from '@react2svelte/swipeable';
 	import SvelteReader from 'svelte-reader';
-	// import PdfViewer from '$lib/components/PdfViewer.svelte';
+	import PdfViewer from '$lib/components/PdfViewer.svelte';
 
 	import { Icon } from 'svelte-icon';
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
@@ -21,6 +21,8 @@
 
 	import { page } from '$app/state';
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
+
+	export const ssr = false;
 
 	const { data } = $props();
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
@@ -112,17 +114,14 @@
 				</button>
 			</div>
 
-			<!--
 		{:else if filetype == 'pdf'}
 			<div>
 				<div
-					class="position-absolute h-100 w-100 h-100 w-100 z-n1 start-0 top-0 overflow-auto"
-					style="padding-top:65px;"
+					class="fixed h-full w-full h-full w-full z-n1 start-0 top-0 top-20 overflow-auto"
 				>
-					<PdfViewer url="/get/file/{data.current}" />
+					<PdfViewer url={mediaUrl} />
 				</div>
 			</div>
-		-->
 		{:else if filetype == 'epub'}
 			<Container>
 				<div
