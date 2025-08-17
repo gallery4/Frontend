@@ -2,6 +2,10 @@
 	import { createElementId } from '$lib/utils';
 	import { goto } from '$app/navigation';
 
+	import { Icon } from 'svelte-icon';
+	import directoryUpIcon from '@mdi/svg/svg/folder-upload.svg?raw';
+	import directoryIcon from '@mdi/svg/svg/folder.svg?raw';
+
 	const { path } = $props();
 	const data: BreadcrumbData[] = $derived(createBreadcrumb(path));
 
@@ -49,10 +53,22 @@
 </script>
 
 <ul class="menu">
-	<li class="menu-title">Parent Directories</li>
-	{#each data as b}
-		<li>
-			<button onclick={() => gotoBrowse(b.path)} disabled={data.length == 1}> {b.name} </button>
-		</li>
-	{/each}
+	<li class="menu-title">Directory</li>
+	<li>
+		<details class="dropdown">
+			<summary class="btn m-1"><Icon data={directoryUpIcon} /> Parents</summary>
+			<ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+				<ul class="menu">
+					{#each data as b}
+						<li>
+							<button onclick={() => gotoBrowse(b.path)} disabled={data.length == 1}>
+								<Icon data={directoryIcon} />
+								{b.name}
+							</button>
+						</li>
+					{/each}
+				</ul>
+			</ul>
+		</details>
+	</li>
 </ul>
