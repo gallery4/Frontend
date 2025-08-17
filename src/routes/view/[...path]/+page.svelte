@@ -113,29 +113,14 @@
 					<Icon data={nextIcon} class="mx-auto"></Icon>
 				</button>
 			</div>
-
 		{:else if filetype == 'pdf'}
-			<div>
-				<div
-					class="fixed h-full w-full h-full w-full z-n1 start-0 top-0 top-20 overflow-auto"
-				>
-					<PdfViewer url={mediaUrl} />
-				</div>
+			<div class="z-n1 fixed start-0 top-0 top-20 h-full w-full overflow-auto">
+				<PdfViewer url={mediaUrl} />
 			</div>
 		{:else if filetype == 'epub'}
-			<Container>
-				<div
-					class="position-absolute h-100 w-100 h-100 w-100 z-n1 start-0 top-0"
-					style="padding-top:65px;"
-				>
-					<SvelteReader
-						url={mediaUrl}
-						title="&nbsp;"
-						getRendition={() => {}}
-						tocChanged={() => {}}
-					/>
-				</div>
-			</Container>
+			<div class="fixed bottom-0 end-0 start-0 top-20 h-full w-full">
+				<SvelteReader url={mediaUrl} title="&nbsp;" getRendition={() => {}} tocChanged={() => {}} />
+			</div>
 		{:else if filetype == 'audio' || filetype == 'video'}
 			<div class="mx-auto mt-4 max-w-[1024px]">
 				<media-player
