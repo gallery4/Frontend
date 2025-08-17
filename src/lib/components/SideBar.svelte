@@ -25,33 +25,17 @@
 
 		<li class="menu-title">Navigation</li>
 
-		<!-- ul class="list">
+		<ul class="list">
 			<li class="list-row">
-				<button onclick={() => goto(browseURL(page.url.origin))}>
+				<button onclick={() => goto(new URL("/browse", page.url.origin))}>
 					<Icon data={browseIcon} />&nbsp;Browse items
 				</button>
 			</li>
 			<li class="list-row">
-				<button onclick={() => goto(tagURL(page.url.origin))}>
-					<Icon data={tagsIcon} />&nbsp;Tag list
-				</button>
-			</li>
-
-			<li class="list-row">
-				<button onclick={() => goto(historyURL(page.url.origin))}>
-					<Icon data={historyIcon} />&nbsp;History
-				</button>
-			</li>
-			<li class="list-row">
-				<button onclick={() => goto(userURL(page.url.origin))}>
-					<Icon data={userIcon} />User
-				</button>
-			</li>
-			<li class="list-row">
-				<button onclick={() => goto(aboutURL(page.url.origin))}>
+				<button onclick={() => goto(new URL("/about", page.url.origin))}>
 					<Icon data={aboutIcon} />About
 				</button>
 			</li>
-		</ul -->
+		</ul>
 	</ul>
 </div>
