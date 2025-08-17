@@ -54,12 +54,7 @@
 <li id={createElementId(filename)} class="list-row">
 	<div class="">
 		{#if type == 'file'}
-			{#if filetype == 'video'}
-				<media-player title={filename} src="/get/file/{name}">
-					<media-provider></media-provider>
-					<media-video-layout></media-video-layout>
-				</media-player>
-			{:else if filetype == 'image'}
+			{#if filetype == 'image'}
 				<div class="tooltip tooltip-right size-[64px]">
 					<div class="tooltip-content">
 						<img src={hoverThumbImage} alt="hover" />
@@ -73,7 +68,7 @@
 						alt="thumbnail"
 						loading="lazy"
 						src={thumbnailUrl}
-						class="size-[64px] rounded-box mt-0 mb-0"
+						class="rounded-box mb-0 mt-0"
 						onload={() => {
 							loaded = true;
 						}}
