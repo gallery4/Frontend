@@ -14,6 +14,7 @@
 	import viewGridIcon from '@mdi/svg/svg/view-grid.svg?raw';
 	import viewListIcon from '@mdi/svg/svg/view-list.svg?raw';
 	import { Timestamp } from '$lib/grpc/google/protobuf/timestamp';
+	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 
 	const { data } = $props();
 
@@ -111,6 +112,7 @@
 		</div>
 	</Content>
 	<SideBar bind:showMenu>
+		<Breadcrumb path={data.response.path}/>
 		<ul class="menu">
 			<li class="menu-title">View</li>
 			<li>

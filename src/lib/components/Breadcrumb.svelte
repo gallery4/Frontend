@@ -1,22 +1,16 @@
 <script lang="ts">
-	import { Button, Icon, Input, InputGroup, InputGroupText } from '@sveltestrap/sveltestrap';
-	import { createElementId } from '../utils';
+	import { createElementId } from '$lib/utils';
 	import { goto } from '$app/navigation';
 
 	const { path } = $props();
 	const data: BreadcrumbData[] = $derived(createBreadcrumb(path));
-
-	let pathVal = $state(path);
-
-	$effect(() => {
-		pathVal = path;
-	});
 
 	interface BreadcrumbData {
 		name: string;
 		path: string;
 		targetId: string;
 	}
+
 	function createBreadcrumb(path?: string): BreadcrumbData[] {
 		let output = [];
 		output.push({
@@ -54,17 +48,11 @@
 	}
 </script>
 
-<InputGroup>
-	<InputGroupText><Icon name="sign-turn-right" /></InputGroupText>
-	<Button onclick={() => gotoBrowse(data[0].path)} disabled={data.length == 1}>
-		<Icon name="slash" />
-	</Button>
-	<Input type="select" bind:value={pathVal} onchange={() => gotoBrowse(pathVal)}>
-		{#each data as b}
-			<option value={b.path}>{b.name}</option>
-		{/each}
-	</Input>
-	<Button onclick={() => gotoBrowse(data[data.length - 2].path)} disabled={data.length == 1}>
-		<Icon name="arrow-90deg-up" />
-	</Button>
-</InputGroup>
+<ul class="menu">
+	<li class="menu-title">Parent Directories</li>
+	{#each data as b}
+		<li>
+			<button onclick={() => gotoBrowse(b.path)} disabled={data.length == 1}> {b.name} </button>
+		</li>
+	{/each}
+</ul>

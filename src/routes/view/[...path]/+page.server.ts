@@ -30,6 +30,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
 
     return {
         current: pathVal,
+        parent: parent,
         files: call.response.files,
     }
 }

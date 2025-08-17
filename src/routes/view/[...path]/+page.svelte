@@ -12,11 +12,15 @@
 	import { Icon } from 'svelte-icon';
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
 	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
+	import downloadIcon from '@mdi/svg/svg/download.svg?raw';
+
 	import Container from '$lib/components/Container.svelte';
 	import Content from '$lib/components/Content.svelte';
 	import NavBar from '$lib/components/NavBar.svelte';
 	import SideBar from '$lib/components/SideBar.svelte';
+
 	import { page } from '$app/state';
+	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 
 	const { data } = $props();
 	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
@@ -166,26 +170,20 @@
 		{/if}
 	</Content>
 	<SideBar bind:showMenu>
-		<!--ul class="menu">
-			<li class="menu-title">View</li>
+		<ul class="menu">
+			<li class="menu-title">Action</li>
 			<li>
-				<button
-					class={$browseView == 'grid' ? 'menu-active' : ''}
-					onclick={() => $browseView = 'grid'}
+				<a
+					class="btn"
+					href={mediaUrl}
+					target="_blank"
 				>
-					<Icon data={viewGridIcon} /> Grid
-				</button>
+					<Icon data={downloadIcon} /> Get
+				</a>
 			</li>
+		</ul>
 
-			<li>
-				<button
-					class={$browseView == 'list' ? 'menu-active' : ''}
-					onclick={() => $browseView = 'list'}
-				>
-					<Icon data={viewListIcon} /> List
-				</button>
-			</li>
-		</ul-->
+		<Breadcrumb path={data.parent}/>
 
 		<!-- TODO: Implement menut
 		<Nav navbar class="ms-lg-1 mt-lg-0 mt-3">
