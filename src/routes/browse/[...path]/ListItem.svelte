@@ -42,48 +42,44 @@
 	const thumbnailUrl = $derived.by(() => {
 		let url = new URL('/api/thumbnail', page.url.origin);
 		url.searchParams.set('path', name);
-		url.searchParams.set('type', 'LIST');
+		url.searchParams.set('type', 'GRID');
+		url.searchParams.set('width', '64');
+		url.searchParams.set('height', '64');
 		return url.toString();
 	});
 
 	const filename = $derived(getFilenameFromKey(name, type));
 </script>
 
-<div id={createElementId(filename)} class="h-30 m-4 flex shadow">
-	<div class="m-2 my-auto w-16 flex-none">
+<li id={createElementId(filename)} class="list-row">
+	<div class="">
 		{#if type == 'file'}
 			{#if filetype == 'video'}
 				<media-player title={filename} src="/get/file/{name}">
 					<media-provider></media-provider>
 					<media-video-layout></media-video-layout>
 				</media-player>
-			{:else if filetype == 'audio'}
-				<Icon
-					class={getIconClass(type, filetype)}
-					data={getIcon(type, filetype)}
-					width="64px"
-					height="64px"
-				/>
 			{:else if filetype == 'image'}
-				{#if !loaded}
-					<span class="loading loading-dots my-auto"></span>
-				{/if}
-				<div class="tooltip tooltip-right">
+				<div class="tooltip tooltip-right size-[64px]">
 					<div class="tooltip-content">
 						<img src={hoverThumbImage} alt="hover" />
 					</div>
 
+					{#if !loaded}
+						<span class="loading loading-dots mx-auto my-auto"></span>
+					{/if}
+
 					<img
 						alt="thumbnail"
-						class="thumbnail"
 						loading="lazy"
 						src={thumbnailUrl}
+						class="size-[64px] rounded-box mt-0 mb-0"
 						onload={() => {
 							loaded = true;
 						}}
 					/>
 				</div>
-			{:else if filetype == 'pdf'}
+			{:else}
 				<Icon
 					data={getIcon(type, filetype)}
 					width="64px"
@@ -100,7 +96,7 @@
 			/>
 		{/if}
 	</div>
-	<div class="m-1 my-2 w-64 flex-1">
+	<div class="list-col-grow">
 		<a href={linkUrl}>
 			{#if type == 'placeholder'}
 				<span class="placeholder"></span>
@@ -119,4 +115,4 @@
 	<div class="my-2 w-24 flex-none">
 		{new Date(dateTime).toLocaleString()}
 	</div>
-</div>
+</li>

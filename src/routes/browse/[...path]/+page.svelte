@@ -79,7 +79,7 @@
 					{/if}
 				</div>
 			{:else if $browseView == 'list'}
-				<div use:moveToHash>
+				<ul class="list" use:moveToHash>
 					{#if directories}
 						{#each directories.objects as object}
 							<ListItem
@@ -107,7 +107,7 @@
 							/>
 						{/each}
 					{/if}
-				</div>
+				</ul>
 			{/if}
 		</div>
 	</Content>
