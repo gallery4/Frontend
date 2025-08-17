@@ -130,7 +130,7 @@
 					style="padding-top:65px;"
 				>
 					<SvelteReader
-						url="/get/file/{data.current}"
+						url={mediaUrl}
 						title="&nbsp;"
 						getRendition={() => {}}
 						tocChanged={() => {}}
