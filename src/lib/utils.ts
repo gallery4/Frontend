@@ -48,19 +48,3 @@ export function compareItems(a: any, b: any, sortBy: string, order: string) {
 
     return output;
 }
-
-export function extractSort(sort: string) {
-    switch (sort) {
-        case "name ascending":
-            return { sortBy: "name", order: "ascending" };
-        case "name descending":
-            return { sortBy: "name", order: "descending" };
-
-        case "dateTime ascending":
-            return { sortBy: "dateTime", order: "ascending" };
-        case "dateTime descending":
-            return { sortBy: "dateTime", order: "descending" };
-    }
-
-    throw new Error("invalid parameter")
-}

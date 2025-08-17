@@ -12,5 +12,13 @@ export default defineConfig(({ command, mode }) => {
 		resolve: {
 			alias: [{ find: 'path', replacement: 'path-browserify' }]
 		},
+
+		// TODO: pdflib's service worker causes vidstack to work erraticly.
+		// this is temporary disable the error of missing DOMMatrix.
+		server:{
+			hmr:{
+				overlay: false
+			}
+		}
 	};
 });
