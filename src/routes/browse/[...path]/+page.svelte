@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
-	import { writable } from 'svelte/store';
 	import GridItem from './GridItem.svelte';
 	import ListItem from './ListItem.svelte';
-	import { compareItems, extractSort } from '$lib/utils';
+	import { compareItems, getFilenameFromKey } from '$lib/utils';
 	import Container from '$lib/components/Container.svelte';
 	import Content from '$lib/components/Content.svelte';
 	import NavBar from '$lib/components/NavBar.svelte';
@@ -18,9 +16,9 @@
 
 	const { data } = $props();
 
-	const browseView = persistBrowserLocal(writable('grid'), 'browseView');
-	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
-	const { sortBy, order } = $derived(extractSort($sort));
+	let browseView: 'grid' | 'list' = $state('grid');
+	let sortBy = $state('name');
+	let order = $state('ascending');
 
 	const files = $derived({
 		objects: data.response.files.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
@@ -53,14 +51,14 @@
 </script>
 
 <svelte:head>
-	<title>Gallery - Browse: {data.response.path}</title>
+	<title>Gallery 4 - {getFilenameFromKey(data.response.path, "directory")}</title>
 </svelte:head>
 
 <Container bind:showMenu>
 	<Content>
-		<NavBar bind:showMenu title="Browse: {data.response.path}" />
+		<NavBar bind:showMenu title={getFilenameFromKey(data.response.path, "directory")} />
 		<div class="prose container mx-auto mt-4 max-w-[1024px]">
-			{#if $browseView == 'grid'}
+			{#if browseView == 'grid'}
 				<div use:moveToHash class="grid grid-cols-1 gap-8 md:grid-cols-3">
 					{#if directories}
 						{#each directories.objects as object}
@@ -78,7 +76,7 @@
 						{/each}
 					{/if}
 				</div>
-			{:else if $browseView == 'list'}
+			{:else if browseView == 'list'}
 				<ul class="list" use:moveToHash>
 					{#if directories}
 						{#each directories.objects as object}
@@ -112,13 +110,13 @@
 		</div>
 	</Content>
 	<SideBar bind:showMenu>
-		<Breadcrumb path={data.response.path}/>
+		<Breadcrumb path={data.response.path} />
 		<ul class="menu">
 			<li class="menu-title">View</li>
 			<li>
 				<button
-					class={$browseView == 'grid' ? 'menu-active' : ''}
-					onclick={() => ($browseView = 'grid')}
+					class={browseView == 'grid' ? 'menu-active' : ''}
+					onclick={() => (browseView = 'grid')}
 				>
 					<Icon data={viewGridIcon} /> Grid
 				</button>
@@ -126,8 +124,8 @@
 
 			<li>
 				<button
-					class={$browseView == 'list' ? 'menu-active' : ''}
-					onclick={() => ($browseView = 'list')}
+					class={browseView == 'list' ? 'menu-active' : ''}
+					onclick={() => (browseView = 'list')}
 				>
 					<Icon data={viewListIcon} /> List
 				</button>

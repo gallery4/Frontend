@@ -67,12 +67,12 @@
 </script>
 
 <svelte:head>
-	<title>Gallery - View: {data.current}</title>
+	<title>Gallery 4 - {getFilenameFromKey(data.current, 'image')}</title>
 </svelte:head>
 
 <Container bind:showMenu>
 	<Content>
-		<NavBar bind:showMenu title="Browse: {data.current}" />
+		<NavBar bind:showMenu title={getFilenameFromKey(data.current, 'image')} />
 		{#if filetype == 'image'}
 			<div class="top-18 fixed bottom-0 end-0 start-0">
 				{#if !isImageLoaded}
@@ -152,7 +152,7 @@
 					</button>
 				</div>
 			</div>
-		{:else if filetype == 'audio' }
+		{:else if filetype == 'audio'}
 			<div class="mx-auto mt-16 max-w-[1024px]">
 				<media-player
 					class="d-block"
