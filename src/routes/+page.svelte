@@ -1,13 +1,5 @@
 <script lang="ts">
 	import { redirect } from '@sveltejs/kit';
-	import {
-		Container,
-		Navbar,
-		NavbarBrand,
-		NavbarToggler	
-    } from '@sveltestrap/sveltestrap';
-
-	let isOpen = $state(false);
 
 	redirect(307, "/browse")
 </script>

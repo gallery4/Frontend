@@ -122,19 +122,21 @@
 					<PdfViewer url="/get/file/{data.current}" />
 				</div>
 			</div>
-			
-			TODO: restore the epub reader.
-			{:else if filetype == 'epub'}
-				<Container>
-					<div
-						class="position-absolute top-0 start-0 h-100 w-100 top-0 start-0 h-100 w-100 z-n1"
-						style="padding-top:65px;"
-					>
-						<SvelteReader url="/get/file/{data.current}" title="&nbsp;"/>
-					</div>
-				</Container>
-			{/if}
 		-->
+		{:else if filetype == 'epub'}
+			<Container>
+				<div
+					class="position-absolute h-100 w-100 h-100 w-100 z-n1 start-0 top-0"
+					style="padding-top:65px;"
+				>
+					<SvelteReader
+						url="/get/file/{data.current}"
+						title="&nbsp;"
+						getRendition={() => {}}
+						tocChanged={() => {}}
+					/>
+				</div>
+			</Container>
 		{:else if filetype == 'audio' || filetype == 'video'}
 			<div class="mx-auto mt-4 max-w-[1024px]">
 				<media-player
@@ -173,50 +175,12 @@
 		<ul class="menu">
 			<li class="menu-title">Action</li>
 			<li>
-				<a
-					class="btn"
-					href={mediaUrl}
-					target="_blank"
-				>
+				<a class="btn" href={mediaUrl} target="_blank">
 					<Icon data={downloadIcon} /> Get
 				</a>
 			</li>
 		</ul>
 
-		<Breadcrumb path={data.parent}/>
-
-		<!-- TODO: Implement menut
-		<Nav navbar class="ms-lg-1 mt-lg-0 mt-3">
-				<InputGroup>
-					<InputGroupText><Icon name="sort-down" /></InputGroupText>
-					<Input type="select" bind:value={$sort}>
-						<option value="name ascending">name ascending</option>
-						<option value="name descending">name descending</option>
-						<option value="dateTime ascending">date-time ascending</option>
-						<option value="dateTime descending">date-time descending</option>
-					</Input>
-				</InputGroup>
-			</Nav>
-			<Nav navbar class="ms-auto">
-				<NavItem>
-					<NavLink href="/get/file/{data.current}" target="_blank">
-						<Icon name="download"></Icon>&nbsp;Get
-					</NavLink>
-				</NavItem>
-			</Nav>
-			<Nav navbar>
-				<NavItem>
-					<NavLink disabled={previous == null} href={`/view/${previous}`}>
-						<Icon name="chevron-left"></Icon>&nbsp;Previous
-					</NavLink>
-				</NavItem>
-				<NavItem>
-					<NavLink disabled={next == null} href={`/view/${next}`}>
-						<div class="d-lg-none"><Icon name="chevron-right"></Icon>&nbsp;Next</div>
-						<div class="d-none d-lg-block">Next&nbsp;<Icon name="chevron-right"></Icon></div>
-					</NavLink>
-				</NavItem>
-			</Nav>
-		-->
+		<Breadcrumb path={data.parent} />
 	</SideBar>
 </Container>
