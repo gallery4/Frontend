@@ -121,7 +121,7 @@
 			<div class="fixed bottom-0 end-0 start-0 top-20 h-full w-full">
 				<SvelteReader url={mediaUrl} title="&nbsp;" getRendition={() => {}} tocChanged={() => {}} />
 			</div>
-		{:else if filetype == 'audio' || filetype == 'video'}
+		{:else if filetype == 'video'}
 			<div class="mx-auto mt-4 max-w-[1024px]">
 				<media-player
 					class="d-block"
@@ -129,8 +129,38 @@
 					src={mediaUrl}
 				>
 					<media-provider></media-provider>
-					<media-audio-layout></media-audio-layout>
 					<media-video-layout></media-video-layout>
+				</media-player>
+
+				<div class="join py-4">
+					<button
+						class="btn join-item"
+						onclick={() => {
+							if (previous != null) goto(`/view/${previous}`);
+						}}
+					>
+						<Icon data={prevIcon}></Icon>&nbsp;Previous
+					</button>
+
+					<button
+						class="btn join-item"
+						onclick={() => {
+							if (next != null) goto(`/view/${next}`);
+						}}
+					>
+						<Icon data={nextIcon}></Icon>&nbsp;Next
+					</button>
+				</div>
+			</div>
+		{:else if filetype == 'audio' }
+			<div class="mx-auto mt-16 max-w-[1024px]">
+				<media-player
+					class="d-block"
+					title={getFilenameFromKey(data.current, 'media')}
+					src={mediaUrl}
+				>
+					<media-provider></media-provider>
+					<media-audio-layout></media-audio-layout>
 				</media-player>
 
 				<div class="join py-4">
