@@ -26,6 +26,15 @@ export function determinFileType(name: string): string | false {
     if (mimetype == "application/epub+zip"){
         return "epub"
     }
+
+    // NOTE: mime.lookup() return "application/mp4" as it could not determine whether the file
+    // contains only audio, or audio + video, or neither of them, from the file name alone 
+    // which would results in different MIME types. 
+    // Let's assume that mp4 is a video file and let the vidstack determine how to handle the file.
+    if (mimetype == "application/mp4") {
+        return "video"
+    }
+
     return mimetype.substring(0, mimetype.indexOf('/'));
 }
 

@@ -51,6 +51,13 @@
 	}
 
 	let showMenu = $state(false);
+
+	const mediaUrl = $derived.by(() => {
+		let url = new URL('/api/get', page.url.origin);
+		url.searchParams.set('path', data.current);
+
+		return url.toString();
+	});
 </script>
 
 <svelte:head>
@@ -124,28 +131,26 @@
 				</Container>
 			{/if}
 		-->
-		{:else if filetype == 'video' || filetype == 'audio'}
+		{:else if filetype == 'audio' || filetype == 'video'}
 			<div class="mx-auto mt-4 max-w-[1024px]">
 				<media-player
 					class="d-block"
 					title={getFilenameFromKey(data.current, 'media')}
-					src="/api/get/{data.current}"
+					src={mediaUrl}
 				>
 					<media-provider></media-provider>
-					<media-video-layout></media-video-layout>
 					<media-audio-layout></media-audio-layout>
+					<media-video-layout></media-video-layout>
 				</media-player>
-			</div>
 
-			<div>
-				<div class="join">
+				<div class="join py-4">
 					<button
 						class="btn join-item"
 						onclick={() => {
 							if (previous != null) goto(`/view/${previous}`);
 						}}
 					>
-						<Icon data={prevIcon} class="mx-auto"></Icon>&nbsp;Previous
+						<Icon data={prevIcon}></Icon>&nbsp;Previous
 					</button>
 
 					<button
@@ -154,7 +159,7 @@
 							if (next != null) goto(`/view/${next}`);
 						}}
 					>
-						<Icon data={nextIcon} class="mx-auto"></Icon>&nbsp;Next
+						<Icon data={nextIcon}></Icon>&nbsp;Next
 					</button>
 				</div>
 			</div>
