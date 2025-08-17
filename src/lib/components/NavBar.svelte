@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Icon } from 'svelte-icon';
 	import menu from '@mdi/svg/svg/menu.svg?raw';
-	// import logo from '$lib/logo.svg?raw';
-	// import { browseURL } from '$lib/routes';
+	import logo from '$lib/logo.svg?raw';
 	import { page } from '$app/state';
 	let { title, showMenu = $bindable(), hasmenu = true } = $props();
 </script>
@@ -11,8 +10,7 @@
 	<div class="w-full max-w-[1024px] mx-auto flex">
 		<div class="flex-none">
 			<a href={new URL("/browse", page.url.origin).toString()}>
-				<!-- Icon data={logo} width="128px" height="48px" /-->
-				 Gallery
+				<Icon data={logo} width="128px" height="48px" />
 			</a>
 		</div>
 		<div class="flex-1 m-2">
