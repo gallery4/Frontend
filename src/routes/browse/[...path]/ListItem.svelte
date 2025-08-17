@@ -46,7 +46,7 @@
 		return url.toString();
 	});
 
-	const filename = $derived.by(() => getFilenameFromKey(name, type));
+	const filename = $derived(getFilenameFromKey(name, type));
 </script>
 
 <div id={createElementId(filename)} class="h-30 m-4 flex shadow">
