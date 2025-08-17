@@ -3,6 +3,7 @@
 	import { getIcon, getIconClass } from '$lib/icons';
 	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
 	import { Icon } from 'svelte-icon';
+	import 'vidstack/bundle';
 
 	let { name, type } = $props();
 
@@ -26,6 +27,13 @@
 		let url = new URL('/api/thumbnail', page.url.origin);
 		url.searchParams.set('path', name);
 		url.searchParams.set('type', 'GRID');
+
+		return url.toString();
+	});
+
+	const mediaUrl = $derived.by(() => {
+		let url = new URL('/api/get', page.url.origin);
+		url.searchParams.set('path', name);
 
 		return url.toString();
 	});
@@ -65,7 +73,14 @@
 	</div>
 	<div class="card-body">
 		<div class="mx-2 h-[4em] overflow-hidden">
-			<a href={linkUrl}>{filename}</a>
+			{#if type == 'file' && filetype == 'audio'}
+				<media-player class="d-block" title={filename} src={mediaUrl}>
+					<media-provider></media-provider>
+					<media-audio-layout></media-audio-layout>
+				</media-player>
+			{:else}
+				<a href={linkUrl}>{filename}</a>
+			{/if}
 		</div>
 	</div>
 </div>
