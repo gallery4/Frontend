@@ -1,10 +1,8 @@
 <script lang="ts">
 	import 'vidstack/bundle';
-	import { compareItems, determinFileType, extractSort, getFilenameFromKey } from '$lib/utils.js';
+	import { compareItems, determinFileType,  getFilenameFromKey } from '$lib/utils.js';
 	import { goto } from '$app/navigation';
-	import { persistBrowserLocal } from '@macfja/svelte-persistent-store';
 	import { swipeable } from '@react2svelte/swipeable';
-	import { writable } from 'svelte/store';
 	import type { SwipeEventData } from '@react2svelte/swipeable';
 	import SvelteReader from 'svelte-reader';
 	import PdfViewer from '$lib/components/PdfViewer.svelte';
@@ -25,11 +23,9 @@
 	export const ssr = false;
 
 	const { data } = $props();
-	const sort = persistBrowserLocal(writable('name ascending'), 'sort');
-	const { sortBy, order } = $derived(extractSort($sort));
 
 	const files = $derived(
-		data.files.toSorted((a: any, b: any) => compareItems(a, b, sortBy, order))
+		data.files.toSorted((a: any, b: any) => compareItems(a, b, 'name', 'ascending'))
 	);
 
 	const index = $derived(files.findIndex((e: any) => e.name == data.current));
