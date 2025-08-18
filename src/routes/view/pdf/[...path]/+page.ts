@@ -12,12 +12,12 @@ export const load: PageLoad = async ({ params, url }) => {
 
     const parent = path.dirname(pathVal)
 
-    const mediaUrl = new URL('/api/get', url.origin);
-    mediaUrl.searchParams.set('path', decodePath(pathVal));
+    const mediaURL = new URL('/api/get', url.origin);
+    mediaURL.searchParams.set('path', decodePath(pathVal));
 
     return {
         filename: path.basename(pathVal),
         parent: parent,
-        mediaUrl: mediaUrl.toString()
+        mediaURL: mediaURL.toString()
     }
 }

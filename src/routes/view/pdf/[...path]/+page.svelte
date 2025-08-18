@@ -22,14 +22,14 @@
 	<Content>
 		<NavBar bind:showMenu title={data.filename} />
 		<div class="z-n1 fixed start-0 top-0 top-20 h-full w-full overflow-auto">
-			<PdfViewer url={data.mediaUrl} />
+			<PdfViewer url={data.mediaURL} />
 		</div>
 	</Content>
 	<SideBar bind:showMenu>
 		<ul class="menu">
 			<li class="menu-title">Action</li>
 			<li>
-				<a class="btn" href={data.mediaUrl} target="_blank">
+				<a class="btn" href={data.mediaURL} target="_blank">
 					<Icon data={downloadIcon} /> Get
 				</a>
 			</li>

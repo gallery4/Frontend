@@ -31,7 +31,7 @@
 			<media-player
 				class="d-block"
 				title={data.filename}
-				src={data.mediaUrl.toString()}
+				src={data.mediaURL.toString()}
 			>
 				<media-provider></media-provider>
 				<media-video-layout></media-video-layout>
@@ -62,7 +62,7 @@
 		<ul class="menu">
 			<li class="menu-title">Action</li>
 			<li>
-				<a class="btn" href={data.mediaUrl.toString()} target="_blank">
+				<a class="btn" href={data.mediaURL.toString()} target="_blank">
 					<Icon data={downloadIcon} /> Get
 				</a>
 			</li>

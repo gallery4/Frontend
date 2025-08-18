@@ -23,7 +23,7 @@
 		<NavBar bind:showMenu title={data.filename} />
 		<div class="fixed bottom-0 end-0 start-0 top-20 h-full w-full">
 			<SvelteReader
-				url={data.mediaUrl}
+				url={data.mediaURL}
 				title="&nbsp;"
 				getRendition={() => {}}
 				tocChanged={() => {}}
@@ -34,7 +34,7 @@
 		<ul class="menu">
 			<li class="menu-title">Action</li>
 			<li>
-				<a class="btn" href={data.mediaUrl} target="_blank">
+				<a class="btn" href={data.mediaURL} target="_blank">
 					<Icon data={downloadIcon} /> Get
 				</a>
 			</li>

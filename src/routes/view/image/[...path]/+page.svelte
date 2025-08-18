@@ -89,7 +89,7 @@
 		<ul class="menu">
 			<li class="menu-title">Action</li>
 			<li>
-				<a class="btn" href={data.mediaUrl} target="_blank">
+				<a class="btn" href={data.mediaURL} target="_blank">
 					<Icon data={downloadIcon} /> Get
 				</a>
 			</li>

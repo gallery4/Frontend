@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { getIcon, getIconClass } from '$lib/icons';
-	import { createBrowseUrl, createViewUrl } from '$lib/navigation';
+	import { createBrowseURL, createViewURL } from '$lib/navigation';
 	import { createElementId, determineFileType, getFilenameFromKey } from '$lib/utils';
 	import { Icon } from 'svelte-icon';
 	import 'vidstack/bundle';
@@ -20,27 +20,27 @@
 		return url.toString();
 	});
 
-	const mediaUrl = $derived.by(() => {
+	const mediaURL = $derived.by(() => {
 		let url = new URL('/api/get', page.url.origin);
 		url.searchParams.set('path', name);
 
 		return url.toString();
 	});
 
-	const linkUrl = $derived.by(() => {
+	const linkURL = $derived.by(() => {
 		switch (type) {
 			case 'file':
-				return createViewUrl(name, page.url.origin);
+				return createViewURL(name, page.url.origin);
 
 			case 'directory':
 			case 'zip':
-				return createBrowseUrl(name, page.url.origin);
+				return createBrowseURL(name, page.url.origin);
 		}
 
 		throw new Error("Unsupported item type.")
 	});
 
-	const thumbnailUrl = $derived.by(() => {
+	const thumbnailURL = $derived.by(() => {
 		let url = new URL('/api/thumbnail', page.url.origin);
 		url.searchParams.set('path', name);
 		url.searchParams.set('type', 'GRID');
@@ -68,7 +68,7 @@
 					<img
 						alt="thumbnail"
 						loading="lazy"
-						src={thumbnailUrl}
+						src={thumbnailURL}
 						class="rounded-box mb-0 mt-0"
 						onload={() => {
 							loaded = true;
@@ -93,7 +93,7 @@
 		{/if}
 	</div>
 	<div class="list-col-grow">
-		<a href={linkUrl.toString()}>
+		<a href={linkURL.toString()}>
 			{#if type == 'placeholder'}
 				<span class="placeholder"></span>
 			{:else}
@@ -102,7 +102,7 @@
 		</a>
 
 		{#if type == 'file' && filetype == 'audio'}
-			<media-player class="d-block" title={filename} src={mediaUrl}>
+			<media-player class="d-block" title={filename} src={mediaURL}>
 				<media-provider></media-provider>
 				<media-audio-layout></media-audio-layout>
 			</media-player>

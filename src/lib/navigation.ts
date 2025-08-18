@@ -1,7 +1,7 @@
 
 import { determineFileType, encodePath } from "./utils";
 
-export function createViewUrl(path: string, base: URL | string): URL {
+export function createViewURL(path: string, base: URL | string): URL {
     const filetype = determineFileType(path)
 
     if (filetype == false) {
@@ -13,7 +13,7 @@ export function createViewUrl(path: string, base: URL | string): URL {
     return new URL(`/view/${filetype}/${encodedPath}`, base)
 }
 
-export function createBrowseUrl(path: string, base: URL | string): URL {
+export function createBrowseURL(path: string, base: URL | string): URL {
     const encodedPath = encodePath(path)
 
     return new URL(`/browse/${encodedPath}`, base)

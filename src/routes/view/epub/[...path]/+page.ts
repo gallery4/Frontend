@@ -10,12 +10,12 @@ export const load: PageLoad = async ({ params, url }) => {
         throw error(500, "path is required.")
     }
 
-    const mediaUrl = new URL('/api/get', url.origin);
-    mediaUrl.searchParams.set('path', decodePath(pathVal));
+    const mediaURL = new URL('/api/get', url.origin);
+    mediaURL.searchParams.set('path', decodePath(pathVal));
 
     return {
         filename: path.basename(pathVal),
         parent: path.dirname(pathVal),
-        mediaUrl: mediaUrl.toString()
+        mediaURL: mediaURL.toString()
     }
 }

@@ -6,7 +6,7 @@ import { env } from "$env/dynamic/private";
 import { ChannelCredentials } from "@grpc/grpc-js";
 import { BrowseClient } from "$lib/grpc/browse.client";
 import { decodePath } from "$lib/utils";
-import { createViewUrl } from "$lib/navigation";
+import { createViewURL } from "$lib/navigation";
 
 export const load: PageServerLoad = async ({ params, url }) => {
     const pathVal = decodePath(params.path);
@@ -34,11 +34,11 @@ export const load: PageServerLoad = async ({ params, url }) => {
     const previous = (index > 0 ? files[index - 1].name : null);
     const next = index < files.length - 1 ? files[index + 1].name : null;
     
-    const nextURL = next == null ? null : createViewUrl(next, url.origin);
-    const previousURL = previous == null ? null : createViewUrl(previous, url.origin);
+    const nextURL = next == null ? null : createViewURL(next, url.origin);
+    const previousURL = previous == null ? null : createViewURL(previous, url.origin);
 
-    const mediaUrl = new URL('/api/get', url.origin);
-    mediaUrl.searchParams.set('path', pathVal);
+    const mediaURL = new URL('/api/get', url.origin);
+    mediaURL.searchParams.set('path', pathVal);
 
     const imageURL = new URL('/api/image', url.origin);
     imageURL.searchParams.set('path', pathVal);
@@ -48,7 +48,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
         parent: parent,
         nextURL: nextURL?.toString(),
         previousURL: previousURL?.toString(),
-        mediaUrl: mediaUrl.toString(),
+        mediaURL: mediaURL.toString(),
         imageURL: imageURL.toString(),
     }
 }
