@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { getIcon, getIconClass } from '$lib/icons';
-	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
+	import { createBrowseURL, createViewURL } from '$lib/navigation';
+	import { createElementId, determineFileType, getFilenameFromKey } from '$lib/utils';
 	import { Icon } from 'svelte-icon';
 	import 'vidstack/bundle';
 
 	let { name, type, dateTime } = $props();
-	const filetype = $derived(determinFileType(name));
+	const filetype = $derived(determineFileType(name));
 
 	let loaded = $state(false);
 
@@ -19,27 +20,27 @@
 		return url.toString();
 	});
 
-	const mediaUrl = $derived.by(() => {
+	const mediaURL = $derived.by(() => {
 		let url = new URL('/api/get', page.url.origin);
 		url.searchParams.set('path', name);
 
 		return url.toString();
 	});
 
-	const linkUrl = $derived.by(() => {
+	const linkURL = $derived.by(() => {
 		switch (type) {
 			case 'file':
-				return `/view/${name}`;
+				return createViewURL(name, page.url.origin);
 
 			case 'directory':
 			case 'zip':
-				return `/browse/${name}`;
+				return createBrowseURL(name, page.url.origin);
 		}
 
-		return '';
+		throw new Error("Unsupported item type.")
 	});
 
-	const thumbnailUrl = $derived.by(() => {
+	const thumbnailURL = $derived.by(() => {
 		let url = new URL('/api/thumbnail', page.url.origin);
 		url.searchParams.set('path', name);
 		url.searchParams.set('type', 'GRID');
@@ -67,7 +68,7 @@
 					<img
 						alt="thumbnail"
 						loading="lazy"
-						src={thumbnailUrl}
+						src={thumbnailURL}
 						class="rounded-box mb-0 mt-0"
 						onload={() => {
 							loaded = true;
@@ -92,7 +93,7 @@
 		{/if}
 	</div>
 	<div class="list-col-grow">
-		<a href={linkUrl}>
+		<a href={linkURL.toString()}>
 			{#if type == 'placeholder'}
 				<span class="placeholder"></span>
 			{:else}
@@ -101,7 +102,7 @@
 		</a>
 
 		{#if type == 'file' && filetype == 'audio'}
-			<media-player class="d-block" title={filename} src={mediaUrl}>
+			<media-player class="d-block" title={filename} src={mediaURL}>
 				<media-provider></media-provider>
 				<media-audio-layout></media-audio-layout>
 			</media-player>

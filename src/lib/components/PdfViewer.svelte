@@ -14,6 +14,7 @@
 	var pageNumber = $state(1);
 
 	let canvas: HTMLCanvasElement;
+	let div: HTMLDivElement;
 
 	// The workerSrc property shall be specified.
 	pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
@@ -21,6 +22,10 @@
 	onMount(async () => {
 		pdf = await pdfjsLib.getDocument({ url: url }).promise;
 		await render();
+
+		window.addEventListener('resize', () => {
+			if (pdf) render();
+		});
 	});
 
 	async function render(): Promise<void> {
@@ -28,16 +33,29 @@
 			return;
 		}
 		// Fetch the first page
-		var page = await pdf.getPage(pageNumber);
-
-		var scale = 1;
-		var viewport = page.getViewport({ scale: scale });
+		const page = await pdf.getPage(pageNumber);
+		const viewport = page.getViewport({ scale: 1 });
 
 		// Prepare canvas using PDF page dimensions
 
-		var context = canvas.getContext('2d');
-		canvas.height = viewport.height;
-		canvas.width = viewport.width;
+		const context = canvas.getContext('2d');
+
+		const canvasAspect = viewport.width / viewport.height;
+		const offsetAspect = div.offsetWidth / div.offsetHeight;
+
+		// Calculate scale based on container's dimension.
+		// Try to fit the screen on the height size.
+
+		// TODO: calculate the scale based on width size on TBD conditons.
+
+		const aspect = Math.min(canvasAspect, offsetAspect);
+		const width = div.offsetHeight * aspect;
+		const scale = width / viewport.width;
+
+		const scaledViewPort = page.getViewport({ scale });
+
+		canvas.width = scaledViewPort.width;
+		canvas.height = scaledViewPort.height;
 
 		if (context == null) {
 			return;
@@ -47,7 +65,7 @@
 		var renderContext = {
 			canvas,
 			canvasContext: context,
-			viewport: viewport
+			viewport: scaledViewPort
 		};
 		await page.render(renderContext).promise;
 	}
@@ -57,8 +75,8 @@
 	});
 </script>
 
-<div class="h-full w-full">
-	<canvas class="d-block mx-auto" bind:this={canvas}></canvas>
+<div class="h-full w-full" bind:this={div}>
+	<canvas bind:this={canvas} class="mx-auto my-auto"></canvas>
 
 	<button
 		class="fixed inset-y-1/2 start-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
