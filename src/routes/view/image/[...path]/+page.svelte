@@ -8,12 +8,15 @@
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
 	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
 	import downloadIcon from '@mdi/svg/svg/download.svg?raw';
+	import closeIcon from '@mdi/svg/svg/close.svg?raw';
 
 	import Container from '$lib/components/Container.svelte';
 	import Content from '$lib/components/Content.svelte';
 	import NavBar from '$lib/components/NavBar.svelte';
 	import SideBar from '$lib/components/SideBar.svelte';
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
+	import { createBrowseURL } from '$lib/navigation';
+	import { page } from '$app/state';
 
 	const { data } = $props();
 	const nextURL = $derived(data.nextURL);
@@ -81,6 +84,13 @@
 				}}
 			>
 				<Icon data={nextIcon} class="mx-auto"></Icon>
+			</button>
+
+			<button
+				class="fixed top-20 end-2 z-10 h-20 w-20 cursor-pointer text-gray-500/50 hover:text-gray-500"
+				onclick={() => goto(createBrowseURL(data.parent, page.url.origin, data.filename))}
+			>
+				<Icon data={closeIcon} class="mx-auto"></Icon>
 			</button>
 		</div>
 	</Content>
