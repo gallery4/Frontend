@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { getIcon, getIconClass } from '$lib/icons';
-	import { createElementId, determinFileType, getFilenameFromKey } from '$lib/utils';
+	import { createBrowseUrl, createViewUrl } from '$lib/navigation';
+	import { createElementId, determineFileType, getFilenameFromKey } from '$lib/utils';
 	import { Icon } from 'svelte-icon';
 	import 'vidstack/bundle';
 
 	let { name, type, dateTime } = $props();
-	const filetype = $derived(determinFileType(name));
+	const filetype = $derived(determineFileType(name));
 
 	let loaded = $state(false);
 
@@ -29,14 +30,14 @@
 	const linkUrl = $derived.by(() => {
 		switch (type) {
 			case 'file':
-				return `/view/${name}`;
+				return createViewUrl(name, page.url.origin);
 
 			case 'directory':
 			case 'zip':
-				return `/browse/${name}`;
+				return createBrowseUrl(name, page.url.origin);
 		}
 
-		return '';
+		throw new Error("Unsupported item type.")
 	});
 
 	const thumbnailUrl = $derived.by(() => {
@@ -92,7 +93,7 @@
 		{/if}
 	</div>
 	<div class="list-col-grow">
-		<a href={linkUrl}>
+		<a href={linkUrl.toString()}>
 			{#if type == 'placeholder'}
 				<span class="placeholder"></span>
 			{:else}

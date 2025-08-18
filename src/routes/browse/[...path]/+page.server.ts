@@ -4,6 +4,7 @@ import {ChannelCredentials} from '@grpc/grpc-js';
 import {GrpcTransport} from '@protobuf-ts/grpc-transport';
 
 import type {PageServerLoad} from './$types';
+import { decodePath } from '$lib/utils';
 
 export const load: PageServerLoad = async ({params, url, fetch}) => {
   let transport = new GrpcTransport({
@@ -12,7 +13,7 @@ export const load: PageServerLoad = async ({params, url, fetch}) => {
   })
 
   let client = new BrowseClient(transport)
-  const path = params.path
+  const path = decodePath(params.path)
 
   let call = await client.list({path})
 

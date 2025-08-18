@@ -5,6 +5,8 @@ import { GrpcTransport } from "@protobuf-ts/grpc-transport";
 import { env } from "$env/dynamic/private";
 import { ChannelCredentials } from "@grpc/grpc-js";
 import { BrowseClient } from "$lib/grpc/browse.client";
+import { compareItems, decodePath } from "$lib/utils";
+import { createViewUrl } from "$lib/navigation";
 
 export const load: PageServerLoad = async ({ params, url }) => {
     const pathVal = params.path;
@@ -26,11 +28,22 @@ export const load: PageServerLoad = async ({ params, url }) => {
         path: parent
     })
 
-    const index = call.response.files.findIndex((e: any) => e.name == pathVal)
+    const files = call.response.files.toSorted((a: any, b: any) => compareItems(a, b, 'name', 'ascending'))
+    const index = (files.findIndex((e: any) => e.name == pathVal));
+    const previous = (index > 0 ? files[index - 1].name : null);
+    const next = (index < files.length - 1 ? files[index + 1].name : null);
+
+    const nextURL = (next == null ? null : createViewUrl(next, url.origin));
+    const previousURL = (previous == null ? null : createViewUrl(previous, url.origin));
+
+    const mediaUrl = new URL('/api/get', url.origin);
+    mediaUrl.searchParams.set('path', decodePath(pathVal));
 
     return {
-        current: pathVal,
+        filename: path.basename(pathVal),
         parent: parent,
-        files: call.response.files,
+        nextURL: nextURL?.toString(),
+        previousURL: previousURL?.toString(),
+        mediaURL: mediaUrl.toString()
     }
 }

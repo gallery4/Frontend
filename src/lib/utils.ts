@@ -10,7 +10,7 @@ export function createElementId(name: string): string {
     return stringHash(name).toString(16);
 }
 
-export function determinFileType(name: string): string | false {
+export function determineFileType(name: string): string | false {
     const lower = name.toLowerCase();
 
     const mimetype = mime.lookup(lower);
@@ -47,4 +47,13 @@ export function compareItems(a: any, b: any, sortBy: string, order: string) {
         output = output * -1;
 
     return output;
+}
+
+
+export function encodePath(path: string) {
+    return path.split('/').map<string>((m) => (encodeURIComponent(m))).join("/");
+}
+
+export function decodePath(path: string) {
+    return path.split('/').map<string>((m) => (decodeURIComponent(m))).join("/");
 }
