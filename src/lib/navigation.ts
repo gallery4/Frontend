@@ -1,5 +1,5 @@
 
-import { determineFileType, encodePath } from "./utils";
+import { createElementId, determineFileType, encodePath } from "./utils";
 
 export function createViewURL(path: string, base: URL | string): URL {
     const filetype = determineFileType(path)
@@ -13,8 +13,13 @@ export function createViewURL(path: string, base: URL | string): URL {
     return new URL(`/view/${filetype}/${encodedPath}`, base)
 }
 
-export function createBrowseURL(path: string, base: URL | string): URL {
+export function createBrowseURL(path: string, base: URL | string, item?: string): URL {
     const encodedPath = encodePath(path)
+    const url = new URL(`/browse/${encodedPath}`, base)
 
-    return new URL(`/browse/${encodedPath}`, base)
+    if (item) {
+        url.hash = `#${createElementId(item)}`
+    }
+
+    return url;
 }

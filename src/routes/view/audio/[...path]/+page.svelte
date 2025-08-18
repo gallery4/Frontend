@@ -6,12 +6,16 @@
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
 	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
 	import downloadIcon from '@mdi/svg/svg/download.svg?raw';
+	import closeIcon from '@mdi/svg/svg/close.svg?raw';
 
 	import Container from '$lib/components/Container.svelte';
 	import Content from '$lib/components/Content.svelte';
 	import NavBar from '$lib/components/NavBar.svelte';
 	import SideBar from '$lib/components/SideBar.svelte';
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
+
+	import {createBrowseURL} from '$lib/navigation.js'
+	import { page } from '$app/state';
 
 	const { data } = $props();
 
@@ -24,38 +28,40 @@
 
 <Container bind:showMenu>
 	<Content>
-		<NavBar bind:showMenu title={(data.filename)} />
+		<NavBar bind:showMenu title={data.filename} />
 
-		<div class="mx-auto mt-4 max-w-[1024px]">
-			<div class="mx-auto mt-16 max-w-[1024px]">
-				<media-player
-					class="d-block"
-					title={data.filename}
-					src={data.mediaURL}
+		<div class="mx-auto mt-16 max-w-[1024px]">
+			<media-player class="d-block" title={data.filename} src={data.mediaURL}>
+				<media-provider></media-provider>
+				<media-audio-layout></media-audio-layout>
+			</media-player>
+
+			<div class="join mt-4 w-full">
+				<button
+					class="btn join-item flex-1"
+					onclick={() => {
+						if (data.previousURL) goto(data.previousURL);
+					}}
 				>
-					<media-provider></media-provider>
-					<media-audio-layout></media-audio-layout>
-				</media-player>
+					<Icon data={prevIcon}></Icon>&nbsp;Previous
+				</button>
 
-				<div class="join py-4">
-					<button
-						class="btn join-item"
-						onclick={() => {
-							if (data.previousURL) goto(data.previousURL);
-						}}
-					>
-						<Icon data={prevIcon}></Icon>&nbsp;Previous
-					</button>
+				<button
+					class="btn join-item flex-1"
+					onclick={() => {
+						if (data.nextURL) goto(data.nextURL);
+					}}
+				>
+					<Icon data={nextIcon}></Icon>&nbsp;Next
+				</button>
+			</div>
 
-					<button
-						class="btn join-item"
-						onclick={() => {
-							if (data.nextURL) goto(data.nextURL);
-						}}
-					>
-						<Icon data={nextIcon}></Icon>&nbsp;Next
-					</button>
-				</div>
+			<div class="mt-4 w-full">
+				<button
+					class="btn btn-secondary w-full"
+					onclick={()=>goto(createBrowseURL(data.parent, page.url.origin, data.filename))}>
+					<Icon data={closeIcon} />Close
+				</button>
 			</div>
 		</div>
 	</Content>
