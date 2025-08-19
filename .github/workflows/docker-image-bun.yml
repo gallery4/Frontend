@@ -5,7 +5,7 @@ on:
     types: [published]
 
   push:
-    branches: ["master"]
+    branches: ["main"]
 
 jobs:
   push_to_registry:
@@ -66,3 +66,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION=${{ steps.condval.outputs.value }}
+
