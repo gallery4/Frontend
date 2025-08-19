@@ -8,7 +8,6 @@
 	import NavBar from '$lib/components/NavBar.svelte';
 	import SideBar from '$lib/components/SideBar.svelte';
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
-	import SvelteReader from 'svelte-reader';
 	import { createBrowseURL } from '$lib/navigation.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
@@ -27,12 +26,6 @@
 	<Content>
 		<NavBar bind:showMenu title={data.filename} />
 		<div class="fixed bottom-4 end-0 start-0 top-20 flex justify-center">
-			<!--SvelteReader
-				url={data.mediaURL}
-				title="&nbsp;"
-				getRendition={() => {}}
-				tocChanged={() => {}}
-			/-->
 			<EpubViewer src={data.mediaURL} />
 		</div>
 
