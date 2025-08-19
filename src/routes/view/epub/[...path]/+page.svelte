@@ -12,6 +12,7 @@
 	import { createBrowseURL } from '$lib/navigation.js';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import EpubViewer from '$lib/components/EpubViewer.svelte';
 
 	const { data } = $props();
 
@@ -26,12 +27,13 @@
 	<Content>
 		<NavBar bind:showMenu title={data.filename} />
 		<div class="fixed bottom-4 end-0 start-0 top-20 flex justify-center">
-			<SvelteReader
+			<!--SvelteReader
 				url={data.mediaURL}
 				title="&nbsp;"
 				getRendition={() => {}}
 				tocChanged={() => {}}
-			/>
+			/-->
+			<EpubViewer src={data.mediaURL} />
 		</div>
 
 		<button

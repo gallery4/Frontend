@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.css';
+	import '$lib/app.css';
 	import { pwaInfo } from 'virtual:pwa-info'; 
 	import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { onMount } from 'svelte';
