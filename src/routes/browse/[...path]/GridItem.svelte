@@ -40,7 +40,7 @@
 	});
 </script>
 
-<div class="card bg-base-100 h-full w-72 shadow-xl" id={createElementId(filename)}>
+<div class="card bg-base-100 h-full w-72 shadow-xl mx-auto" id={createElementId(filename)}>
 	<a href={linkURL.toString()} aria-label={name} style="display:block; aspect-ratio: 3/4">
 		{#if type == 'file'}
 			{#if filetype == 'image'}

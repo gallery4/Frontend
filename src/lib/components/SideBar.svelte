@@ -1,19 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	//import { browseURL, tagURL, historyURL, userURL, aboutURL } from '$lib/routes';
 
 	import { Icon } from 'svelte-icon';
 	import browseIcon from '@mdi/svg/svg/bookshelf.svg?raw';
-	import tagsIcon from '@mdi/svg/svg/tag-multiple.svg?raw';
-	import historyIcon from '@mdi/svg/svg/history.svg?raw';
-	import userIcon from '@mdi/svg/svg/account.svg?raw';
 	import aboutIcon from '@mdi/svg/svg/information.svg?raw';
 
 	let { children = undefined, showMenu = $bindable() } = $props();
 </script>
 
-<div class="drawer-side">
+<div class="drawer-side z-20">
 	<div
 		class="drawer-overlay"
 		role="none"
