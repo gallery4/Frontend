@@ -25,7 +25,7 @@
 <Container bind:showMenu>
 	<Content>
 		<NavBar bind:showMenu title={data.filename} />
-		<div class="fixed bottom-0 end-0 start-0 top-20 flex h-full w-full justify-center">
+		<div class="fixed bottom-4 end-0 start-0 top-20 flex justify-center">
 			<SvelteReader
 				url={data.mediaURL}
 				title="&nbsp;"
