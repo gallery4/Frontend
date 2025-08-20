@@ -24,7 +24,7 @@
 
 	let isImageLoaded = $state(false);
 
-	function handler(e: CustomEvent<SwipeEventData>) {
+	function onswiped(e: CustomEvent<SwipeEventData>) {
 		switch (e.detail.dir) {
 			case 'Left':
 				if (nextURL) {
@@ -58,7 +58,7 @@
 				</div>
 			{/if}
 
-			<div class="h-full w-full" use:swipeable onswiped={handler}>
+			<div class="h-full w-full" use:swipeable onswiped={onswiped}>
 				<img
 					alt={data.filename}
 					src={data.imageURL}

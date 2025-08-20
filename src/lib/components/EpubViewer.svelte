@@ -2,6 +2,9 @@
 	import { onMount } from 'svelte';
 	import ePub, { Book } from 'epubjs';
 
+	import { swipeable } from '@react2svelte/swipeable';
+	import type { SwipeEventData } from '@react2svelte/swipeable';
+
 	import { Icon } from 'svelte-icon';
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
 	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
@@ -15,16 +18,22 @@
 	let rendition: Rendition;
 
 	async function render() {
-		
 		rendition = book.renderTo(div, {
 			width: div.offsetWidth,
 			height: div.offsetHeight /*, stylesheet: stylesheet*/
+		});
+		rendition.on('rendered', (e: Event, iframe: any) => {
+			iframe?.iframe?.contentWindow.focus();
+
+			swipeable(iframe);
+
+			iframe.addEventListener('onswiped', onswiped);
 		});
 		await rendition.display();
 	}
 
 	onMount(async () => {
-        book = ePub(src);
+		book = ePub(src);
 		await render();
 
 		window.addEventListener('resize', () => {
@@ -32,6 +41,22 @@
 		});
 	});
 
+	async function onswiped(e: CustomEvent<SwipeEventData>) {
+		console.log(e.detail);
+		switch (e.detail.dir) {
+			case 'Left':
+				if (rendition) {
+					await rendition.next();
+				}
+				break;
+
+			case 'Right':
+				if (rendition) {
+					await rendition.prev();
+				}
+				break;
+		}
+	}
 </script>
 
 <div class="mx-auto h-full w-full max-w-[1024px]" bind:this={div}>

@@ -2,7 +2,12 @@
 	// Loaded via <script> tag, create shortcut to access PDF.js exports.
 	import * as pdfjsLib from 'pdfjs-dist';
 	import { onMount } from 'svelte';
+
+	import { swipeable } from '@react2svelte/swipeable';
+	import type { SwipeEventData } from '@react2svelte/swipeable';
+
 	import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url';
+
 	import { Icon } from 'svelte-icon';
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
 	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
@@ -73,9 +78,21 @@
 	$effect(() => {
 		if (pdf) render();
 	});
+
+	async function onswiped(e: CustomEvent<SwipeEventData>) {
+		switch (e.detail.dir) {
+			case 'Left':
+				if (pageNumber < (pdf?.numPages ?? 0)) pageNumber++;
+				break;
+
+			case 'Right':
+				if (pageNumber > 1) pageNumber--;
+				break;
+		}
+	}
 </script>
 
-<div class="h-full w-full" bind:this={div}>
+<div class="h-full w-full" bind:this={div} use:swipeable {onswiped}>
 	<canvas bind:this={canvas} class="mx-auto my-auto"></canvas>
 
 	<button
