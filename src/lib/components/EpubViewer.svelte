@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import ePub, { Book } from 'epubjs';
-
-	import { swipeable } from '@react2svelte/swipeable';
-	import type { SwipeEventData } from '@react2svelte/swipeable';
+	import ePub, { Book, Rendition } from 'epubjs';
 
 	import { Icon } from 'svelte-icon';
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
 	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
+
+	import Hammer, { DIRECTION_LEFT, DIRECTION_RIGHT } from 'hammerjs';
 
 	//import stylesheet from '$lib/app.css?url';
 
@@ -23,11 +22,29 @@
 			height: div.offsetHeight /*, stylesheet: stylesheet*/
 		});
 		rendition.on('rendered', (e: Event, iframe: any) => {
+			console.log(e)
+			console.log(iframe)
 			iframe?.iframe?.contentWindow.focus();
 
-			swipeable(iframe);
+			let manager = new Hammer.Manager(iframe.document.documentElement);
+			let swipe = new Hammer.Swipe();
+			manager.add(swipe);
 
-			iframe.addEventListener('onswiped', onswiped);
+			manager.on('swipe', async (e) => {
+				switch (e.direction) {
+					case DIRECTION_LEFT:
+						if (rendition) {
+							await rendition.next();
+						}
+						break;
+
+					case DIRECTION_RIGHT:
+						if (rendition) {
+							await rendition.prev();
+						}
+						break;
+				}
+			});
 		});
 		await rendition.display();
 	}
@@ -40,23 +57,6 @@
 			rendition.resize(div.offsetWidth, div.offsetHeight);
 		});
 	});
-
-	async function onswiped(e: CustomEvent<SwipeEventData>) {
-		console.log(e.detail);
-		switch (e.detail.dir) {
-			case 'Left':
-				if (rendition) {
-					await rendition.next();
-				}
-				break;
-
-			case 'Right':
-				if (rendition) {
-					await rendition.prev();
-				}
-				break;
-		}
-	}
 </script>
 
 <div class="mx-auto h-full w-full max-w-[1024px]" bind:this={div}>
