@@ -22,10 +22,6 @@
 			height: div.offsetHeight /*, stylesheet: stylesheet*/
 		});
 		rendition.on('rendered', (e: Event, iframe: any) => {
-			console.log(e)
-			console.log(iframe)
-			iframe?.iframe?.contentWindow.focus();
-
 			let manager = new Hammer.Manager(iframe.document.documentElement);
 			let swipe = new Hammer.Swipe();
 			manager.add(swipe);
