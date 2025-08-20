@@ -47,7 +47,6 @@
 	"dependencies": {
 		"@mdi/svg": "^7.4.47",
 		"@protobuf-ts/plugin": "^2.11.1",
-		"@react2svelte/swipeable": "^0.1.4",
 		"@sveltejs/adapter-node": "^5.3.1",
 		"@types/hammerjs": "^2.0.46",
 		"@types/mime-types": "^3.0.1",
