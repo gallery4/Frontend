@@ -3,14 +3,12 @@
 	import * as pdfjsLib from 'pdfjs-dist';
 	import { onMount } from 'svelte';
 
-	import { swipeable } from '@react2svelte/swipeable';
-	import type { SwipeEventData } from '@react2svelte/swipeable';
-
 	import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url';
 
 	import { Icon } from 'svelte-icon';
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
 	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
+	import { createSwipeAttachment } from '$lib/touch_gestures';
 
 	export const ssr = false;
 
@@ -79,20 +77,21 @@
 		if (pdf) render();
 	});
 
-	async function onswiped(e: CustomEvent<SwipeEventData>) {
-		switch (e.detail.dir) {
-			case 'Left':
+	const swipeAttachment = createSwipeAttachment((e) => {
+		switch (e.direction) {
+			case Hammer.DIRECTION_LEFT:
 				if (pageNumber < (pdf?.numPages ?? 0)) pageNumber++;
 				break;
+				break;
 
-			case 'Right':
+			case Hammer.DIRECTION_RIGHT:
 				if (pageNumber > 1) pageNumber--;
 				break;
 		}
-	}
+	});
 </script>
 
-<div class="h-full w-full" bind:this={div} use:swipeable {onswiped}>
+<div class="h-full w-full" bind:this={div} {@attach swipeAttachment}>
 	<canvas bind:this={canvas} class="mx-auto my-auto"></canvas>
 
 	<button
