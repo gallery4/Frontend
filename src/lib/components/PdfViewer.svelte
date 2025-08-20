@@ -22,6 +22,41 @@
 	// The workerSrc property shall be specified.
 	pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
+	function determineRenderMode(src: {width:number, height:number}, target: {width:number, height:number}): "ONE_PAGE" | "LEFT_RIGHT" | "TOP_BOTTOM" {
+		const srcAspect = src.width/src.height;
+		const targetAspect = target.width/target.height;
+
+		const srcOrientation = srcAspect>1? "landscape": "portrait"
+		const targetOrientation = targetAspect > 1 ? "landscape": "portrait"
+
+		if(srcOrientation == targetOrientation){
+			return "ONE_PAGE";
+		}
+		else if (targetOrientation == Orientation.LANDSCAPE){
+			return "LEFT_RIGHT";
+		} else {
+			return "TOP_BOTTOM"
+		} 
+	}
+
+	async function renderPage(pageNumber: number, target: {width: number, height: number}){
+		const page = await pdf.getPage(pageNumber);
+		const viewport = page.getViewport({ scale: 1 });
+
+		const scale = target.width / viewport.width;
+		const scaledViewPort = page.getViewport({ scale});
+		const context = canvas.getContext('2d');
+
+		var renderContext = {
+			canvas,
+			canvasContext: context,
+			viewport: scaledViewPort
+		};
+		await page.render(renderContext).promise;
+
+		return context?.getImageData(0,0, target.width, target.height)
+	}
+
 	onMount(async () => {
 		pdf = await pdfjsLib.getDocument({ url: url }).promise;
 		await render();
@@ -35,42 +70,16 @@
 		if (!pdf) {
 			return;
 		}
-		// Fetch the first page
-		const page = await pdf.getPage(pageNumber);
-		const viewport = page.getViewport({ scale: 1 });
 
-		// Prepare canvas using PDF page dimensions
+		canvas.width = div.offsetWidth
+		canvas.height = div.offsetHeight
+		
+		const img1 = await renderPage(pageNumber, {width: canvas.width/2, height: canvas.height})
+		const img2 = await renderPage(pageNumber+1, {width: canvas.width/2, height: canvas.height})
 
 		const context = canvas.getContext('2d');
-
-		const canvasAspect = viewport.width / viewport.height;
-		const offsetAspect = div.offsetWidth / div.offsetHeight;
-
-		// Calculate scale based on container's dimension.
-		// Try to fit the screen on the height size.
-
-		// TODO: calculate the scale based on width size on TBD conditons.
-
-		const aspect = Math.min(canvasAspect, offsetAspect);
-		const width = div.offsetHeight * aspect;
-		const scale = width / viewport.width;
-
-		const scaledViewPort = page.getViewport({ scale });
-
-		canvas.width = scaledViewPort.width;
-		canvas.height = scaledViewPort.height;
-
-		if (context == null) {
-			return;
-		}
-
-		// Render PDF page into canvas context
-		var renderContext = {
-			canvas,
-			canvasContext: context,
-			viewport: scaledViewPort
-		};
-		await page.render(renderContext).promise;
+		context.putImageData(img1, 0, 0);
+		context.putImageData(img2, canvas.width/2, 0);
 	}
 
 	$effect(() => {
@@ -81,7 +90,6 @@
 		switch (e.direction) {
 			case Hammer.DIRECTION_LEFT:
 				if (pageNumber < (pdf?.numPages ?? 0)) pageNumber++;
-				break;
 				break;
 
 			case Hammer.DIRECTION_RIGHT:
