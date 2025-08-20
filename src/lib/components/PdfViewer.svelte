@@ -143,15 +143,29 @@
 	}
 
 	async function renderTopBottom(canvas: HTMLCanvasElement) {
-		const img1 = await renderPage(pageNumber, { width: canvas.width, height: canvas.height / 2 });
+		const topPage = pageNumber % 2 == 0 ? pageNumber : pageNumber - 1;
+		const bottomPage = pageNumber % 2 == 1 ? pageNumber : pageNumber + 1;
+
+		pageNumber = topPage;
 
 		const context = canvas.getContext('2d');
 
+		const img1 =
+			topPage > 0 && topPage <= (pdf?.numPages ?? 0)
+				? await renderPage(topPage, {
+						width: canvas.width,
+						height: canvas.height / 2
+					})
+				: undefined;
+
 		context?.clearRect(0, 0, canvas.width, canvas.height);
-		const img2 = await renderPage(pageNumber + 1, {
-			width: canvas.width,
-			height: canvas.height / 2
-		});
+		const img2 =
+			bottomPage > 0 && bottomPage <= (pdf?.numPages ?? 0)
+				? await renderPage(bottomPage, {
+						width: canvas.width,
+						height: canvas.height / 2
+					})
+				: undefined;
 
 		context?.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -231,7 +245,7 @@
 		const viewport = page?.getViewport({ scale: 1 });
 
 		renderMode = determineRenderMode(viewport, canvas);
-		
+
 		switch (renderMode) {
 			case 'ONE_PAGE':
 				await renderOnePage(canvas);
