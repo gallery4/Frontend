@@ -1,8 +1,8 @@
 <script lang="ts">
 	import 'vidstack/bundle';
 	import { goto } from '$app/navigation';
-	import { swipeable } from '@react2svelte/swipeable';
-	import type { SwipeEventData } from '@react2svelte/swipeable';
+
+	import Hammer from 'hammerjs';
 
 	import { Icon } from 'svelte-icon';
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
@@ -17,6 +17,9 @@
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import { createBrowseURL } from '$lib/navigation';
 	import { page } from '$app/state';
+	import { onMount } from 'svelte';
+	import type { Attachment } from 'svelte/attachments';
+	import { createSwipeAttachment } from '$lib/touch_gestures';
 
 	const { data } = $props();
 	const nextURL = $derived(data.nextURL);
@@ -24,23 +27,23 @@
 
 	let isImageLoaded = $state(false);
 
-	function handler(e: CustomEvent<SwipeEventData>) {
-		switch (e.detail.dir) {
-			case 'Left':
-				if (nextURL) {
-					goto(nextURL);
-				}
-				break;
-
-			case 'Right':
-				if (previousURL) {
-					goto(previousURL);
-				}
-				break;
-		}
-	}
-
 	let showMenu = $state(false);
+
+	const swipeAttachment = createSwipeAttachment((e) => {
+			switch (e.direction) {
+				case Hammer.DIRECTION_LEFT:
+					if (nextURL) {
+						goto(nextURL);
+					}
+					break;
+
+				case Hammer.DIRECTION_RIGHT:
+					if (previousURL) {
+						goto(previousURL);
+					}
+					break;
+			}
+		});
 </script>
 
 <svelte:head>
@@ -58,7 +61,7 @@
 				</div>
 			{/if}
 
-			<div class="h-full w-full" use:swipeable onswiped={handler}>
+			<div class="h-full w-full" {@attach swipeAttachment}>
 				<img
 					alt={data.filename}
 					src={data.imageURL}

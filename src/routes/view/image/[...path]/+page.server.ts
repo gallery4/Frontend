@@ -8,6 +8,8 @@ import { BrowseClient } from "$lib/grpc/browse.client";
 import { compareItems, decodePath } from "$lib/utils";
 import { createViewURL } from "$lib/navigation";
 
+export const ssr = false;
+
 export const load: PageServerLoad = async ({ params, url }) => {
     const pathVal = decodePath(params.path);
 
