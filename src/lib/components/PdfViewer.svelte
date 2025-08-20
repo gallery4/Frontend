@@ -13,7 +13,7 @@
 
 	const { url } = $props();
 	var pdf: pdfjsLib.PDFDocumentProxy | undefined = $state(undefined);
-	var pageNumbers = $state(1);
+	var pageNumber = $state(1);
 
 	let canvas: HTMLCanvasElement;
 	let div: HTMLDivElement;
@@ -21,7 +21,7 @@
 	// The workerSrc property shall be specified.
 	pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
-	let renderMode = $state("ONE_PAGE")
+	let renderMode = $state('ONE_PAGE');
 
 	function determineRenderMode(
 		src: { width: number; height: number },
@@ -72,7 +72,9 @@
 	}
 
 	async function renderOnePage(canvas: HTMLCanvasElement) {
-		const img = await renderPage(pageNumbers, { width: canvas.width, height: canvas.height });
+		pageNumber = Math.min(Math.max(pageNumber, 1), pdf?.numPages ?? 0);
+
+		const img = await renderPage(pageNumber, { width: canvas.width, height: canvas.height });
 
 		const context = canvas.getContext('2d');
 		context?.clearRect(0, 0, canvas.width, canvas.height);
@@ -91,15 +93,27 @@
 	}
 
 	async function renderLeftRight(canvas: HTMLCanvasElement) {
-		const img1 = await renderPage(pageNumbers, { width: canvas.width / 2, height: canvas.height });
-
 		const context = canvas.getContext('2d');
 
+		const leftPage = pageNumber % 2 == 0 ? pageNumber : pageNumber - 1;
+		const rightPage = pageNumber % 2 == 1 ? pageNumber : pageNumber + 1;
+
+		pageNumber = leftPage;
+
+		const img1 =
+			leftPage > 0 && leftPage <= (pdf?.numPages ?? 0)
+				? await renderPage(leftPage, { width: canvas.width / 2, height: canvas.height })
+				: undefined;
+
 		context?.clearRect(0, 0, canvas.width, canvas.height);
-		const img2 = await renderPage(pageNumbers + 1, {
-			width: canvas.width / 2,
-			height: canvas.height
-		});
+
+		const img2 =
+			rightPage > 0 && rightPage <= (pdf?.numPages ?? 0)
+				? await renderPage(rightPage, {
+						width: canvas.width / 2,
+						height: canvas.height
+					})
+				: undefined;
 
 		context?.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -129,12 +143,12 @@
 	}
 
 	async function renderTopBottom(canvas: HTMLCanvasElement) {
-		const img1 = await renderPage(pageNumbers, { width: canvas.width, height: canvas.height / 2 });
+		const img1 = await renderPage(pageNumber, { width: canvas.width, height: canvas.height / 2 });
 
 		const context = canvas.getContext('2d');
 
 		context?.clearRect(0, 0, canvas.width, canvas.height);
-		const img2 = await renderPage(pageNumbers + 1, {
+		const img2 = await renderPage(pageNumber + 1, {
 			width: canvas.width,
 			height: canvas.height / 2
 		});
@@ -213,10 +227,11 @@
 		canvas.width = div.offsetWidth;
 		canvas.height = div.offsetHeight;
 
-		const page = await pdf?.getPage(pageNumbers);
+		const page = await pdf?.getPage(pageNumber == 0 ? 1 : pageNumber);
 		const viewport = page?.getViewport({ scale: 1 });
 
 		renderMode = determineRenderMode(viewport, canvas);
+		
 		switch (renderMode) {
 			case 'ONE_PAGE':
 				await renderOnePage(canvas);
@@ -228,8 +243,6 @@
 				await renderTopBottom(canvas);
 				break;
 		}
-
-		//if (img2) context?.putImageData(img2, canvas.width / 2, 0);
 	}
 
 	$effect(() => {
@@ -239,14 +252,32 @@
 	const swipeAttachment = createSwipeAttachment((e) => {
 		switch (e.direction) {
 			case Hammer.DIRECTION_LEFT:
-				if (pageNumbers < (pdf?.numPages ?? 0)) pageNumbers++;
+				next();
 				break;
 
 			case Hammer.DIRECTION_RIGHT:
-				if (pageNumbers > 1) pageNumbers--;
+				previous();
 				break;
 		}
 	});
+
+	function next() {
+		if (renderMode == 'ONE_PAGE') {
+			pageNumber = Math.min(Math.max(pageNumber + 1, 1), pdf?.numPages ?? 0);
+		} else {
+			pageNumber = pageNumber % 2 == 0 ? pageNumber : pageNumber + 1;
+			pageNumber = Math.min(Math.max(pageNumber + 2, 0), pdf?.numPages ?? 0);
+		}
+	}
+
+	function previous() {
+		if (renderMode == 'ONE_PAGE') {
+			pageNumber = Math.min(Math.max(pageNumber - 1, 1), pdf?.numPages ?? 0);
+		} else {
+			pageNumber = pageNumber % 2 == 0 ? pageNumber : pageNumber - 1;
+			pageNumber = Math.min(Math.max(pageNumber - 2, 0), pdf?.numPages ?? 0);
+		}
+	}
 </script>
 
 <div class="h-full w-full" bind:this={div} {@attach swipeAttachment}>
@@ -255,7 +286,7 @@
 	<button
 		class="fixed inset-y-1/2 start-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
 		onclick={() => {
-			if (pageNumbers > 1) pageNumbers--;
+			previous();
 		}}
 	>
 		<Icon data={prevIcon} class="mx-auto"></Icon>
@@ -264,7 +295,7 @@
 	<button
 		class="fixed inset-y-1/2 end-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
 		onclick={() => {
-			if (pageNumbers < (pdf?.numPages ?? 0)) pageNumbers++;
+			next();
 		}}
 	>
 		<Icon data={nextIcon} class="mx-auto"></Icon>
