@@ -37,7 +37,7 @@
 				return createBrowseURL(name, page.url.origin);
 		}
 
-		throw new Error("Unsupported item type.")
+		throw new Error('Unsupported item type.');
 	});
 
 	const thumbnailURL = $derived.by(() => {
@@ -61,19 +61,21 @@
 						<img src={hoverThumbImage} alt="hover" />
 					</div>
 
-					{#if !loaded}
-						<span class="loading loading-dots mx-auto my-auto"></span>
-					{/if}
+					<div>
+						{#if !loaded}
+							<div class="skeleton size-[64px]"></div>
+						{/if}
 
-					<img
-						alt="thumbnail"
-						loading="lazy"
-						src={thumbnailURL}
-						class="rounded-box mb-0 mt-0"
-						onload={() => {
-							loaded = true;
-						}}
-					/>
+						<img
+							alt="thumbnail"
+							loading="lazy"
+							src={thumbnailURL}
+							class="absolute rounded-box mb-0 mt-0"
+							onload={() => {
+								loaded = true;
+							}}
+						/>
+					</div>
 				</div>
 			{:else}
 				<Icon
