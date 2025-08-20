@@ -53,8 +53,8 @@
 
 		<div class="top-18 fixed bottom-0 end-0 start-0">
 			{#if !isImageLoaded}
-				<div class="h-full w-full">
-					<span class="loading loading-dots loading-sm"></span>
+				<div class="fixed inset-1/2">
+					<span class="loading loading-spinner loading-xl"></span>
 				</div>
 			{/if}
 
@@ -64,7 +64,7 @@
 					src={data.imageURL}
 					class="h-full w-full"
 					style="object-fit:contain;"
-					onload={() => (isImageLoaded = true)}
+					onload={() => (isImageLoaded = true)}					
 				/>
 			</div>
 
@@ -87,7 +87,7 @@
 			</button>
 
 			<button
-				class="fixed top-20 end-2 z-10 h-20 w-20 cursor-pointer text-gray-500/50 hover:text-gray-500"
+				class="fixed end-2 top-20 z-10 h-20 w-20 cursor-pointer text-gray-500/50 hover:text-gray-500"
 				onclick={() => goto(createBrowseURL(data.parent, page.url.origin, data.filename))}
 			>
 				<Icon data={closeIcon} class="mx-auto"></Icon>

@@ -38,21 +38,30 @@
 
 		return url;
 	});
+
+	let loading = $state(true);
 </script>
 
-<div class="card bg-base-100 h-full w-72 shadow-xl mx-auto" id={createElementId(filename)}>
-	<a href={linkURL.toString()} aria-label={name} style="display:block; aspect-ratio: 3/4">
+<div class="card bg-base-100 mx-auto h-full w-72 shadow-xl" id={createElementId(filename)}>
+	<a href={linkURL.toString()} aria-label={name} style="display:block; aspect-ratio: 4/3">
 		{#if type == 'file'}
 			{#if filetype == 'image'}
+				{#if loading}
+					<div class="mt-0 object-cover absolute">
+						<div class="skeleton w-72 h-54"></div>
+					</div>
+				{/if}
+
 				<img
-					class="card-img-top mb-0 mt-0 h-full object-cover"
+					class="mt-0 object-cover absolute w-72 h-54"
 					alt={name}
 					loading="lazy"
 					src={thumbnailURL.toString()}
+					onload={() => (loading = false)}
 				/>
 			{:else}
 				<Icon
-					class="mx-auto mt-16 {getIconClass(type, filetype)} object-cover object-center"
+					class="mx-auto mt-8 {getIconClass(type, filetype)} object-cover object-center"
 					data={getIcon(type, filetype)}
 					width="160"
 					height="160"
@@ -60,7 +69,7 @@
 			{/if}
 		{:else}
 			<Icon
-				class="mx-auto mt-16 {getIconClass(type, filetype)} object-cover object-center"
+				class="mx-auto mt-8 {getIconClass(type, filetype)} object-cover object-center"
 				data={getIcon(type, filetype)}
 				width="160"
 				height="160"

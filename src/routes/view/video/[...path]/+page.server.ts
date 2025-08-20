@@ -5,7 +5,7 @@ import { GrpcTransport } from "@protobuf-ts/grpc-transport";
 import { env } from "$env/dynamic/private";
 import { ChannelCredentials } from "@grpc/grpc-js";
 import { BrowseClient } from "$lib/grpc/browse.client";
-import { decodePath } from "$lib/utils";
+import { compareItems, decodePath } from "$lib/utils";
 import { createViewURL } from "$lib/navigation";
 
 export const load: PageServerLoad = async ({ params, url }) => {
@@ -28,8 +28,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
         path: parent
     })
 
-    const files = call.response.files;
-
+    const files = call.response.files.toSorted((a: any, b: any) => compareItems(a, b, 'name', 'ascending'))
     const index = files.findIndex((e: any) => e.name == pathVal);
     const previous = index > 0 ? files[index - 1].name : null;
     const next = index < files.length - 1 ? files[index + 1].name : null;
