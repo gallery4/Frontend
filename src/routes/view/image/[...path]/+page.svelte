@@ -64,8 +64,7 @@
 					src={data.imageURL}
 					class="h-full w-full"
 					style="object-fit:contain;"
-					onload={() => (isImageLoaded = true)}
-					bind:this={img}
+					onload={() => (isImageLoaded = true)}					
 				/>
 			</div>
 
