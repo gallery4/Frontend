@@ -48,15 +48,21 @@
 	}
 
 	let showMenu = $state(false);
+
+	console.log("path", data.response.path)
 </script>
 
 <svelte:head>
-	<title>Gallery 4 - {getFilenameFromKey(data.response.path, "directory")}</title>
+	<title>Gallery 4 - {getFilenameFromKey(data.response.path, 'directory')}</title>
 </svelte:head>
 
 <Container bind:showMenu>
 	<Content>
-		<NavBar bind:showMenu title={getFilenameFromKey(data.response.path, "directory")} />
+		<NavBar
+			bind:showMenu
+			title={getFilenameFromKey(data.response.path, 'directory')}
+			rootPage={data.response.path == ''}
+		/>
 		<div class="prose container mx-auto mt-4 max-w-[1024px]">
 			{#if browseView == 'grid'}
 				<div use:moveToHash class="grid grid-cols-1 gap-8 md:grid-cols-3">

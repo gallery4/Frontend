@@ -15,6 +15,8 @@ export const load: PageServerLoad = async ({params, url, fetch}) => {
   let client = new BrowseClient(transport)
   const path = decodePath(params.path)
 
+  console.log(path)
+
   let call = await client.list({path})
 
   return {
