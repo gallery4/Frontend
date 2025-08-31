@@ -11,8 +11,10 @@
 	import { Icon } from 'svelte-icon';
 	import viewGridIcon from '@mdi/svg/svg/view-grid.svg?raw';
 	import viewListIcon from '@mdi/svg/svg/view-list.svg?raw';
+
 	import { Timestamp } from '$lib/grpc/google/protobuf/timestamp';
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
+	import { createBrowseURL } from '$lib/navigation';
 
 	const { data } = $props();
 
@@ -49,7 +51,18 @@
 
 	let showMenu = $state(false);
 
-	console.log("path", data.response.path)
+	let parent = $derived.by(() => {
+		if (data.response.path == '') {
+			return undefined;
+		}
+		const lastSep = data.response.path.lastIndexOf('/');
+
+		if (lastSep == -1) {
+			return '';
+		}
+
+		return data.response.path.substring(0, lastSep);
+	});
 </script>
 
 <svelte:head>
@@ -62,6 +75,7 @@
 			bind:showMenu
 			title={getFilenameFromKey(data.response.path, 'directory')}
 			rootPage={data.response.path == ''}
+			upUrl={parent == undefined ? undefined : createBrowseURL(parent, page.url.origin).toString()}
 		/>
 		<div class="prose container mx-auto mt-4 max-w-[1024px]">
 			{#if browseView == 'grid'}

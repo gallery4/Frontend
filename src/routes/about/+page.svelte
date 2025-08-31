@@ -16,7 +16,7 @@
 
 <Container bind:showMenu>
 	<Content>
-		<NavBar bind:showMenu title="About" />
+		<NavBar bind:showMenu title="About" hasUp={false}/>
 		<div class="container mx-auto mt-4 prose max-w-[1024px]">
 			<h1>Gallery 4</h1>
 

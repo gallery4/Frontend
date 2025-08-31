@@ -2,13 +2,31 @@
 	import { Icon } from 'svelte-icon';
 	import menu from '@mdi/svg/svg/menu.svg?raw';
 	import backIcon from '@mdi/svg/svg/arrow-left.svg?raw';
+	import upIcon from '@mdi/svg/svg/arrow-up.svg?raw';
 	import refreshIcon from '@mdi/svg/svg/refresh.svg?raw';
 	import logo from '$lib/logo.svg?raw';
 	import { page } from '$app/state';
 
 	import { MediaQuery } from 'svelte/reactivity';
+	import { goto } from '$app/navigation';
 
-	let { title, showMenu = $bindable(), hasmenu = true, rootPage = false } = $props();
+	interface Props {
+		title?: string;
+		showMenu?: boolean;
+		hasMenu?: boolean;
+		rootPage?: boolean;
+		hasUp?: boolean;
+		upUrl?: URL|string ;
+	}
+
+	let {
+		title,
+		showMenu = $bindable(),
+		hasMenu = true,
+		rootPage = false,
+		upUrl = undefined,
+		hasUp = true
+	}: Props = $props();
 
 	const isBrowser = new MediaQuery('display-mode: browser');
 </script>
@@ -40,7 +58,20 @@
 			<div class="hidden truncate text-ellipsis text-xl md:block">{title}</div>
 		</div>
 		<div class="flex-none place-self-center">
-			{#if hasmenu}
+			{#if hasUp}
+				<button
+					class="btn btn-square btn-ghost"
+					class:btn-disabled={upUrl == undefined}
+					onclick={() => {
+						if (upUrl) goto(upUrl);
+					}}
+				>
+					<Icon data={upIcon} />
+				</button>
+			{/if}
+		</div>
+		<div class="flex-none place-self-center">
+			{#if hasMenu}
 				<button class="btn btn-square btn-ghost" onclick={() => (showMenu = true)}>
 					<Icon data={menu} />
 				</button>
