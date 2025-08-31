@@ -69,6 +69,7 @@
 			{#if !isImageLoaded}
 				<div class="fixed inset-1/2">
 					<span class="loading loading-spinner loading-xl"></span>
+					<div class="text-xl">Loading</div>
 				</div>
 			{/if}
 
@@ -77,6 +78,8 @@
 					alt={data.filename}
 					src={data.imageURL}
 					class="h-full w-full"
+					class:blur-xs={!isImageLoaded}
+					class:sepia-50={!isImageLoaded}
 					style="object-fit:contain;"
 					onload={() => (isImageLoaded = true)}
 				/>
