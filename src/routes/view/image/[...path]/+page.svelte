@@ -65,7 +65,7 @@
 			</div>
 		</NavBar>
 
-		<div class="top-18 fixed bottom-0 end-0 start-0">
+		<div class="top-13 fixed bottom-0 end-0 start-0">
 			<div class="h-full w-full" {@attach swipeAttachment}>
 				<img
 					alt={data.filename}
@@ -79,8 +79,8 @@
 			</div>
 
 			{#if !isImageLoaded}
-				<div class="absolute inset-y-1/2 end-0 start-0">
-					<progress class="progress w-full"></progress>
+				<div class="absolute top-0 end-0 start-0">
+					<progress class="progress progress-primary w-full"></progress>
 				</div>
 			{/if}
 
