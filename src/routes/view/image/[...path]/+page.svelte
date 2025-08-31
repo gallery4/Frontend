@@ -23,6 +23,14 @@
 	const previousURL = $derived(data.previousURL);
 
 	let isImageLoaded = $state(false);
+	let oldImgSrc = $state('')
+
+	$effect(()=>{
+		if(oldImgSrc != data.imageURL){
+			isImageLoaded = false;
+			oldImgSrc = data.imageURL
+		}
+	})
 
 	let showMenu = $state(false);
 
