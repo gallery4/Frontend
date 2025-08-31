@@ -22,11 +22,13 @@
 
 <Container bind:showMenu>
 	<Content>
-		<NavBar
-			bind:showMenu
-			title={data.filename}
-			upUrl={createBrowseURL(data.parent, page.url.origin, data.filename)}
-		/>
+		<NavBar bind:showMenu upUrl={createBrowseURL(data.parent, page.url.origin, data.filename)}>
+			<div class="hidden text-xl md:inline">
+				<div class=" whitespace-nowrap">
+					{data.filename}
+				</div>
+			</div>
+		</NavBar>
 		<div class="fixed bottom-4 end-0 start-0 top-20 flex justify-center">
 			<EpubViewer src={data.mediaURL} />
 		</div>

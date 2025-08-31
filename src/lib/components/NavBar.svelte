@@ -9,23 +9,24 @@
 
 	import { MediaQuery } from 'svelte/reactivity';
 	import { goto } from '$app/navigation';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
-		title?: string;
 		showMenu?: boolean;
 		hasMenu?: boolean;
 		rootPage?: boolean;
 		hasUp?: boolean;
-		upUrl?: URL|string ;
+		upUrl?: URL | string;
+		children?: Snippet;
 	}
 
 	let {
-		title,
 		showMenu = $bindable(),
 		hasMenu = true,
 		rootPage = false,
 		upUrl = undefined,
-		hasUp = true
+		hasUp = true,
+		children = undefined
 	}: Props = $props();
 
 	const isBrowser = new MediaQuery('display-mode: browser');
@@ -54,8 +55,8 @@
 				<Icon data={logo} width="128px" height="48px" />
 			</a>
 		</div>
-		<div class="m-2 flex-1 place-self-center">
-			<div class="hidden truncate text-ellipsis text-xl md:block">{title}</div>
+		<div class="flex-1 grow place-self-center overflow-hidden">
+			{@render children?.()}
 		</div>
 		<div class="flex-none place-self-center">
 			{#if hasUp}

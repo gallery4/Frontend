@@ -27,11 +27,13 @@
 
 <Container bind:showMenu>
 	<Content>
-		<NavBar
-			bind:showMenu
-			title={data.filename}
-			upUrl={createBrowseURL(data.parent, page.url.origin, data.filename)}
-		/>
+		<NavBar bind:showMenu upUrl={createBrowseURL(data.parent, page.url.origin, data.filename)}>
+			<div class="hidden text-xl md:inline">
+				<div class=" whitespace-nowrap">
+					{data.filename}
+				</div>
+			</div>
+		</NavBar>
 
 		<div class="mx-auto mt-16 max-w-[1024px]">
 			<media-player class="d-block" title={data.filename} src={data.mediaURL}>
