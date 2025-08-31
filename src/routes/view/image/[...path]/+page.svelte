@@ -23,14 +23,14 @@
 	const previousURL = $derived(data.previousURL);
 
 	let isImageLoaded = $state(false);
-	let oldImgSrc = $state('')
+	let oldImgSrc = $state('');
 
-	$effect(()=>{
-		if(oldImgSrc != data.imageURL){
+	$effect(() => {
+		if (oldImgSrc != data.imageURL) {
 			isImageLoaded = false;
-			oldImgSrc = data.imageURL
+			oldImgSrc = data.imageURL;
 		}
-	})
+	});
 
 	let showMenu = $state(false);
 
@@ -66,13 +66,6 @@
 		</NavBar>
 
 		<div class="top-18 fixed bottom-0 end-0 start-0">
-			{#if !isImageLoaded}
-				<div class="fixed inset-1/2">
-					<span class="loading loading-spinner loading-xl"></span>
-					<div class="text-xl">Loading</div>
-				</div>
-			{/if}
-
 			<div class="h-full w-full" {@attach swipeAttachment}>
 				<img
 					alt={data.filename}
@@ -84,6 +77,12 @@
 					onload={() => (isImageLoaded = true)}
 				/>
 			</div>
+
+			{#if !isImageLoaded}
+				<div class="absolute inset-y-1/2 end-0 start-0">
+					<progress class="progress w-full"></progress>
+				</div>
+			{/if}
 
 			<button
 				class="absolute inset-y-1/2 start-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
