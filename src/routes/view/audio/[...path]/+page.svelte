@@ -6,7 +6,6 @@
 	import prevIcon from '@mdi/svg/svg/chevron-left.svg?raw';
 	import nextIcon from '@mdi/svg/svg/chevron-right.svg?raw';
 	import downloadIcon from '@mdi/svg/svg/download.svg?raw';
-	import closeIcon from '@mdi/svg/svg/close.svg?raw';
 
 	import Container from '$lib/components/Container.svelte';
 	import Content from '$lib/components/Content.svelte';
@@ -14,7 +13,7 @@
 	import SideBar from '$lib/components/SideBar.svelte';
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 
-	import {createBrowseURL} from '$lib/navigation.js'
+	import { createBrowseURL } from '$lib/navigation.js';
 	import { page } from '$app/state';
 
 	const { data } = $props();
@@ -28,7 +27,11 @@
 
 <Container bind:showMenu>
 	<Content>
-		<NavBar bind:showMenu title={data.filename} />
+		<NavBar
+			bind:showMenu
+			title={data.filename}
+			upUrl={createBrowseURL(data.parent, page.url.origin, data.filename)}
+		/>
 
 		<div class="mx-auto mt-16 max-w-[1024px]">
 			<media-player class="d-block" title={data.filename} src={data.mediaURL}>
@@ -53,14 +56,6 @@
 					}}
 				>
 					<Icon data={nextIcon}></Icon>&nbsp;Next
-				</button>
-			</div>
-
-			<div class="mt-4 w-full">
-				<button
-					class="btn btn-secondary w-full"
-					onclick={()=>goto(createBrowseURL(data.parent, page.url.origin, data.filename))}>
-					<Icon data={closeIcon} />Close
 				</button>
 			</div>
 		</div>
