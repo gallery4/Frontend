@@ -93,20 +93,31 @@
 		{/if}
 	</a>
 	<div class="card-body">
-		<div class="mx-2 h-[4em]">
+		<div class="mx-2 h-32">
 			{#if type == 'file' && filetype == 'audio'}
+				<div class="h-16">
+					<a class="link link-hover" href={linkURL.toString()} {@attach tooltipAttachment}>
+						{filename}
+
+						<div class="tooltip-content">
+							{filename}
+						</div>
+					</a>
+				</div>
 				<media-player class="d-block" title={filename} src={mediaURL.toString()}>
 					<media-provider></media-provider>
 					<media-audio-layout></media-audio-layout>
 				</media-player>
 			{:else}
-				<a href={linkURL.toString()} {@attach tooltipAttachment}>
-					{filename}
-
-					<div class="tooltip-content">
+				<div class="h-full">
+					<a class="link link-hover" href={linkURL.toString()} {@attach tooltipAttachment}>
 						{filename}
-					</div>
-				</a>
+
+						<div class="tooltip-content">
+							{filename}
+						</div>
+					</a>
+				</div>
 			{/if}
 		</div>
 	</div>
