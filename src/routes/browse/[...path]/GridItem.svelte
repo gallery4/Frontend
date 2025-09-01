@@ -40,25 +40,39 @@
 	});
 
 	let loading = $state(true);
+	const hoverThumbImage = $derived.by(() => {
+		let url = new URL('/api/thumbnail', page.url.origin);
+		url.searchParams.set('path', name);
+		url.searchParams.set('type', 'LIST');
+		url.searchParams.set('width', '300');
+		url.searchParams.set('height', '300');
+		return url.toString();
+	});
 </script>
 
 <div class="card bg-base-100 mx-auto h-full w-72 shadow-xl" id={createElementId(filename)}>
 	<a href={linkURL.toString()} aria-label={name} style="display:block; aspect-ratio: 4/3">
 		{#if type == 'file'}
 			{#if filetype == 'image'}
-				{#if loading}
-					<div class="mt-0 object-cover absolute">
-						<div class="skeleton w-72 h-54"></div>
+				<div class="tooltip w-full h-full">
+					<div class="tooltip-content">
+						<img src={hoverThumbImage} alt="hover" />
 					</div>
-				{/if}
-
-				<img
-					class="mt-0 object-cover absolute w-72 h-54"
-					alt={name}
-					loading="lazy"
-					src={thumbnailURL.toString()}
-					onload={() => (loading = false)}
-				/>
+					<div>
+						<img
+							class="h-54 absolute mt-0 w-72 object-cover"
+							alt={name}
+							loading="lazy"
+							src={thumbnailURL.toString()}
+							onload={() => (loading = false)}
+						/>
+						{#if loading}
+							<div class="absolute mt-0 object-cover">
+								<div class="skeleton h-54 w-72"></div>
+							</div>
+						{/if}
+					</div>
+				</div>
 			{:else}
 				<Icon
 					class="mx-auto mt-8 {getIconClass(type, filetype)} object-cover object-center"
@@ -77,15 +91,17 @@
 		{/if}
 	</a>
 	<div class="card-body">
-		<div class="mx-2 h-[4em] overflow-hidden">
-			{#if type == 'file' && filetype == 'audio'}
-				<media-player class="d-block" title={filename} src={mediaURL.toString()}>
-					<media-provider></media-provider>
-					<media-audio-layout></media-audio-layout>
-				</media-player>
-			{:else}
-				<a href={linkURL.toString()}>{filename}</a>
-			{/if}
+		<div class="tooltip" data-tip={filename}>
+			<div class="mx-2 h-[4em] overflow-hidden">
+				{#if type == 'file' && filetype == 'audio'}
+					<media-player class="d-block" title={filename} src={mediaURL.toString()}>
+						<media-provider></media-provider>
+						<media-audio-layout></media-audio-layout>
+					</media-player>
+				{:else}
+					<a href={linkURL.toString()}>{filename}</a>
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
