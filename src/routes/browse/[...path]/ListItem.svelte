@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import { getIcon, getIconClass } from '$lib/icons';
 	import { createBrowseURL, createViewURL } from '$lib/navigation';
+	import { tooltipAttachment } from '$lib/tooltip';
 	import { createElementId, determineFileType, getFilenameFromKey } from '$lib/utils';
 	import { Icon } from 'svelte-icon';
 	import 'vidstack/bundle';
@@ -56,9 +57,9 @@
 	<div class="">
 		{#if type == 'file'}
 			{#if filetype == 'image'}
-				<div class="tooltip tooltip-right size-[64px]">
+				<div class="size-[64px]" {@attach tooltipAttachment}>
 					<div class="tooltip-content">
-						<img src={hoverThumbImage} alt="hover" />
+						<img class="m-3 rounded border-0" src={hoverThumbImage} alt="hover" />
 					</div>
 
 					<div>
@@ -70,7 +71,7 @@
 							alt="thumbnail"
 							loading="lazy"
 							src={thumbnailURL}
-							class="absolute rounded-box mb-0 mt-0"
+							class="rounded-box absolute mb-0 mt-0"
 							onload={() => {
 								loaded = true;
 							}}
@@ -95,7 +96,7 @@
 		{/if}
 	</div>
 	<div class="list-col-grow">
-		<a href={linkURL.toString()}>
+		<a class="link link-hover" href={linkURL.toString()}>
 			{#if type == 'placeholder'}
 				<span class="placeholder"></span>
 			{:else}
