@@ -1,3 +1,9 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 @plugin 'daisyui';
+
+@import 'tippy.js/dist/tippy.css';
+
+.tooltip-content {
+    display: none;
+}
