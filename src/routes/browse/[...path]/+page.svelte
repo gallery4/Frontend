@@ -76,13 +76,37 @@
 			rootPage={data.response.path == ''}
 			upUrl={parent == undefined ? undefined : createBrowseURL(parent, page.url.origin).toString()}
 		>
-			<div class="text-xl hidden md:inline">
+			<div class="hidden text-xl md:inline">
 				<div class=" whitespace-nowrap">{getFilenameFromKey(data.response.path, 'directory')}</div>
 			</div>
 		</NavBar>
-		<div class="prose container mx-auto mt-4 max-w-[1024px]">
+		<div class="container mx-auto my-2 max-w-[1024px]">
+			<div class="bg-base-200 my-2 flex p-4 shadow">
+				<div class="flex-1 overflow-auto">
+					<Breadcrumb path={data.request.path} />
+				</div>
+				<div class="divider divider-horizontal flex-none"></div>
+				<div class="join flex-none">
+					<button
+						class="join-item btn btn-ghost btn-square"
+						class:btn-active={browseView == 'grid'}
+						class:btn-primary={browseView == 'grid'}
+						onclick={() => (browseView = 'grid')}
+					>
+						<Icon data={viewGridIcon} class="fill-slate-400 stroke-slate-800" />
+					</button>
+					<button
+						class="join-item btn btn-ghost btn-square"
+						class:btn-active={browseView == 'list'}
+						class:btn-primary={browseView == 'list'}
+						onclick={() => (browseView = 'list')}
+					>
+						<Icon data={viewListIcon} class="fill-slate-400 stroke-slate-800" />
+					</button>
+				</div>
+			</div>
 			{#if browseView == 'grid'}
-				<div use:moveToHash class="grid grid-cols-1 gap-8 md:grid-cols-3">
+				<div use:moveToHash class="my-4 grid grid-cols-1 gap-8 md:grid-cols-3">
 					{#if directories}
 						{#each directories.objects as object}
 							<GridItem name={object.name} type="directory" />
@@ -100,7 +124,7 @@
 					{/if}
 				</div>
 			{:else if browseView == 'list'}
-				<ul class="list" use:moveToHash>
+				<ul class="list bg-base-100 rounded-md shadow-xl" use:moveToHash>
 					{#if directories}
 						{#each directories.objects as object}
 							<ListItem
@@ -132,27 +156,5 @@
 			{/if}
 		</div>
 	</Content>
-	<SideBar bind:showMenu>
-		<Breadcrumb path={data.response.path} />
-		<ul class="menu">
-			<li class="menu-title">View</li>
-			<li>
-				<button
-					class={browseView == 'grid' ? 'menu-active' : ''}
-					onclick={() => (browseView = 'grid')}
-				>
-					<Icon data={viewGridIcon} /> Grid
-				</button>
-			</li>
-
-			<li>
-				<button
-					class={browseView == 'list' ? 'menu-active' : ''}
-					onclick={() => (browseView = 'list')}
-				>
-					<Icon data={viewListIcon} /> List
-				</button>
-			</li>
-		</ul>
-	</SideBar>
+	<SideBar bind:showMenu></SideBar>
 </Container>

@@ -7,3 +7,9 @@
 .tooltip-content {
     display: none;
 }
+
+:root,
+[data-theme] {
+  background-color: var(--root-bg, var(--color-base-300));
+  color: var(--color-base-content);
+}
