@@ -80,8 +80,8 @@
 				<div class=" whitespace-nowrap">{getFilenameFromKey(data.response.path, 'directory')}</div>
 			</div>
 		</NavBar>
-		<div class="container mx-auto my-2 max-w-[1024px]">
-			<div class="bg-base-200 my-2 flex p-4 shadow">
+		<div class="container mx-auto mb-2 max-w-[1024px]">
+			<div class="bg-base-200 mb-2 flex p-4 shadow">
 				<div class="flex-1 overflow-auto">
 					<Breadcrumb path={data.request.path} />
 				</div>
@@ -124,7 +124,7 @@
 					{/if}
 				</div>
 			{:else if browseView == 'list'}
-				<ul class="list bg-base-100 rounded-md shadow-xl" use:moveToHash>
+				<ul class="list bg-base-100 rounded-md shadow-xl my-4" use:moveToHash>
 					{#if directories}
 						{#each directories.objects as object}
 							<ListItem
