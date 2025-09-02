@@ -40,6 +40,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
     mediaURL.searchParams.set('path', decodePath(pathVal));
 
     return {
+        request: call.request,
         filename: path.basename(pathVal),
         parent,
         nextURL: nextURL?.toString(),

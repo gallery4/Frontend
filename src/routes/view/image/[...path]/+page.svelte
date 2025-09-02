@@ -65,7 +65,7 @@
 			</div>
 		</NavBar>
 
-		<div class="top-13 fixed bottom-0 end-0 start-0">
+		<div class="top-13 fixed bottom-0 end-0 start-0 bg-base-300">
 			<div class="h-full w-full" {@attach swipeAttachment}>
 				<img
 					alt={data.filename}
@@ -109,10 +109,9 @@
 			<li class="menu-title">Action</li>
 			<li>
 				<a class="btn" href={data.mediaURL} target="_blank">
-					<Icon data={downloadIcon} /> Get
+					<Icon data={downloadIcon} class="fill-slate-400 stroke-slate-800"/> Get
 				</a>
 			</li>
 		</ul>
-		<Breadcrumb path={data.parent} />
 	</SideBar>
 </Container>

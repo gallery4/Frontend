@@ -29,7 +29,7 @@
 				</div>
 			</div>
 		</NavBar>
-		<div class="fixed bottom-4 end-0 start-0 top-20 flex justify-center">
+		<div class="fixed bottom-4 end-0 start-0 top-20 flex justify-center  bg-base-300">
 			<EpubViewer src={data.mediaURL} />
 		</div>
 	</Content>
@@ -38,11 +38,9 @@
 			<li class="menu-title">Action</li>
 			<li>
 				<a class="btn" href={data.mediaURL} target="_blank">
-					<Icon data={downloadIcon} /> Get
+					<Icon data={downloadIcon} class="fill-slate-400 stroke-slate-800"/> Get
 				</a>
 			</li>
 		</ul>
-
-		<Breadcrumb path={data.parent} />
 	</SideBar>
 </Container>

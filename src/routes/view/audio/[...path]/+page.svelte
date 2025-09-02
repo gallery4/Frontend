@@ -35,8 +35,11 @@
 			</div>
 		</NavBar>
 
-		<div class="mx-auto mt-16 max-w-[1024px]">
-			<media-player class="d-block" title={data.filename} src={data.mediaURL}>
+		<div class="mx-auto my-4 max-w-[1024px]">
+			<div class="bg-base-200 overflow-auto p-4 shadow">
+				<Breadcrumb path={data.request.path} />
+			</div>
+			<media-player class="block my-4" title={data.filename} src={data.mediaURL}>
 				<media-provider></media-provider>
 				<media-audio-layout></media-audio-layout>
 			</media-player>
@@ -48,7 +51,7 @@
 						if (data.previousURL) goto(data.previousURL);
 					}}
 				>
-					<Icon data={prevIcon}></Icon>&nbsp;Previous
+					<Icon data={prevIcon} class="fill-slate-400 stroke-slate-800"></Icon>&nbsp;Previous
 				</button>
 
 				<button
@@ -57,7 +60,7 @@
 						if (data.nextURL) goto(data.nextURL);
 					}}
 				>
-					<Icon data={nextIcon}></Icon>&nbsp;Next
+					<Icon data={nextIcon} class="fill-slate-400 stroke-slate-800"></Icon>&nbsp;Next
 				</button>
 			</div>
 		</div>
@@ -71,7 +74,5 @@
 				</a>
 			</li>
 		</ul>
-
-		<Breadcrumb path={data.parent} />
 	</SideBar>
 </Container>

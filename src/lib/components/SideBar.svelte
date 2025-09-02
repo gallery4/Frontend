@@ -24,12 +24,12 @@
 		<ul class="list">
 			<li class="list-row">
 				<button onclick={() => goto(new URL("/browse", page.url.origin))}>
-					<Icon data={browseIcon} />&nbsp;Browse items
+					<Icon data={browseIcon} class="fill-slate-400 stroke-slate-800"/>&nbsp;Browse items
 				</button>
 			</li>
 			<li class="list-row">
 				<button onclick={() => goto(new URL("/about", page.url.origin))}>
-					<Icon data={aboutIcon} />About
+					<Icon data={aboutIcon} class="fill-slate-400 stroke-slate-800"/> About
 				</button>
 			</li>
 		</ul>

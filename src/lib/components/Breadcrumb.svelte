@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createElementId } from '$lib/utils';
+	import { createElementId, encodePath } from '$lib/utils';
 	import { goto } from '$app/navigation';
 
 	import { Icon } from 'svelte-icon';
@@ -48,27 +48,19 @@
 
 	function gotoBrowse(path: string) {
 		const b = data.find((b) => b.path == path);
-		if (b) goto(`/browse/${b.path}#${b.targetId}`);
+		if (b) goto(`/browse/${encodePath(b.path)}#${b.targetId}`);
 	}
 </script>
 
-<ul class="menu">
-	<li class="menu-title">Directory</li>
-	<li>
-		<details class="dropdown">
-			<summary class="btn m-1"><Icon data={directoryUpIcon} /> Parents</summary>
-			<ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-				<ul class="menu">
-					{#each data as b}
-						<li>
-							<button onclick={() => gotoBrowse(b.path)} disabled={data.length == 1}>
-								<Icon data={directoryIcon} />
-								{b.name}
-							</button>
-						</li>
-					{/each}
-				</ul>
-			</ul>
-		</details>
-	</li>
-</ul>
+<div class="breadcrumbs text-sm">
+	<ul>
+		{#each data as b}
+			<li>
+				<button onclick={() => gotoBrowse(b.path)} disabled={data.length == 1}>
+					<Icon data={directoryIcon} class="fill-slate-400 stroke-slate-800" />
+					{b.name}
+				</button>
+			</li>
+		{/each}
+	</ul>
+</div>
