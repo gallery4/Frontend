@@ -29,7 +29,7 @@
 				</div>
 			</div>
 		</NavBar>
-		<div class="fixed bottom-4 end-0 start-0 top-20 flex justify-center">
+		<div class="fixed bottom-4 end-0 start-0 top-20 flex justify-center  bg-base-300">
 			<EpubViewer src={data.mediaURL} />
 		</div>
 	</Content>

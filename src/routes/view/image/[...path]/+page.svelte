@@ -65,7 +65,7 @@
 			</div>
 		</NavBar>
 
-		<div class="top-13 fixed bottom-0 end-0 start-0">
+		<div class="top-13 fixed bottom-0 end-0 start-0 bg-base-300">
 			<div class="h-full w-full" {@attach swipeAttachment}>
 				<img
 					alt={data.filename}

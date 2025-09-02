@@ -29,7 +29,7 @@
 				</div>
 			</div>
 		</NavBar>
-		<div class="z-n1 fixed bottom-0 end-0 start-0 top-20">
+		<div class="z-n1 fixed bottom-0 end-0 start-0 top-20 bg-base-300" >
 			<PdfViewer url={data.mediaURL} />
 		</div>
 	</Content>

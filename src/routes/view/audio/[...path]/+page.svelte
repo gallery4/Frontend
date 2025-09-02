@@ -35,7 +35,7 @@
 			</div>
 		</NavBar>
 
-		<div class="mx-auto mt-16 max-w-[1024px]">
+		<div class="mx-auto my-16 max-w-[1024px]">
 			<media-player class="d-block" title={data.filename} src={data.mediaURL}>
 				<media-provider></media-provider>
 				<media-audio-layout></media-audio-layout>

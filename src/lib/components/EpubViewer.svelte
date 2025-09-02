@@ -55,7 +55,7 @@
 	});
 </script>
 
-<div class="mx-auto h-full w-full max-w-[1024px]" bind:this={div}>
+<div class="mx-auto h-full w-full max-w-[1024px] bg-base-100" bind:this={div}>
 	<button
 		class="fixed inset-y-1/2 start-2 z-10 h-1/2 w-20 -translate-y-1/2 cursor-pointer text-gray-500/50 hover:text-gray-500"
 		onclick={async () => {
