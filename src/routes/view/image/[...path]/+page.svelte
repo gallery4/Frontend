@@ -109,10 +109,9 @@
 			<li class="menu-title">Action</li>
 			<li>
 				<a class="btn" href={data.mediaURL} target="_blank">
-					<Icon data={downloadIcon} /> Get
+					<Icon data={downloadIcon} class="fill-slate-400 stroke-slate-800"/> Get
 				</a>
 			</li>
 		</ul>
-		<Breadcrumb path={data.parent} />
 	</SideBar>
 </Container>

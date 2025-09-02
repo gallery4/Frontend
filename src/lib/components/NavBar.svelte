@@ -41,16 +41,16 @@
 					class:btn-disabled={rootPage}
 					onclick={() => history.back()}
 				>
-					<Icon data={backIcon} />
+					<Icon data={backIcon} class="fill-slate-400 stroke-slate-800" />
 				</button>
 			</div>
 			<div class="flex-none place-self-center">
 				<button class="btn btn-square btn-ghost" onclick={() => location.reload()}>
-					<Icon data={refreshIcon} />
+					<Icon data={refreshIcon} class="fill-slate-400 stroke-slate-800" />
 				</button>
 			</div>
 		{/if}
-		<div class="flex-none place-self-center">
+		<div class="flex-none place-self-center pe-4">
 			<a href={new URL('/browse', page.url.origin).toString()}>
 				<Icon data={logo} width="128px" height="48px" />
 			</a>
@@ -67,14 +67,20 @@
 						if (upUrl) goto(upUrl);
 					}}
 				>
-					<Icon data={upIcon} />
+					<Icon
+						data={upIcon}
+						class={() => {
+							if (upUrl == undefined) return 'fill-slate-200 stroke-slate-400';
+							else return 'fill-slate-400 stroke-slate-800';
+						}}
+					/>
 				</button>
 			{/if}
 		</div>
 		<div class="flex-none place-self-center">
 			{#if hasMenu}
 				<button class="btn btn-square btn-ghost" onclick={() => (showMenu = true)}>
-					<Icon data={menu} />
+					<Icon data={menu} class="fill-slate-400 stroke-slate-800" />
 				</button>
 			{/if}
 		</div>

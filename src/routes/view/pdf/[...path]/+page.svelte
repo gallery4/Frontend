@@ -42,7 +42,5 @@
 				</a>
 			</li>
 		</ul>
-
-		<Breadcrumb path={data.parent} />
 	</SideBar>
 </Container>
