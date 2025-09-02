@@ -35,8 +35,11 @@
 			</div>
 		</NavBar>
 
-		<div class="mx-auto my-16 max-w-[1024px]">
-			<media-player class="d-block" title={data.filename} src={data.mediaURL}>
+		<div class="mx-auto my-4 max-w-[1024px]">
+			<div class="bg-base-200 overflow-auto p-4 shadow">
+				<Breadcrumb path={data.request.path} />
+			</div>
+			<media-player class="block my-4" title={data.filename} src={data.mediaURL}>
 				<media-provider></media-provider>
 				<media-audio-layout></media-audio-layout>
 			</media-player>

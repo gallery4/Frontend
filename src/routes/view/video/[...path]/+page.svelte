@@ -36,7 +36,11 @@
 		</NavBar>
 
 		<div class="mx-auto mt-4 max-w-[1024px]">
-			<media-player title={data.filename} src={data.mediaURL.toString()}>
+			<div class="bg-base-200 overflow-auto p-4 shadow">
+				<Breadcrumb path={data.request.path} />
+			</div>
+
+			<media-player class="block my-4" title={data.filename} src={data.mediaURL.toString()}>
 				<media-provider></media-provider>
 				<media-video-layout></media-video-layout>
 			</media-player>
