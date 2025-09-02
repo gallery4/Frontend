@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import { getIcon, getIconClass } from '$lib/icons';
 	import { createBrowseURL, createViewURL } from '$lib/navigation';
+	import { tooltipAttachment } from '$lib/tooltip';
 	import { createElementId, determineFileType, getFilenameFromKey } from '$lib/utils';
 	import { Icon } from 'svelte-icon';
 	import 'vidstack/bundle';
@@ -22,6 +23,15 @@
 		}
 
 		throw new Error('unsupported item type.');
+	});
+
+	const hoverThumbImage = $derived.by(() => {
+		let url = new URL('/api/thumbnail', page.url.origin);
+		url.searchParams.set('path', name);
+		url.searchParams.set('type', 'LIST');
+		url.searchParams.set('width', '300');
+		url.searchParams.set('height', '300');
+		return url.toString();
 	});
 
 	const thumbnailURL = $derived.by(() => {
@@ -46,19 +56,25 @@
 	<a href={linkURL.toString()} aria-label={name} style="display:block; aspect-ratio: 4/3">
 		{#if type == 'file'}
 			{#if filetype == 'image'}
-				{#if loading}
-					<div class="mt-0 object-cover absolute">
-						<div class="skeleton w-72 h-54"></div>
-					</div>
-				{/if}
+				<div class="round-t-5 block h-full w-full" {@attach tooltipAttachment}>
+					{#if loading}
+						<div class="absolute mt-0 object-cover">
+							<div class="skeleton h-54 w-72"></div>
+						</div>
+					{/if}
 
-				<img
-					class="mt-0 object-cover absolute w-72 h-54"
-					alt={name}
-					loading="lazy"
-					src={thumbnailURL.toString()}
-					onload={() => (loading = false)}
-				/>
+					<img
+						class="h-54 absolute mt-0 w-72 object-cover"
+						alt={name}
+						loading="lazy"
+						src={thumbnailURL.toString()}
+						onload={() => (loading = false)}
+					/>
+
+					<div class="tooltip-content">
+						<img class="m-3 rounded border-0" src={hoverThumbImage} alt="hover-thumb" />
+					</div>
+				</div>
 			{:else}
 				<Icon
 					class="mx-auto mt-8 {getIconClass(type, filetype)} object-cover object-center"
@@ -77,14 +93,31 @@
 		{/if}
 	</a>
 	<div class="card-body">
-		<div class="mx-2 h-[4em] overflow-hidden">
+		<div class="mx-2 h-32">
 			{#if type == 'file' && filetype == 'audio'}
+				<div class="h-16">
+					<a class="link link-hover" href={linkURL.toString()} {@attach tooltipAttachment}>
+						{filename}
+
+						<div class="tooltip-content">
+							{filename}
+						</div>
+					</a>
+				</div>
 				<media-player class="d-block" title={filename} src={mediaURL.toString()}>
 					<media-provider></media-provider>
 					<media-audio-layout></media-audio-layout>
 				</media-player>
 			{:else}
-				<a href={linkURL.toString()}>{filename}</a>
+				<div class="h-full">
+					<a class="link link-hover" href={linkURL.toString()} {@attach tooltipAttachment}>
+						{filename}
+
+						<div class="tooltip-content">
+							{filename}
+						</div>
+					</a>
+				</div>
 			{/if}
 		</div>
 	</div>
