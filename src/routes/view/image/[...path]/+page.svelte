@@ -71,8 +71,6 @@
 					alt={data.filename}
 					src={data.imageURL}
 					class="h-full w-full"
-					class:blur-xs={!isImageLoaded}
-					class:sepia-50={!isImageLoaded}
 					style="object-fit:contain;"
 					onload={() => (isImageLoaded = true)}
 				/>
