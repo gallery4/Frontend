@@ -81,7 +81,7 @@
 			</div>
 		</NavBar>
 		<div class="container mx-auto mb-2 max-w-[1024px]">
-			<div class="bg-base-200 mb-2 flex p-4 shadow">
+			<div class="bg-base-200 mb-2 flex p-4 shadow sticky top-16 z-1">
 				<div class="flex-1 overflow-auto">
 					<Breadcrumb path={data.request.path} />
 				</div>

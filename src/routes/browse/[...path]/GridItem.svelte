@@ -52,19 +52,16 @@
 	let loading = $state(true);
 </script>
 
-<div class="card bg-base-100 mx-auto h-full w-72 shadow-xl" id={createElementId(filename)}>
+<div class="card bg-base-100 mx-auto h-full w-full max-w-72 shadow-xl" id={createElementId(filename)}>
 	<a href={linkURL.toString()} aria-label={name} style="display:block; aspect-ratio: 4/3">
 		{#if type == 'file'}
 			{#if filetype == 'image'}
-				<div class="round-t-5 block h-full w-full" {@attach tooltipAttachment}>
+				<div class="h-54 block round-t-5" {@attach tooltipAttachment}>
 					{#if loading}
-						<div class="absolute mt-0 object-cover">
-							<div class="skeleton h-54 w-72"></div>
-						</div>
+						<div class="skeleton h-54 absolute w-full"></div>
 					{/if}
-
 					<img
-						class="h-54 absolute mt-0 w-72 object-cover"
+						class="absolute mt-0 object-cover h-54"
 						alt={name}
 						loading="lazy"
 						src={thumbnailURL.toString()}

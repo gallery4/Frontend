@@ -32,7 +32,7 @@
 	const isBrowser = new MediaQuery('display-mode: browser');
 </script>
 
-<div class="navbar bg-base-100 z-1 sticky top-0 h-16 shadow-sm">
+<div class="navbar bg-base-100 z-2 sticky top-0 h-16 shadow-sm">
 	<div class="mx-auto flex h-16 w-full max-w-[1024px]">
 		{#if !isBrowser.current}
 			<div class="flex-none place-self-center">
